@@ -224,3 +224,8 @@ VALUES
 ;
 
 SELECT * FROM SWEET_MESSAGE;
+
+select host, user, password from mysql.user;
+show grants for 'root'@'%';
+create user 'invitation'@'localhost' identified by '1111';
+grant all privileges on INVITATION.* to 'invitation'@'localhost';
