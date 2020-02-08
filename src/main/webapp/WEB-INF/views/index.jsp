@@ -7,7 +7,7 @@
 </head>
 <body>
 
-	<jsp:forward page="login.do"/>
+	<%-- <jsp:forward page="login.do"/> --%>
 
 </body>
 </html>

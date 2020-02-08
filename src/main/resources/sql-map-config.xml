@@ -5,10 +5,10 @@
 <configuration>
 
 	<typeAliases>
-		<!-- <typeAlias type="user" alias="com.invitation.biz.user.UserVO"></typeAlias> -->
+		<typeAlias alias="userAdmin" type="com.invitation.biz.admin.user.UserAdminVO"></typeAlias> 
 	</typeAliases>
 	
 	<mappers>
-		<!-- <mapper resource="mappings/useres-mapping.xml" /> -->
+		<mapper resource="mappings/AdminUseres-mapping.xml" />
 	</mappers>
 </configuration>

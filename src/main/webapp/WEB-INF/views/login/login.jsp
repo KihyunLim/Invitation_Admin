@@ -31,7 +31,7 @@
 			<div class="card-body login-card-body">
 				<p class="login-box-msg">계정을 입력해주세요.</p>
 
-				<form action="login.do" method="post">
+				<form>
 					<div class="input-group mb-3">
 						<input type="text" class="form-control" placeholder="아이디">
 						<div class="input-group-append">

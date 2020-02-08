@@ -1080,4 +1080,393 @@ public interface PlatformTransactionManager {
 
 ---
 
-## 7.
+## 7. bootstrap 적용
+- bootstrap 프레임워크 다운
+  - adminLTE.io 사이트 접속해서 소스 파일 다운로드
+  - 압축해제 후 `src/main/sebapp/resources/bootstrap/adminlte3`에 dist, plugins 폴더 복사
+
+- bootstrap 파일 매핑 설정 추가
+```xml
+<!-- servlet-config.xml -->
+
+	<!-- ~~~ -->
+	<mvc:annotation-driven></mvc:annotation-driven>
+	
+	<!-- 부트스트랩 추가 -->
+	<mvc:resources mapping="/adminlte3/**" location="/resources/bootstrap/adminlte3/"></mvc:resources>
+
+	<!-- resolver 설정 추가 -->
+	<!-- ~~~ -->
+```
+
+- 로그인 페이지 작성
+  - `src/main/webapp/resources/pages/examples/login.html` 소스 복사
+  - `src/main/WEB-INF/views/login/login.jsp` 생성 후 위의 소스 붙여넣기
+  - 불필요한 부분 제거 및 수정
+```jsp
+<!-- login.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>AdminLTE 3 | Log in</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="adminlte3/plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="adminlte3/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="adminlte3/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition login-page">
+	<div class="login-box">
+		<div class="login-logo">
+			<span><b>Invitataion</b> Admin</span>
+		</div>
+		<!-- /.login-logo -->
+		<div class="card">
+			<div class="card-body login-card-body">
+				<p class="login-box-msg">계정을 입력해주세요.</p>
+
+				<form action="login.do" method="post">
+					<div class="input-group mb-3">
+						<input type="text" class="form-control" placeholder="아이디">
+						<div class="input-group-append">
+							<div class="input-group-text"></div>
+						</div>
+					</div>
+					<div class="input-group mb-3">
+						<input type="password" class="form-control" placeholder="비밀번호">
+						<div class="input-group-append">
+							<div class="input-group-text">
+								<span class="fas fa-lock"></span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-8">
+							<div class="icheck-primary">
+								<input type="checkbox" id="remember"> <label
+									for="remember"> 아이디 저장하기 </label>
+							</div>
+						</div>
+						<!-- /.col -->
+						<div class="col-4">
+							<button type="submit" class="btn btn-primary btn-block">로그인</button>
+						</div>
+						<!-- /.col -->
+					</div>
+				</form>
+			</div>
+			<!-- /.login-card-body -->
+		</div>
+	</div>
+	<!-- /.login-box -->
+
+	<!-- jQuery -->
+	<script src="adminlte3/plugins/jquery/jquery.min.js"></script>
+	<!-- Bootstrap 4 -->
+	<script src="adminlte3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- AdminLTE App -->
+	<script src="adminlte3/dist/js/adminlte.min.js"></script>
+
+</body>
+</html>
+```
+
+---
+
+## 8. restful 적용, 로그인 구현
+- postman 설치
+  - 인터넷에서 postman 검색해서 프로그램 설치
+  - 로그인 필요
+
+- depndency 추가
+```xml
+<!-- pom.xml -->
+
+		<!-- ~~~ -->
+		<dependencies>
+		<!-- json -->
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.9.8</version>
+		</dependency>
+	
+		<!-- database -->
+		<!-- ~~~ -->
+```
+
+- url 패턴 관련 설정 추가
+```xml
+<!-- servlet-config.xml -->
+
+	<!-- ~~~ -->
+	<mvc:annotation-driven></mvc:annotation-driven>
+	
+	<!-- tomcat의 server.xml에 정의돈 url-pattern "/" 무시하고 현재 DispatcherServlet의 url-pattern으로 설정 -->
+	<mvc:default-servlet-handler/>
+	
+	<!-- 부트스트랩 추가 -->
+	<!-- ~~~ -->
+```
+
+- restful 적용할 로그인 기능 추가
+  - 사용자 VO 생성
+    - `com.invitation.biz.admin.user` 패키지 생성
+```java
+// UserAdminVO.java
+
+package com.invitation.biz.admin.user;
+
+public class UserAdminVO {
+
+	private String id;
+	private String password;
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	@Override
+	public String toString() {
+		return "UserAdminVO [id=" + id + ", password=" + password + "]";
+	}
+}
+```
+
+  - xml 매핑 설정 파일 수정
+```xml
+<!-- sql-map-config.xml -->
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<typeAliases>
+		<typeAlias alias="userAdmin" type="com.invitation.biz.admin.user.UserAdminVO"></typeAlias> 
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mappings/AdminUseres-mapping.xml" />
+	</mappers>
+</configuration>
+```
+
+  - 로그인 확인용 쿼리 xml 추가
+```xml
+<!-- AdminUseres-mapping.xml.xml -->
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AdminUserDAO">
+	<select id="getUserInfo" resultType="userAdmin">
+		SELECT 
+			* 
+		FROM 
+			ADMIN 
+		WHERE 
+			ID = #{id};
+	</select>
+</mapper>
+```
+
+  - DAO 파일 생성
+    - `com.invitation.biz.admin.user.impl` 패키지 생성
+```java
+// UserAdminDAOMybatis.java
+
+package com.invitation.biz.admin.user.impl;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.invitation.biz.admin.user.UserAdminVO;
+
+@Repository
+public class UserAdminDAOMybatis {
+
+	@Autowired
+	private SqlSessionTemplate mybatis;
+	
+	public UserAdminVO getUserInfo(String id) {
+		return mybatis.selectOne("AdminUserDAO.getUserInfo", id);
+	}
+}
+```
+
+  - interface 파일 생성
+```java
+// UserAdminService.java
+
+package com.invitation.biz.admin.user;
+
+public interface UserAdminService {
+
+	UserAdminVO getUserInfo(String id);
+
+}
+```
+
+  - service 파일 생성
+```java
+// UserAdminServiceImpl.java
+
+package com.invitation.biz.admin.user.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.invitation.biz.admin.user.UserAdminService;
+import com.invitation.biz.admin.user.UserAdminVO;
+
+@Service("userAdmin")
+public class UserAdminServiceImpl implements UserAdminService {
+
+	@Autowired
+	private UserAdminDAOMybatis userAdminDAO;
+	
+	@Override
+	public UserAdminVO getUserInfo(String id) {
+		return userAdminDAO.getUserInfo(id);
+	}
+}
+```
+
+  - 로그인 controller 수정
+```java
+// LoginController.java
+
+package com.invitation.controller.login;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.invitation.biz.admin.user.UserAdminService;
+import com.invitation.biz.admin.user.UserAdminVO;
+import com.invitation.biz.common.exception.CommonException;
+
+@Controller
+@RequestMapping(value="/login")
+public class LoginController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+	
+	@Autowired
+	private UserAdminService userAdminService;
+	
+	@RequestMapping(value="/login.do", method=RequestMethod.GET)
+	public String login(Model model) {
+		LOGGER.info("login page!!");
+		
+		return "login/login";
+	}
+	
+	@PostMapping(value="/login.do", headers= {"Content-type=application/json"})
+	@ResponseBody
+	public Map<String, Object> doLogin(@RequestBody UserAdminVO user, HttpSession session) throws CommonException {
+		Boolean resFlag = false;
+		String resMessage = "";
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		LOGGER.info("doLogin");
+		try {
+			UserAdminVO resGetUserInfo = userAdminService.getUserInfo(user.getId());
+			
+			if(resGetUserInfo == null) {
+				throw new NullPointerException("User information not found");
+			}
+			
+			if(resGetUserInfo.getPassword().equals(user.getPassword())) {
+				session.setAttribute("id", resGetUserInfo.getId());
+				
+				resFlag = true;
+			} else {
+				throw new CommonException("비밀번호 불일치!!");
+			}
+		} catch(NullPointerException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "등록된 아이디가 없습니다.";
+		} catch(CommonException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "비밀번호가 일지하지 않습니다.";
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "로그인 중 에러가 발생했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+		}
+		
+		return result;
+	}
+	
+	@GetMapping(value="/logout.do")
+	public String doLogout(HttpSession session) {
+		LOGGER.info("logout!!");
+		
+		session.invalidate();
+		
+		return "login/login";
+	}
+}
+```
+
+  - postman으로 기능 테스트
+    - POST 선택
+    - url : http://localhost:8080/admin/login/login.do
+    - Headers > key : Content-Type
+    - Headers > value : application/json
+    - Body > raw 선택 및 우측의 json 확인
+      - `{"id" : "root", "password" : "1234"}` 입력
+    - send 클릭
+
+  - 로그인 화면 js 파일 생성
