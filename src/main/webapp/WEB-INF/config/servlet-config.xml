@@ -18,7 +18,9 @@
 	<mvc:default-servlet-handler/>
 	
 	<!-- 부트스트랩 추가 -->
-	<mvc:resources mapping="/adminlte3/**" location="/resources/bootstrap/adminlte3/"></mvc:resources>
+	<mvc:resources mapping="adminlte3/**" location="/resources/bootstrap/adminlte3/"></mvc:resources>
+	<!-- js파일 매핑 -->
+	<mvc:resources mapping="js/**" location="/resources/js/"></mvc:resources>
 	
 	<!-- resolver 설정 추가 -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

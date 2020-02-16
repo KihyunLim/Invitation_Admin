@@ -1093,42 +1093,207 @@ public interface PlatformTransactionManager {
 	<mvc:annotation-driven></mvc:annotation-driven>
 	
 	<!-- 부트스트랩 추가 -->
-	<mvc:resources mapping="/adminlte3/**" location="/resources/bootstrap/adminlte3/"></mvc:resources>
+	<mvc:resources mapping="adminlte3/**" location="/resources/bootstrap/adminlte3/"></mvc:resources>
+	<!-- js파일 매핑 -->
+	<mvc:resources mapping="js/**" location="/resources/js/"></mvc:resources>
 
 	<!-- resolver 설정 추가 -->
 	<!-- ~~~ -->
 ```
 
-- 로그인 페이지 작성
-  - `src/main/webapp/resources/pages/examples/login.html` 소스 복사
-  - `src/main/WEB-INF/views/login/login.jsp` 생성 후 위의 소스 붙여넣기
-  - 불필요한 부분 제거 및 수정
+- 페이지 작성
+  - 다른 화면에서도 공통으로 사용될 코드 include로 변경
+    - `src/main/webapp/WEB-INF/views/include/adminlte3/head.jsp`
+    - `src/main/webapp/WEB-INF/views/include/adminlte3/js.jsp`
+    - `src/main/webapp/WEB-INF/views/include/adminlte3/navbar.jsp`
+    - `src/main/webapp/WEB-INF/views/include/adminlte3/sidebar.jsp`
+    - `src/main/webapp/WEB-INF/views/include/adminlte3/footer.jsp`
+  - 각 화면 jsp 작성
+    - `src/main/webapp/WEB-INF/views/login/login.jsp`
+    - `src/main/webapp/WEB-INF/views/member/memberList.jsp`
+    - `src/main/webapp/WEB-INF/views/invitation/invitationList.jsp`
+    - `src/main/webapp/WEB-INF/views/invitation/invitationDetail.jsp`
+    - `src/main/webapp/WEB-INF/views/invitation/invitationAdd.jsp`
+  - 각 화면에서 쓸 js 파일은 우선 생성만
+    - `src/main/webapp/resources/js/login/login.js`
+    - `src/main/webapp/resources/js/member/memberList.js`
+    - `src/main/webapp/resources/js/invitation/invitationList.js`
+    - `src/main/webapp/resources/js/invitation/invitationDetail.js`
+    - `src/main/webapp/resources/js/invitation/invitationAdd.js`
+    - `src/main/webapp/resources/js/util.js`
+    - `src/main/webapp/resources/js/def.js`
+
+```jsp
+<!--head.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="../adminlte3/plugins/fontawesome-free/css/all.min.css">
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+	<!-- icheck bootstrap -->
+	<link rel="stylesheet" href="../adminlte3/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="../adminlte3/dist/css/adminlte.min.css">
+	<!-- Google Font: Source Sans Pro -->
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+```
+
+```jsp
+<!--js.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+	<!-- jQuery -->
+	<script src="../adminlte3/plugins/jquery/jquery.min.js"></script>
+	<!-- Bootstrap 4 -->
+	<script src="../adminlte3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- AdminLTE App -->
+	<script src="../adminlte3/dist/js/adminlte.min.js"></script>
+```
+
+```jsp
+<!--navbar.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+	<!-- Navbar -->
+	<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+		<!-- Left navbar links -->
+		<ul class="navbar-nav">
+			<li class="nav-item"><a class="nav-link" data-widget="pushmenu"
+				href="#"><i class="fas fa-bars"></i></a></li>
+		</ul>
+	
+		<!-- Right navbar links -->
+		<ul class="navbar-nav ml-auto">
+			<!-- 로그아웃 버튼 -->
+			<!-- Notifications Dropdown Menu -->
+			<li class="nav-item dropdown"><a class="nav-link"
+				data-toggle="dropdown" href="#"> <i class="far fa-bell"></i> <span
+					class="badge badge-warning navbar-badge">15</span>
+			</a>
+				<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+					<span class="dropdown-item dropdown-header">15 Notifications</span>
+					<div class="dropdown-divider"></div>
+					<a href="#" class="dropdown-item"> <i
+						class="fas fa-envelope mr-2"></i> 4 new messages <span
+						class="float-right text-muted text-sm">3 mins</span>
+					</a>
+					<div class="dropdown-divider"></div>
+					<a href="#" class="dropdown-item"> <i class="fas fa-users mr-2"></i>
+						8 friend requests <span class="float-right text-muted text-sm">12
+							hours</span>
+					</a>
+					<div class="dropdown-divider"></div>
+					<a href="#" class="dropdown-item"> <i class="fas fa-file mr-2"></i>
+						3 new reports <span class="float-right text-muted text-sm">2
+							days</span>
+					</a>
+					<div class="dropdown-divider"></div>
+					<a href="#" class="dropdown-item dropdown-footer">See All
+						Notifications</a>
+				</div></li>
+		</ul>
+	</nav>
+	<!-- /.navbar -->
+```
+
+```jsp
+<!--sidebar.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+	<!-- Main Sidebar Container -->
+	<aside class="main-sidebar sidebar-dark-primary elevation-4">
+		<!-- Brand Logo -->
+		<a href="../adminlte3/index3.html" class="brand-link">
+			<img src="../adminlte3/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+			<span class="brand-text font-weight-light">Invitation Admin</span>
+		</a>
+	
+		<!-- Sidebar -->
+		<div class="sidebar">
+			<!-- Sidebar Menu -->
+			<nav class="mt-2" id="navSidebar">
+				<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+					<!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+					<li class="nav-item">
+						<a href="../member/memberList.do" class="nav-link" id="aMember">
+							<i class="nav-icon fas fa-th"></i>
+							<p>회원 관리</p>
+						</a>
+					</li>
+					<li class="nav-item has-treeview">
+						<a href="#" class="nav-link" id="aInvitation"> 
+							<i class="nav-icon fas fa-table"></i>
+							<p>
+								청첩장 관리 <i class="fas fa-angle-left right"></i>
+							</p>
+						</a>
+						<ul class="nav nav-treeview">
+							<li class="nav-item">
+								<a href="../invitation/invitationList.do" class="nav-link" id="aInvitation_List"> 
+									<i class="far fa-circle nav-icon"></i>
+									<p>청첩장 목록</p>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a href="../invitation/invitationDetail.do" class="nav-link" id="aInvitation_Detail"> 
+									<i class="far fa-circle nav-icon"></i>
+									<p>청첩장 상세</p>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a href="../invitation/invitationAdd.do" class="nav-link" id="aInvitation_Add"> 
+									<i class="far fa-circle nav-icon"></i>
+									<p>청첩장 추가</p>
+								</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</nav>
+			<!-- /.sidebar-menu -->
+		</div>
+		<!-- /.sidebar -->
+	</aside>
+```
+
+```jsp
+<!--footer.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+	<footer class="main-footer">
+		<div class="float-right d-none d-sm-block">
+			<b>Version</b> 3.0.0
+		</div>
+		<strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+	</footer>
+
+	<!-- Control Sidebar -->
+	<aside class="control-sidebar control-sidebar-dark">
+		<!-- Control sidebar content goes here -->
+	</aside>
+	<!-- /.control-sidebar -->
+```
+
 ```jsp
 <!-- login.jsp -->
 
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
+
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | Log in</title>
-  <!-- Tell the browser to be responsive to screen width -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="adminlte3/plugins/fontawesome-free/css/all.min.css">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  <!-- icheck bootstrap -->
-  <link rel="stylesheet" href="adminlte3/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="adminlte3/dist/css/adminlte.min.css">
-  <!-- Google Font: Source Sans Pro -->
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+	<%@ include file="../include/adminlte3/head.jsp" %>
+	<title>로그인</title>
 </head>
+
 <body class="hold-transition login-page">
 	<div class="login-box">
 		<div class="login-logo">
@@ -1139,55 +1304,567 @@ public interface PlatformTransactionManager {
 			<div class="card-body login-card-body">
 				<p class="login-box-msg">계정을 입력해주세요.</p>
 
-				<form action="login.do" method="post">
-					<div class="input-group mb-3">
-						<input type="text" class="form-control" placeholder="아이디">
-						<div class="input-group-append">
-							<div class="input-group-text"></div>
+				<div class="input-group mb-3">
+					<input type="text" class="form-control" placeholder="아이디" id="inputId">
+					<div class="input-group-append">
+						<div class="input-group-text"></div>
+					</div>
+				</div>
+				<div class="input-group mb-3">
+					<input type="password" class="form-control" placeholder="비밀번호" id="inputPassword">
+					<div class="input-group-append">
+						<div class="input-group-text">
+							<span class="fas fa-lock"></span>
 						</div>
 					</div>
-					<div class="input-group mb-3">
-						<input type="password" class="form-control" placeholder="비밀번호">
-						<div class="input-group-append">
-							<div class="input-group-text">
-								<span class="fas fa-lock"></span>
-							</div>
+				</div>
+				<div class="row">
+					<div class="col-8">
+						<div class="icheck-primary">
+							<input type="checkbox" id="remember"> <label
+								for="remember"> 아이디 저장하기 </label>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-8">
-							<div class="icheck-primary">
-								<input type="checkbox" id="remember"> <label
-									for="remember"> 아이디 저장하기 </label>
-							</div>
-						</div>
-						<!-- /.col -->
-						<div class="col-4">
-							<button type="submit" class="btn btn-primary btn-block">로그인</button>
-						</div>
-						<!-- /.col -->
+					<!-- /.col -->
+					<div class="col-4">
+						<button type="submit" class="btn btn-primary btn-block" id="btnLogin">로그인</button>
 					</div>
-				</form>
+					<!-- /.col -->
+				</div>
 			</div>
 			<!-- /.login-card-body -->
 		</div>
 	</div>
 	<!-- /.login-box -->
 
-	<!-- jQuery -->
-	<script src="adminlte3/plugins/jquery/jquery.min.js"></script>
-	<!-- Bootstrap 4 -->
-	<script src="adminlte3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<!-- AdminLTE App -->
-	<script src="adminlte3/dist/js/adminlte.min.js"></script>
-
+	<%@ include file="../include/adminlte3/js.jsp" %>
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/def.js"></script>
+	<script type="text/javascript" src="../js/login/login.js"></script>
 </body>
 </html>
 ```
 
+```jsp
+<!--memberList.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<%@ include file="../include/adminlte3/head.jsp"%>
+	<title>회원 관리</title>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<%@ include file="../include/adminlte3/navbar.jsp"%>
+		<%@ include file="../include/adminlte3/sidebar.jsp"%>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>회원 관리</h1>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title">추가/삭제/검색 영역</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<table id="example2" class="table table-bordered table-hover">
+									<thead>
+										<tr>
+											<th>Rendering engine</th>
+											<th>Browser</th>
+											<th>Platform(s)</th>
+											<th>Engine version</th>
+											<th>CSS grade</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Trident</td>
+											<td>Internet Explorer 4.0</td>
+											<td>Win 95+</td>
+											<td>4</td>
+											<td>X</td>
+										</tr>
+										<tr>
+											<td>Trident</td>
+											<td>Internet Explorer 5.0</td>
+											<td>Win 95+</td>
+											<td>5</td>
+											<td>C</td>
+										</tr>
+										<tr>
+											<td>Trident</td>
+											<td>Internet Explorer 5.5</td>
+											<td>Win 95+</td>
+											<td>5.5</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Trident</td>
+											<td>Internet Explorer 6</td>
+											<td>Win 98+</td>
+											<td>6</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Trident</td>
+											<td>Internet Explorer 7</td>
+											<td>Win XP SP2+</td>
+											<td>7</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Trident</td>
+											<td>AOL browser (AOL desktop)</td>
+											<td>Win XP</td>
+											<td>6</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Firefox 1.0</td>
+											<td>Win 98+ / OSX.2+</td>
+											<td>1.7</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Firefox 1.5</td>
+											<td>Win 98+ / OSX.2+</td>
+											<td>1.8</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Firefox 2.0</td>
+											<td>Win 98+ / OSX.2+</td>
+											<td>1.8</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Firefox 3.0</td>
+											<td>Win 2k+ / OSX.3+</td>
+											<td>1.9</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Camino 1.0</td>
+											<td>OSX.2+</td>
+											<td>1.8</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Camino 1.5</td>
+											<td>OSX.3+</td>
+											<td>1.8</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Netscape 7.2</td>
+											<td>Win 95+ / Mac OS 8.6-9.2</td>
+											<td>1.7</td>
+											<td>A</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<%@ include file="../include/adminlte3/footer.jsp"%>
+	</div>
+	<!-- ./wrapper -->
+
+	<%@ include file="../include/adminlte3/js.jsp"%>
+	<!-- DataTables -->
+	<script src="../adminlte3/plugins/datatables/jquery.dataTables.js"></script>
+	<script src="../adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+	
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/def.js"></script>
+	<script type="text/javascript" src="../js/member/memberList.js"></script>
+
+	<!-- page script -->
+	<script>
+		$(function () {
+			$("#example1").DataTable();
+			$('#example2').DataTable({
+				"paging": true,
+				"lengthChange": false,
+				"searching": false,
+				"ordering": true,
+				"info": true,
+				"autoWidth": false,
+			});
+		});
+	</script>
+</body>
+</html>
+```
+
+```jsp
+<!--invitationList.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<%@ include file="../include/adminlte3/head.jsp"%>
+	<title>청첩장 목록</title>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<%@ include file="../include/adminlte3/navbar.jsp"%>
+		<%@ include file="../include/adminlte3/sidebar.jsp"%>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>청첩장 목록</h1>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title">추가/삭제/검색 영역</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<table id="example2" class="table table-bordered table-hover">
+									<thead>
+										<tr>
+											<th>Rendering engine</th>
+											<th>Browser</th>
+											<th>Platform(s)</th>
+											<th>Engine version</th>
+											<th>CSS grade</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Trident</td>
+											<td>Internet Explorer 4.0</td>
+											<td>Win 95+</td>
+											<td>4</td>
+											<td>X</td>
+										</tr>
+										<tr>
+											<td>Trident</td>
+											<td>Internet Explorer 5.0</td>
+											<td>Win 95+</td>
+											<td>5</td>
+											<td>C</td>
+										</tr>
+										<tr>
+											<td>Trident</td>
+											<td>Internet Explorer 5.5</td>
+											<td>Win 95+</td>
+											<td>5.5</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Trident</td>
+											<td>Internet Explorer 6</td>
+											<td>Win 98+</td>
+											<td>6</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Trident</td>
+											<td>Internet Explorer 7</td>
+											<td>Win XP SP2+</td>
+											<td>7</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Trident</td>
+											<td>AOL browser (AOL desktop)</td>
+											<td>Win XP</td>
+											<td>6</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Firefox 1.0</td>
+											<td>Win 98+ / OSX.2+</td>
+											<td>1.7</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Firefox 1.5</td>
+											<td>Win 98+ / OSX.2+</td>
+											<td>1.8</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Firefox 2.0</td>
+											<td>Win 98+ / OSX.2+</td>
+											<td>1.8</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Firefox 3.0</td>
+											<td>Win 2k+ / OSX.3+</td>
+											<td>1.9</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Camino 1.0</td>
+											<td>OSX.2+</td>
+											<td>1.8</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Camino 1.5</td>
+											<td>OSX.3+</td>
+											<td>1.8</td>
+											<td>A</td>
+										</tr>
+										<tr>
+											<td>Gecko</td>
+											<td>Netscape 7.2</td>
+											<td>Win 95+ / Mac OS 8.6-9.2</td>
+											<td>1.7</td>
+											<td>A</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<%@ include file="../include/adminlte3/footer.jsp"%>
+	</div>
+	<!-- ./wrapper -->
+
+	<%@ include file="../include/adminlte3/js.jsp"%>
+	<!-- DataTables -->
+	<script src="../adminlte3/plugins/datatables/jquery.dataTables.js"></script>
+	<script src="../adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+	
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/def.js"></script>
+	<script type="text/javascript" src="../js/invitation/invitationList.js"></script>
+
+	<!-- page script -->
+	<script>
+		$(function () {
+			$("#example1").DataTable();
+			$('#example2').DataTable({
+				"paging": true,
+				"lengthChange": false,
+				"searching": false,
+				"ordering": true,
+				"info": true,
+				"autoWidth": false,
+			});
+		});
+	</script>
+</body>
+</html>
+```
+
+```jsp
+<!--invitationDetail.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<%@ include file="../include/adminlte3/head.jsp"%>
+	<title>청첩장 상세</title>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<%@ include file="../include/adminlte3/navbar.jsp"%>
+		<%@ include file="../include/adminlte3/sidebar.jsp"%>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>청첩장 상세</h1>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title">추가/삭제/검색 영역</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<%@ include file="../include/adminlte3/footer.jsp"%>
+	</div>
+	<!-- ./wrapper -->
+
+	<%@ include file="../include/adminlte3/js.jsp"%>
+	
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/def.js"></script>
+	<script type="text/javascript" src="../js/invitation/invitationDetail.js"></script>
+</body>
+</html>
+```
+
+```jsp
+<!--invitationAdd.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<%@ include file="../include/adminlte3/head.jsp"%>
+	<title>청첩장 추가</title>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<%@ include file="../include/adminlte3/navbar.jsp"%>
+		<%@ include file="../include/adminlte3/sidebar.jsp"%>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>청첩장 추가</h1>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title">추가/삭제/검색 영역</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<%@ include file="../include/adminlte3/footer.jsp"%>
+	</div>
+	<!-- ./wrapper -->
+
+	<%@ include file="../include/adminlte3/js.jsp"%>
+	
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/def.js"></script>
+	<script type="text/javascript" src="../js/invitation/invitationAdd.js"></script>
+</body>
+</html>
+```
+
+
 ---
 
-## 8. restful 적용, 로그인 구현
+## 8. restful 적용한 로그인 및 나머지 구현
 - postman 설치
   - 인터넷에서 postman 검색해서 프로그램 설치
   - 로그인 필요
@@ -1469,4 +2146,239 @@ public class LoginController {
       - `{"id" : "root", "password" : "1234"}` 입력
     - send 클릭
 
-  - 로그인 화면 js 파일 생성
+  - 웹으로 기능 테스트
+    - 화면 이동을 위한 컨트롤러 파일 생성
+      - `src/main/java/com.invitation.controller.member/MemberController.java`
+      - `src/main/java/com.invitation.controller.invitation/InvitationController.java`
+```java
+// MemberController.java
+package com.invitation.controller.member;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+@Controller
+@RequestMapping(value="/member")
+public class MemberController {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemberController.class);
+	
+	@RequestMapping(value="/memberList.do", method=RequestMethod.GET)
+	public String viewMemberList(Model model) {
+		LOGGER.info("memberList.do");
+		
+		return "member/memberList";
+	}
+}
+```
+
+```java
+// InvitationController.java
+
+package com.invitation.controller.invitation;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+@Controller
+@RequestMapping(value="/invitation")
+public class InvitationController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(InvitationController.class);
+	
+	@RequestMapping(value="/invitationAdd.do", method=RequestMethod.GET)
+	public String temp1(Model model) {
+		LOGGER.info("invitationAdd.do");
+		
+		return "invitation/invitationAdd";
+	}
+	
+	@RequestMapping(value="/invitationDetail.do", method=RequestMethod.GET)
+	public String temp2(Model model) {
+		LOGGER.info("invitationDetail.do");
+		
+		return "invitation/invitationDetail";
+	}
+	
+	@RequestMapping(value="/invitationList.do", method=RequestMethod.GET)
+	public String temp3(Model model) {
+		LOGGER.info("invitationList.do");
+		
+		return "invitation/invitationList";
+	}
+}
+```
+
+    - 각 화면 js파일 작성
+```js
+// def.js
+
+/**
+ * 
+ */
+
+var GO_TO_MAIN = "/admin/member/memberList.do";
+
+var MAP_SIDEBAR = {
+	"member" : {
+		"isUnder" : false,
+		"super" : "",
+		"memberList.do" : "aMember"
+	},
+	"invitation"  : {
+		"isUnder" : true,
+		"super" : "aInvitation",
+		"invitationList.do" : "aInvitation_List",
+		"invitationDetail.do" : "aInvitation_Detail",
+		"invitationAdd.do" : "aInvitation_Add"
+	}
+};
+```
+
+```js
+// util.js
+
+/**
+ * 
+ */
+
+function setActiveSidebar() {
+	$("#navSidebar a").removeClass("active");
+	$("#navSidebar li").removeClass("menu-open");
+	
+	var arrPathName = window.location.pathname.split("/", 4);
+	if(MAP_SIDEBAR[arrPathName[2]]["isUnder"]) {
+		$("#" + MAP_SIDEBAR[arrPathName[2]]["super"])
+			.addClass("active")
+			.parent().addClass("menu-open");
+	}
+	$("#" + MAP_SIDEBAR[arrPathName[2]][arrPathName[3]]).addClass("active");
+};
+
+function utilGoToMain() {
+	$.ajax({
+		url : "member/memberList.do",
+		type : "GET",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "/nHttp error msg : " + msg);
+		},
+		success : function() {
+		}
+	});
+};
+```
+
+```js
+// login.js
+
+/**
+ * 
+ */
+
+console.log("########## login.js ##########");
+
+$(function(){
+	$("#btnLogin").on("click", function(){
+		var id = $("#inputId").val(),
+			password = $("#inputPassword").val();
+		
+		if(id == "" || password == "") {
+			alert("아이디 혹은 비밀번호를 입력해주세요.");
+			return;
+		}
+		
+		var reqData = {
+			id : id,
+			password : password
+		};
+		
+		$.ajax({
+			url : "/admin/login/login.do",
+			type : "POST",
+			dataType : "json",
+			data : JSON.stringify(reqData),
+			contentType : "application/json",
+			mimeType : "application/json",
+			error : function(xhr, status, msg) {
+				alert("status : " + status + "/nHttp error msg : " + msg);
+			},
+			success : function(result) {
+				if(result.resFlag) {
+					window.location.href = GO_TO_MAIN;
+				} else {
+					alert(result.resMessage);
+				}
+			}
+		})
+	});
+});
+```
+
+```js
+// memberList.js
+
+/**
+ * 
+ */
+
+console.log("########## memberList.js ##########");
+
+$(function(){
+	setActiveSidebar();
+});
+```
+
+```js
+// invitationList.js
+
+/**
+ * 
+ */
+
+console.log("########## invitationList.js ##########");
+
+$(function(){
+	setActiveSidebar();
+});
+```
+
+```js
+// invitationDetail.js
+
+/**
+ * 
+ */
+
+console.log("########## invitationDetail.js ##########");
+
+$(function(){
+	setActiveSidebar();
+});
+```
+
+```js
+// invitationAdd.js
+
+/**
+ * 
+ */
+
+console.log("########## invitationAdd.js ##########");
+
+$(function(){
+	setActiveSidebar();
+});
+```
+
+
+---
+
+## 9. ㅎㅎ
