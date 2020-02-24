@@ -6,9 +6,12 @@
 
 	<typeAliases>
 		<typeAlias alias="userAdmin" type="com.invitation.biz.admin.user.UserAdminVO"></typeAlias> 
+		<typeAlias alias="userMember" type="com.invitation.biz.member.user.UserMemberVO"></typeAlias> 
+		<typeAlias alias="userMemberList" type="com.invitation.biz.member.user.UserMemberListVO"></typeAlias> 
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="mappings/AdminUseres-mapping.xml" />
+		<mapper resource="mappings/MemberUseres-mapping.xml" />
 	</mappers>
 </configuration>
