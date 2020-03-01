@@ -2381,4 +2381,398 @@ $(function(){
 
 ---
 
-## 9. ㅎㅎ
+## 9. 회원 관리 화면 구현 - 부트스트랩 적용
+- 회원 조회용 VO 파일 생성
+  - `com.invitation.biz.member.user`패키지 생성
+```java
+// UserMemberListVO.java
+
+package com.invitation.biz.member.user;
+
+public class UserMemberListVO {
+
+	private String id;
+	private String name;
+	private String phone;
+	private String statusSee;
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getStatusSee() {
+		return statusSee;
+	}
+	public void setStatusSee(String statusSee) {
+		this.statusSee = statusSee;
+	}
+	
+	@Override
+	public String toString() {
+		return "UserMemberListVO [id=" + id + ", name=" + name + ", phone=" + phone + ", statusSee=" + statusSee + "]";
+	}
+}
+```
+
+- 회원 조회용 쿼리 alias 추가
+  - mappings폴더에 `MemberUseres-mapping.xml`파일 생성
+  - `userMemberList` alias 추가 및 `MemberUseres-mapping.xml` mapper 추가
+```xml
+<!-- sql-map-config.xml -->
+
+	<!-- ~~~ -->
+	<typeAliases>
+		<typeAlias alias="userAdmin" type="com.invitation.biz.admin.user.UserAdminVO"></typeAlias> 
+		<typeAlias alias="userMemberList" type="com.invitation.biz.member.user.UserMemberListVO"></typeAlias> 
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mappings/AdminUseres-mapping.xml" />
+		<mapper resource="mappings/MemberUseres-mapping.xml" />
+	</mappers>
+</configuration>
+```
+
+- 회원 조회용 쿼리 추가
+  - `getMemberList` 추가
+```xml
+<!-- MemberUseres-mapping.xml -->
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MemberUserDAO">
+	<select id="getMemberList" resultType="userMemberList">
+		<![CDATA[
+			SELECT
+				U.ID, U.NAME, U.PHONE, (
+					IFNULL((
+						SELECT
+							IL.VISABLE
+						FROM
+							INVITATION_LIST IL
+						WHERE
+							IL.ID = U.ID
+							AND NOW() >= DATE_BEGIN
+							AND NOW() <= DATE_END)
+					, 'X')
+				) AS STATUSSEE
+			FROM
+				USERES U
+			WHERE
+				U.DELETEFLAG <> 'Y'
+			;
+		]]>
+	</select>
+</mapper>
+```
+
+- DAO, service, serviceImpl에 회원 조회용 함수 추가
+  - `com.invitation.biz.member.user.impl` 패키지 생성
+```java
+// UserMemberDAOMybatis.java
+
+package com.invitation.biz.member.user.impl;
+
+import java.util.List;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.invitation.biz.member.user.UserMemberListVO;
+
+@Repository
+public class UserMemberDAOMybatis {
+
+	@Autowired
+	private SqlSessionTemplate mybatis;
+	
+	public List<UserMemberListVO> getMemberList() {
+		return mybatis.selectList("MemberUserDAO.getMemberList");
+	}
+}
+```
+
+```java
+// UserMemberService.java
+
+package com.invitation.biz.member.user;
+
+import java.util.List;
+
+public interface UserMemberService {
+
+	List<UserMemberListVO> getMemberList();
+}
+```
+
+```java
+// UserMemberServiceImpl.java
+
+package com.invitation.biz.member.user.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.invitation.biz.member.user.UserMemberListVO;
+import com.invitation.biz.member.user.UserMemberService;
+
+@Service("userMember")
+public class UserMemberServiceImpl implements UserMemberService {
+
+	@Autowired
+	private UserMemberDAOMybatis userMemberDAO;
+	
+	@Override
+	public List<UserMemberListVO> getMemberList() {
+		return userMemberDAO.getMemberList();
+	}
+}
+```
+
+- Controller에 회원 조회용 함수 추가
+  - 기존에 테스트로 작성했던 회원 조회 함수는 주석 처리
+```java
+// MemberController.java
+
+		// ~~~
+		return "member/memberList";
+	}
+	
+	@RequestMapping(value="/getMemberList", method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getMemberList() {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		List<UserMemberListVO> resUserMemberList = null;
+		
+		LOGGER.info("getMemberList");
+		try {
+			List<UserMemberListVO> userMemberList = userMemberService.getMemberList();
+			
+			resFlag = true;
+			resUserMemberList = userMemberList;
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "회원 목록 조회에 실패앴습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("list", resUserMemberList);
+		}
+		
+		return result;
+	}
+}
+```
+
+- 회원 관리 페이지 수정
+  - dataTable.js의 selectbox 쓸려면 js, css 폴더 모두 포함 필요!!
+```jsp
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<%@ include file="../include/adminlte3/head.jsp"%>
+	<!-- dataTable-select -->
+	<link rel="stylesheet" href="../adminlte3/plugins/datatables-select/css/select.bootstrap4.css">
+	
+	<title>회원 관리</title>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<%@ include file="../include/adminlte3/navbar.jsp"%>
+		<%@ include file="../include/adminlte3/sidebar.jsp"%>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>회원 관리</h1>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title">추가/삭제/검색 영역</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<table id="tableMemberList" class="table table-bordered table-hover dataTable">
+									<thead>
+										<tr>
+											<th></th>
+											<th>아이디</th>
+											<th>이름</th>
+											<th>핸드폰</th>
+											<th>게시상태</th>
+										</tr>
+									</thead>
+									<tbody></tbody>
+								</table>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<%@ include file="../include/adminlte3/footer.jsp"%>
+	</div>
+	<!-- ./wrapper -->
+
+	<%@ include file="../include/adminlte3/js.jsp"%>
+	<!-- DataTables -->
+	<script src="../adminlte3/plugins/datatables/jquery.dataTables.js"></script>
+	<script src="../adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+	<script src="../adminlte3/plugins/datatables-select/js/dataTables.select.js"></script>
+	
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/def.js"></script>
+	<script type="text/javascript" src="../js/member/memberList.js"></script>
+</body>
+</html>
+```
+
+- 회원 관리 화면 js 수정
+```js
+// memberList.js
+
+	// ~~~
+	setActiveSidebar();
+	
+	getMemberList();
+});
+
+function getMemberList() {
+	$.ajax({
+		url : "/admin/member/getMemberList",
+		type : "GET",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			renderMemberList(result.list);
+		}
+	});
+};
+
+function renderMemberList(data) {
+	// - 맨 앞에 체크박스 컬럼도 추가해야함
+	// 페이징 처리 구현
+	// 검색 기능 구현
+	// 오름/내림차순 정렬 할 수 있게도 해야하고
+	// 공통으로 할 수 있게 유틸로 빼고
+	$("#tableMemberList").DataTable({
+		lengthChange : false,
+		searching : false,
+		ordering : false,
+		autoWidth : false,
+		pagingType: 'full_numbers',
+	    language: {
+	        paginate: {
+	            first:    '«',
+	            previous: '‹',
+	            next:     '›',
+	            last:     '»'
+	        },
+	        aria: {
+	            paginate: {
+	                first:    'First',
+	                previous: 'Previous',
+	                next:     'Next',
+	                last:     'Last'
+	            }
+	        }
+	    },
+	    info : true,
+	    infoCallback : function(settings, start, end, max, total, pre) {
+	    	return "총 겸색 결과 : " + 5;
+	    },
+		data : data,
+		
+		columnDefs : [{
+			targets : 0,
+			defaultContent : '',
+			data : null,
+			className : 'select-checkbox'
+		}, {
+			targets : 1,
+			data : 'id'
+		}, {
+			targets : 2,
+			data : 'name'
+		}, {
+			targets : 3,
+			data : 'phone'
+		}, {
+			targets : 4,
+			data : function(row, type, val, meta) {
+				var statusSee = '';
+				
+				if(row.statusSee == 'Y') {
+					statusSee = '게시';
+				} else if(row.statusSee == 'N') {
+					statusSee = '비게시'; 
+				} else {
+					statusSee = '-';
+				}
+				
+				return statusSee;
+			}
+		}],
+		select : {
+			style : 'os',
+			selector : 'th:first-child, td:first-child'
+		}
+	});
+}
+```
+
+
+---
+
+## 10. 회원 관리 화면 구현 - 페이징 및 검색/정렬 구현

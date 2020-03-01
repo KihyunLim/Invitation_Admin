@@ -26,10 +26,11 @@ function getMemberList() {
 };
 
 function renderMemberList(data) {
-	// 공통으로 할 수 있게 유틸로 빼고
+	// - 맨 앞에 체크박스 컬럼도 추가해야함
+	// 페이징 처리 구현
+	// 검색 기능 구현
 	// 오름/내림차순 정렬 할 수 있게도 해야하고
-	// 맨 앞에 체크박스 컬럼도 추가해야함
-	
+	// 공통으로 할 수 있게 유틸로 빼고
 	$("#tableMemberList").DataTable({
 		lengthChange : false,
 		searching : false,
@@ -58,26 +59,39 @@ function renderMemberList(data) {
 	    },
 		data : data,
 		
-		columns : [
-			{data : "id"},
-			{data : "name"},
-			{data : "phone"},
-			{
-				data : "statusSee", 
-				render : function(data, type, row, meta) {
-					var statusSee = "";
-					
-					if(data == "Y") {
-						statusSee = "게시";
-					} else if(data == "N") {
-						statusSee = "비게시"; 
-					} else {
-						statusSee = "-";
-					}
-					
-					return statusSee;
+		columnDefs : [{
+			targets : 0,
+			defaultContent : '',
+			data : null,
+			className : 'select-checkbox'
+		}, {
+			targets : 1,
+			data : 'id'
+		}, {
+			targets : 2,
+			data : 'name'
+		}, {
+			targets : 3,
+			data : 'phone'
+		}, {
+			targets : 4,
+			data : function(row, type, val, meta) {
+				var statusSee = '';
+				
+				if(row.statusSee == 'Y') {
+					statusSee = '게시';
+				} else if(row.statusSee == 'N') {
+					statusSee = '비게시'; 
+				} else {
+					statusSee = '-';
 				}
+				
+				return statusSee;
 			}
-		]
+		}],
+		select : {
+			style : 'os',
+			selector : 'th:first-child, td:first-child'
+		}
 	});
 }

@@ -5,6 +5,9 @@
 <html>
 <head>
 	<%@ include file="../include/adminlte3/head.jsp"%>
+	<!-- dataTable-select -->
+	<link rel="stylesheet" href="../adminlte3/plugins/datatables-select/css/select.bootstrap4.css">
+	
 	<title>회원 관리</title>
 </head>
 
@@ -37,15 +40,17 @@
 							</div>
 							<!-- /.card-header -->
 							<div class="card-body">
-								<table id="tableMemberList" class="table table-bordered table-hover">
+								<table id="tableMemberList" class="table table-bordered table-hover dataTable">
 									<thead>
 										<tr>
+											<th></th>
 											<th>아이디</th>
 											<th>이름</th>
 											<th>핸드폰</th>
 											<th>게시상태</th>
 										</tr>
 									</thead>
+									<tbody></tbody>
 								</table>
 							</div>
 							<!-- /.card-body -->
@@ -68,23 +73,10 @@
 	<!-- DataTables -->
 	<script src="../adminlte3/plugins/datatables/jquery.dataTables.js"></script>
 	<script src="../adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+	<script src="../adminlte3/plugins/datatables-select/js/dataTables.select.js"></script>
 	
 	<script type="text/javascript" src="../js/util.js"></script>
 	<script type="text/javascript" src="../js/def.js"></script>
 	<script type="text/javascript" src="../js/member/memberList.js"></script>
-
-	<!-- page script -->
-	<script>
-		$(function () {
-			/* $('#example2').DataTable({
-				"paging": true,
-				"lengthChange": false,
-				"searching": false,
-				"ordering": true,
-				"info": true,
-				"autoWidth": false,
-			}); */
-		});
-	</script>
 </body>
 </html>

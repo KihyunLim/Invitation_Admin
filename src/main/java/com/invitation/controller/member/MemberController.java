@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.invitation.biz.member.user.UserMemberListVO;
 import com.invitation.biz.member.user.UserMemberService;
-import com.invitation.biz.member.user.UserMemberVO;
 
 @Controller
 @RequestMapping(value="/member")
@@ -33,35 +32,6 @@ public class MemberController {
 		return "member/memberList";
 	}
 	
-	/*@RequestMapping(value="/getMemberList", method=RequestMethod.GET)
-	@ResponseBody
-	public Map<String, Object> getMemberList() {
-		Map<String, Object> result = new HashMap<String, Object>();
-		Boolean resFlag = false;
-		String resMessage = "";
-		List<UserMemberVO> resUserMemberList = null;
-		
-		LOGGER.info("getMemberList");
-		try {
-			List<UserMemberVO> userMemberList = userMemberService.getUserList();
-			
-			resFlag = true;
-			resUserMemberList = userMemberList;
-		} catch(Exception e) {
-			LOGGER.error("error message : " + e.getMessage());
-			LOGGER.error("error trace : ", e);
-			
-			resFlag = false;
-			resMessage = "회원 목록 조회에 실패앴습니다.";
-		} finally {
-			result.put("resFlag", resFlag);
-			result.put("resMessage", resMessage);
-			result.put("list", resUserMemberList);
-		}
-		
-		return result;
-	}*/
-
 	@RequestMapping(value="/getMemberList", method=RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> getMemberList() {
