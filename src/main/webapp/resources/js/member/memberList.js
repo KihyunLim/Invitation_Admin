@@ -28,6 +28,7 @@ function getMemberList() {
 function renderMemberList(data) {
 	// - 맨 앞에 체크박스 컬럼도 추가해야함
 	// 페이징 처리 구현
+		// elementId, total, data, columnDefs... 을 파라미터로 넘기고 나머진 유틸 기본값으로
 	// 검색 기능 구현
 	// 오름/내림차순 정렬 할 수 있게도 해야하고
 	// 공통으로 할 수 있게 유틸로 빼고
@@ -36,26 +37,10 @@ function renderMemberList(data) {
 		searching : false,
 		ordering : false,
 		autoWidth : false,
-		pagingType: 'full_numbers',
-	    language: {
-	        paginate: {
-	            first:    '«',
-	            previous: '‹',
-	            next:     '›',
-	            last:     '»'
-	        },
-	        aria: {
-	            paginate: {
-	                first:    'First',
-	                previous: 'Previous',
-	                next:     'Next',
-	                last:     'Last'
-	            }
-	        }
-	    },
+		paging : false,
 	    info : true,
 	    infoCallback : function(settings, start, end, max, total, pre) {
-	    	return "총 겸색 결과 : " + 5;
+	    	return "총 겸색 결과 : " + 29;
 	    },
 		data : data,
 		
@@ -91,7 +76,7 @@ function renderMemberList(data) {
 		}],
 		select : {
 			style : 'os',
-			selector : 'th:first-child, td:first-child'
+			selector : 'td:first-child'
 		}
 	});
 }
