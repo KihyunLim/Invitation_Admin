@@ -2775,4 +2775,359 @@ function renderMemberList(data) {
 
 ---
 
-## 10. 회원 관리 화면 구현 - 페이징 및 검색/정렬 구현
+## 10. 회원 관리 화면 구현 - 페이징 및 검색 구현
+- 페이징 패키지 생성
+  - `com.invitation.biz.common.paging` 패키지 생성
+
+- 목록 정보를 가진 Criteria 클래스 작성
+```java
+// Criteria.java
+
+package com.invitation.biz.common.paging;
+
+public class Criteria {
+
+	private int page;
+	private int perPageNum;
+	
+	public Criteria() {
+		this.page = 1;
+		this.perPageNum = 5;
+	}
+	
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		if(page <= 0) {
+			this.page = 1;
+			return;
+		}
+		
+		this.page = page;
+	}
+	
+	public int getPerPageNum() {
+		return perPageNum;
+	}
+	public void setPerPageNum(int perPageNum) {
+		if(perPageNum <= 0 || perPageNum > 100) {
+			this.perPageNum = 5;
+			return;
+		}
+		
+		this.perPageNum = perPageNum;
+	}
+	
+	public int getPageStart() {
+		return (page - 1) * perPageNum;
+	}
+
+	@Override
+	public String toString() {
+		return "Criteria [page=" + page + ", perPageNum=" + perPageNum + "]";
+	}
+}
+```
+
+- 목록 하단의 페이징 버튼 정보를 가진 PageMaker 클래스 작성
+```java
+// PageMaker.java
+
+package com.invitation.biz.common.paging;
+
+public class PageMaker {
+
+	private int totalCount;
+	private int displayPageNum = 3;
+	private int startPage;
+	private int endPage;
+	private boolean prev;
+	private boolean next;
+	private Criteria cri;
+	
+	public int getTotalCount() {
+		return totalCount;
+	}
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
+		
+		calcData();
+	}
+	
+	public int getDisplayPageNum() {
+		return displayPageNum;
+	}
+	public void setDisplayPageNum(int displayPageNum) {
+		this.displayPageNum = displayPageNum;
+	}
+	
+	public int getStartPage() {
+		return startPage;
+	}
+	public void setStartPage(int startPage) {
+		this.startPage = startPage;
+	}
+	
+	public int getEndPage() {
+		return endPage;
+	}
+	public void setEndPage(int endPage) {
+		this.endPage = endPage;
+	}
+	
+	public boolean isPrev() {
+		return prev;
+	}
+	public void setPrev(boolean prev) {
+		this.prev = prev;
+	}
+	
+	public boolean isNext() {
+		return next;
+	}
+	public void setNext(boolean next) {
+		this.next = next;
+	}
+	
+	public Criteria getCri() {
+		return cri;
+	}
+	public void setCri(Criteria cri) {
+		this.cri = cri;
+	}
+	
+	private void calcData() {
+		endPage = (int) (Math.ceil(cri.getPage() / (double) displayPageNum) * displayPageNum);
+		startPage = (endPage - displayPageNum) + 1;
+		
+		int tempEndPage = (int) (Math.ceil(totalCount / (double) cri.getPerPageNum()));
+		if(endPage > tempEndPage) {
+			endPage = tempEndPage;
+		}
+		
+		prev = startPage == 1 ? false : true;
+		next = endPage * cri.getPerPageNum() >= totalCount ? false : true;
+	}
+	
+	@Override
+	public String toString() {
+		return "PageMaker [totalCount=" + totalCount + ", displayPageNum=" + displayPageNum + ", startPage=" + startPage
+				+ ", endPage=" + endPage + ", prev=" + prev + ", next=" + next + ", cri=" + cri + "]";
+	}
+}
+```
+
+- 고객 조회 쿼리에 검색, 페이징 기능의 쿼리 추가
+  - 페이징 처리와 총 검색 결과 개수 정보를 얻기 위한 쿼리 추가
+```xml
+<!-- MemberUseres-mapping.xml -->
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MemberUserDAO">
+	<select id="getMemberList" resultType="userMemberList">
+		SELECT
+			U.ID
+			, U.NAME
+			, U.PHONE
+			, (
+				IFNULL((
+					SELECT
+						IL.VISABLE
+					FROM
+						INVITATION_LIST IL
+					WHERE
+						IL.ID = U.ID
+						AND NOW() <![CDATA[>=]]> IL.DATE_BEGIN
+						AND NOW() <![CDATA[<=]]> IL.DATE_END)
+				, 'X')
+			) AS STATUSSEE
+		FROM
+			USERES U
+		WHERE
+			U.DELETEFLAG <![CDATA[<>]]> 'Y'
+		<if test="condition == 'id'">
+			AND U.ID LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="condition == 'name'">
+			AND U.NAME LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="condition == 'phone'">
+			AND U.PHONE LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		LIMIT #{pageStart}, #{perPageNum};
+	</select>
+	
+	<select id="getMemberListCount" resultType="int">
+		SELECT
+			COUNT(
+				IFNULL((
+					SELECT
+						IL.VISABLE
+					FROM
+						INVITATION_LIST IL
+					WHERE
+						IL.ID = U.ID
+						AND NOW() <![CDATA[>=]]> IL.DATE_BEGIN
+						AND NOW() <![CDATA[<=]]> IL.DATE_END)
+				, 'X')
+			)
+		FROM
+			USERES U
+		WHERE
+			U.DELETEFLAG <![CDATA[<>]]> 'Y'
+		<if test="condition == 'id'">
+			AND U.ID LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="condition == 'name'">
+			AND U.NAME LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="condition == 'phone'">
+		</if>
+			AND U.PHONE LIKE CONCAT('%', #{keyword}, '%')
+		;
+	</select>
+</mapper>
+```
+
+- 검색 조건으로 사용할 정보 파라미터로 넘겨주기
+```java
+// UserMemberDAOMybatis.java
+
+	// ~~~
+	private SqlSessionTemplate mybatis;
+	
+	public List<UserMemberListVO> getMemberList(Criteria cri, String condition, String keyword) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("pageStart",  cri.getPageStart());
+		param.put("perPageNum", cri.getPerPageNum());
+		param.put("condition", condition);
+		param.put("keyword", keyword);
+		
+		return mybatis.selectList("MemberUserDAO.getMemberList", param);
+	}
+	
+	public int getMemberListCount(String condition, String keyword) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("condition", condition);
+		param.put("keyword", keyword);
+		
+		return mybatis.selectOne("MemberUserDAO.getMemberListCount", param);
+	}
+}
+```
+
+```java
+// UserMemberService.java
+
+// ~~~
+public interface UserMemberService {
+
+	List<UserMemberListVO> getMemberList(Criteria cri, String condition, String keyword);
+	
+	int getMemberListCount(String condition, String keyword);
+}
+```
+
+```java
+// UserMemberServiceImpl.java
+
+	// ~~~
+	@Override
+	public List<UserMemberListVO> getMemberList(Criteria cri, String condition, String keyword) {
+		return userMemberDAO.getMemberList(cri, condition, keyword);
+	}
+
+	@Override
+	public int getMemberListCount(String condition, String keyword) {
+		return userMemberDAO.getMemberListCount(condition, keyword);
+	}
+}
+```
+
+```java
+// MemberController.java
+
+	// ~~~
+	@RequestMapping(value="/getMemberList", method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getMemberList(Criteria cri,
+			@RequestParam(value="searchCondition", defaultValue="", required=false) String condition,
+			@RequestParam(value="searchKeyword", defaultValue="", required=false) String keyword
+			) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		List<UserMemberListVO> resUserMemberList = null;
+		PageMaker resPageMaker = null;
+		
+		LOGGER.info("getMemberList");
+		try {
+			List<UserMemberListVO> userMemberList = userMemberService.getMemberList(cri, condition, keyword);
+			
+			PageMaker pageMaker = new PageMaker();
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(userMemberService.getMemberListCount(condition, keyword));
+			
+			resFlag = true;
+			resUserMemberList = userMemberList;
+			resPageMaker = pageMaker;
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "회원 목록 조회에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("list", resUserMemberList);
+			result.put("pageMaker", resPageMaker);
+		}
+		
+		return result;
+	}
+}
+```
+
+- postman으로 기능 테스트
+  - `http://localhost:8080/admin/member/getMemberList?searchCondition=phone&searchKeyword=3333`
+  - 결과값 : 
+```json
+{
+    "resFlag": true,
+    "resMessage": "",
+    "list": [
+        {
+            "id": "test1",
+            "name": "일유저",
+            "phone": "01022223333",
+            "statusSee": "X"
+        },
+        {
+            "id": "test2",
+            "name": "이유저",
+            "phone": "01033334444",
+            "statusSee": "N"
+        }
+    ],
+    "pageMaker": {
+        "totalCount": 2,
+        "displayPageNum": 3,
+        "startPage": 1,
+        "endPage": 1,
+        "prev": false,
+        "next": false,
+        "cri": {
+            "page": 1,
+            "perPageNum": 5,
+            "pageStart": 0
+        }
+    }
+}
+```

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.invitation.biz.common.paging.Criteria;
 import com.invitation.biz.member.user.UserMemberListVO;
 import com.invitation.biz.member.user.UserMemberService;
 
@@ -15,7 +16,12 @@ public class UserMemberServiceImpl implements UserMemberService {
 	private UserMemberDAOMybatis userMemberDAO;
 	
 	@Override
-	public List<UserMemberListVO> getMemberList() {
-		return userMemberDAO.getMemberList();
+	public List<UserMemberListVO> getMemberList(Criteria cri, String condition, String keyword) {
+		return userMemberDAO.getMemberList(cri, condition, keyword);
+	}
+
+	@Override
+	public int getMemberListCount(String condition, String keyword) {
+		return userMemberDAO.getMemberListCount(condition, keyword);
 	}
 }

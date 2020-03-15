@@ -4,25 +4,65 @@
 
 <mapper namespace="MemberUserDAO">
 	<select id="getMemberList" resultType="userMemberList">
-		<![CDATA[
-			SELECT
-				U.ID, U.NAME, U.PHONE, (
-					IFNULL((
-						SELECT
-							IL.VISABLE
-						FROM
-							INVITATION_LIST IL
-						WHERE
-							IL.ID = U.ID
-							AND NOW() >= DATE_BEGIN
-							AND NOW() <= DATE_END)
-					, 'X')
-				) AS STATUSSEE
-			FROM
-				USERES U
-			WHERE
-				U.DELETEFLAG <> 'Y'
-			;
-		]]>
+		SELECT
+			U.ID
+			, U.NAME
+			, U.PHONE
+			, (
+				IFNULL((
+					SELECT
+						IL.VISABLE
+					FROM
+						INVITATION_LIST IL
+					WHERE
+						IL.ID = U.ID
+						AND NOW() <![CDATA[>=]]> IL.DATE_BEGIN
+						AND NOW() <![CDATA[<=]]> IL.DATE_END)
+				, 'X')
+			) AS STATUSSEE
+		FROM
+			USERES U
+		WHERE
+			U.DELETEFLAG <![CDATA[<>]]> 'Y'
+		<if test="condition == 'id'">
+			AND U.ID LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="condition == 'name'">
+			AND U.NAME LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="condition == 'phone'">
+			AND U.PHONE LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		LIMIT #{pageStart}, #{perPageNum};
+	</select>
+	
+	<select id="getMemberListCount" resultType="int">
+		SELECT
+			COUNT(
+				IFNULL((
+					SELECT
+						IL.VISABLE
+					FROM
+						INVITATION_LIST IL
+					WHERE
+						IL.ID = U.ID
+						AND NOW() <![CDATA[>=]]> IL.DATE_BEGIN
+						AND NOW() <![CDATA[<=]]> IL.DATE_END)
+				, 'X')
+			)
+		FROM
+			USERES U
+		WHERE
+			U.DELETEFLAG <![CDATA[<>]]> 'Y'
+		<if test="condition == 'id'">
+			AND U.ID LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="condition == 'name'">
+			AND U.NAME LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="condition == 'phone'">
+		</if>
+			AND U.PHONE LIKE CONCAT('%', #{keyword}, '%')
+		;
 	</select>
 </mapper>

@@ -7,12 +7,22 @@ console.log("########## memberList.js ##########");
 $(function(){
 	setActiveSidebar();
 	
-	getMemberList();
+	getMemberList(1);
 });
 
-function getMemberList() {
+function getMemberList(pageItem) {
+	var requestParam = {
+			page : pageItem,
+			condition : "",
+			keyword : $("#inputKeyword").val().trim()
+	};
+	
+	if(requestParam.keyword != "") {
+		requestParam.condition = $("#selectCondition").val();
+	}
+	
 	$.ajax({
-		url : "/admin/member/getMemberList",
+		url : "/admin/member/getMemberList?" + $.param(requestParam),
 		type : "GET",
 		error : function(xhr, status, msg) {
 			alert("status : " + status + "\nHttp error msg : " + msg);
@@ -30,6 +40,7 @@ function renderMemberList(data) {
 	// 페이징 처리 구현
 		// elementId, total, data, columnDefs... 을 파라미터로 넘기고 나머진 유틸 기본값으로
 	// 검색 기능 구현
+		// 검색란이 ""면 조건도 ""해서 걍 ㄱ / 입력된게 있으면 조건 같이 ㄱ
 	// 오름/내림차순 정렬 할 수 있게도 해야하고
 	// 공통으로 할 수 있게 유틸로 빼고
 	$("#tableMemberList").DataTable({
