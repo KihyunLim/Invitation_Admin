@@ -58,6 +58,8 @@
 							</div>
 							<!-- /.card-header -->
 							<div class="card-body">
+								<!-- iframe으로 여기만 따로 잡아주는 것두?? -->
+							
 								<table id="tableMemberList" class="table table-bordered table-hover dataTable">
 									<thead>
 										<tr>
@@ -72,13 +74,17 @@
 								</table>
 								
 								<div class="row">
-									<div class="col-md-12" style="text-align:center;">
+									<div class="col-md-12" id="divPagingWrap" style="text-align:center;">
 										<ul class="pagination" style="display:inline-flex;">
 											<li class="paginate_button page-item first disabled" id="tableMemberList_first">
 												<a href="#" aria-controls="tableMemberList" aria-label="First" data-dt-idx="0" tabindex="0" class="page-link">«</a>
 											</li>
 											<li class="paginate_button page-item previous disabled" id="tableMemberList_previous">
 												<a href="#" aria-controls="tableMemberList" aria-label="Previous" data-dt-idx="1" tabindex="0" class="page-link">‹</a>
+											</li>
+											
+											<li class="paginate_button page-item" id="liRecord" style="display:none">
+												<a href="#" aria-controls="tableMemberList" data-dt-idx="2" tabindex="0" class="page-link">1</a>
 											</li>
 											
 											<!-- 이거로 반복 돌리고 제어ㄱㄱ -->
