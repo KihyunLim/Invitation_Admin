@@ -61,83 +61,133 @@ function utilDataTable(targetId, addOption, total) {
 	$("#" + targetId).DataTable(option);
 };
 
-function utilDataTablePaging($target, pageMaker) {
+function utilDataTablePaging(idTarget, idDataTable, pageMaker) {
 	// 클론해서 쓰는 걸로
-	if($target == undefined) {
-		console.warn("utilDataTable >>>>> $target");
+	if(idTarget == undefined) {
+		console.warn("utilDataTable >>>>> idTarget");
+		return;
+	} else if(idDataTable == undefined) {
+		console.warn("utilDataTable >>>>> idDataTable");
 		return;
 	} else if(pageMaker == undefined || typeof pageMaker != "object") {
 		console.warn("utilDataTable >>>>> pageMaker");
 		return;
 	}
 	
-	var liFirstPrevious = [
-		{
-			"class" : "paginate_button page-item first disabled",
-			"id" : "tableMemberList_first",
-			"child_a" : {
-				"href" : "#",
-				"aria-controls" : "tableMemberList",
-				"aria-label" : "First",
-				"data-dt-idx" : "0",
-				"class" : "page-link"
+	var $idTarget = $("#" + idTarget),
+		pageList = [], 
+		liPage = [],
+		liFirstPrevious = [
+			{
+				"class" : "paginate_button page-item first disabled",
+				"id" : idDataTable + "_first",
+				"child_a" : {
+					"href" : "#",
+					"aria-controls" : idDataTable,
+					"aria-label" : "First",
+					"data-dt-idx" : "",
+					"class" : "page-link",
+					"tabindex" : "1",
+					"text" : "<<"
+				}
+			},
+			{
+				"class" : "paginate_button page-item previous disabled",
+				"id" : idDataTable + "_previous",
+				"child_a" : {
+					"href" : "#",
+					"aria-controls" : idDataTable,
+					"aria-label" : "First",
+					"data-dt-idx" : "",
+					"class" : "page-link",
+					"tabindex" : pageMaker.startPage - 1,
+					"text" : "<"
+				}
 			}
-		},
-		{
-			"class" : "paginate_button page-item previous disabled",
-			"id" : "tableMemberList_previous",
-			"child_a" : {
-				"href" : "#",
-				"aria-controls" : "tableMemberList",
-				"aria-label" : "First",
-				"data-dt-idx" : "1",
-				"class" : "page-link"
+		], liNextLast = [
+			{
+				"class" : "paginate_button page-item next disabled",
+				"id" : idDataTable + "_next",
+				"child_a" : {
+					"href" : "#",
+					"aria-controls" : idDataTable,
+					"aria-label" : "First",
+					"data-dt-idx" : "",
+					"class" : "page-link",
+					"tabindex" : pageMaker.endPage + 1,
+					"text" : ">"
+				}
+			},
+			{
+				"class" : "paginate_button page-item last disabled",
+				"id" : idDataTable + "_last",
+				"child_a" : {
+					"href" : "#",
+					"aria-controls" : idDataTable,
+					"aria-label" : "First",
+					"data-dt-idx" : "",
+					"class" : "page-link",
+					"tabindex" : Math.ceil(pageMaker.totalCount/pageMaker.cri.perPageNum),
+					"text" : ">>"
+				}
 			}
-		}
-	], liPage = [
-		{
-			"class" : "paginate_button page-item active",
+		];
+	
+	for(var index1 = pageMaker.startPage ; index1<= pageMaker.endPage ; index1++) {
+		var active = pageMaker.cri.page == index1 ? " active" : "";
+		
+		liPage.push({
+			"class" : "paginate_button page-item" + active,
 			"id" : "",
 			"child_a" : {
 				"href" : "#",
-				"aria-controls" : "tableMemberList",
+				"aria-controls" : idDataTable,
 				"aria-label" : "",
-				"data-dt-idx" : "4",
-				"class" : "page-link"
+				"data-dt-idx" : index1,
+				"class" : "page-link",
+				"tabindex" : index1,
+				"text" : index1
 			}
-		}
-	], liNextLast = [
-		{
-			"class" : "paginate_button page-item next disabled",
-			"id" : "tableMemberList_next",
-			"child_a" : {
-				"href" : "#",
-				"aria-controls" : "tableMemberList",
-				"aria-label" : "First",
-				"data-dt-idx" : "2",
-				"class" : "page-link"
-			}
-		},
-		{
-			"class" : "paginate_button page-item last disabled",
-			"id" : "tableMemberList_last",
-			"child_a" : {
-				"href" : "#",
-				"aria-controls" : "tableMemberList",
-				"aria-label" : "First",
-				"data-dt-idx" : "3",
-				"class" : "page-link"
-			}
-		}
-	];
+		});
+	}
 	
-	/**
-	 * 페이지 부분 반복문 돌리면서 클론한거에 위에 데이터 넣어주고 콘캣으로 배열 합해서 페이징 랜더
-	 */
-//	test = new Array;
-//	test1 = [1, 2];
-//	test2 = [3, 4];
-//	test3 = [5, 6];
-//
-//	test = test1.concat(test2, test3);
+	$idTarget.find("li:first").siblings().remove();
+	$idTarget.find("li:first").show();
+	
+	pageList = liFirstPrevious.concat(liPage, liNextLast);
+	pageList.forEach(function(item){
+		var $liPage = $("#liRecord").clone();
+		
+		$liPage.attr({
+			"class" : item["class"],
+			"id" : item["id"]
+		}).find("a").attr({
+			"href" : item["child_a"]["href"],
+			"aria-controls" : item["child_a"]["aria-controls"],
+			"aria-label" : item["child_a"]["aria-label"],
+			"data-dt-idx" : item["child_a"]["data-dt-idx"],
+			"tabindex" : item["child_a"]["tabindex"],
+			"class" : item["child_a"]["class"]
+		}).text(item["child_a"]["text"]);
+		
+		$idTarget.find("ul").append($liPage);
+	});
+	
+	$idTarget.find("li:first").hide();
+	
+	if(pageMaker.prev) {
+		$idTarget.find(".first").removeClass("disabled");
+		$idTarget.find(".previous").removeClass("disabled");
+	} else {
+		$idTarget.find(".first").addClass("disabled");
+		$idTarget.find(".previous").addClass("disabled");
+	}
+	
+	if(pageMaker.next) {
+		$idTarget.find(".next").removeClass("disabled");
+		$idTarget.find(".last").removeClass("disabled");
+	} else {
+		$idTarget.find(".next").addClass("disabled");
+		$idTarget.find(".last").addClass("disabled");
+	}
 };

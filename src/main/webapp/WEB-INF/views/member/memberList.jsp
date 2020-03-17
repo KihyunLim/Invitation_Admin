@@ -76,39 +76,8 @@
 								<div class="row">
 									<div class="col-md-12" id="divPagingWrap" style="text-align:center;">
 										<ul class="pagination" style="display:inline-flex;">
-											<li class="paginate_button page-item first disabled" id="tableMemberList_first">
-												<a href="#" aria-controls="tableMemberList" aria-label="First" data-dt-idx="0" tabindex="0" class="page-link">«</a>
-											</li>
-											<li class="paginate_button page-item previous disabled" id="tableMemberList_previous">
-												<a href="#" aria-controls="tableMemberList" aria-label="Previous" data-dt-idx="1" tabindex="0" class="page-link">‹</a>
-											</li>
-											
 											<li class="paginate_button page-item" id="liRecord" style="display:none">
-												<a href="#" aria-controls="tableMemberList" data-dt-idx="2" tabindex="0" class="page-link">1</a>
-											</li>
-											
-											<!-- 이거로 반복 돌리고 제어ㄱㄱ -->
-											<li class="paginate_button page-item active">
-												<a href="#" aria-controls="tableMemberList" data-dt-idx="2" tabindex="0" class="page-link">1</a>
-											</li>
-											<li class="paginate_button page-item">
-												<a href="#" aria-controls="tableMemberList" data-dt-idx="3" tabindex="0" class="page-link">2</a>
-											</li>
-											<li class="paginate_button page-item">
-												<a href="#" aria-controls="tableMemberList" data-dt-idx="4" tabindex="0" class="page-link">3</a>
-											</li>
-											<li class="paginate_button page-item">
-												<a href="#" aria-controls="tableMemberList" data-dt-idx="5" tabindex="0" class="page-link">4</a>
-											</li>
-											<li class="paginate_button page-item">
-												<a href="#" aria-controls="tableMemberList" data-dt-idx="6" tabindex="0" class="page-link">5</a>
-											</li>
-											
-											<li class="paginate_button page-item next disabled" id="tableMemberList_next">
-												<a href="#" aria-controls="tableMemberList" aria-label="Next" data-dt-idx="7" tabindex="0" class="page-link">›</a>
-											</li>
-											<li class="paginate_button page-item last disabled" id="tableMemberList_last">
-												<a href="#" aria-controls="tableMemberList" aria-label="Last" data-dt-idx="8" tabindex="0" class="page-link">»</a>
+												<a href="#" aria-controls="" data-dt-idx="" tabindex="" class="page-link"></a>
 											</li>
 										</ul>
 									</div>
