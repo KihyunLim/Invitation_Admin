@@ -8,17 +8,23 @@ $(function(){
 	setActiveSidebar();
 	
 	getMemberList(1);
+	
+	$("#btnSearch").on("click", function(){
+		DATATABLE.destroy();
+		
+		getMemberList(1);
+	});
 });
 
 function getMemberList(pageItem) {
 	var requestParam = {
 			page : pageItem,
-			condition : "",
-			keyword : $("#inputKeyword").val().trim()
+			searchCondition : "",
+			searchKeyword : $("#inputKeyword").val().trim()
 	};
 	
-	if(requestParam.keyword != "") {
-		requestParam.condition = $("#selectCondition").val();
+	if(requestParam.searchKeyword != "") {
+		requestParam.searchCondition = $("#selectCondition").val();
 	}
 	
 	$.ajax({

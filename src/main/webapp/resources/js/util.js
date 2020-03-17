@@ -44,13 +44,13 @@ function utilDataTable(targetId, addOption, total) {
 	
 	option = $.extend(true, option, addOption);
 	
-	if(total != undefined || typeof total != "number") {
+	if(total == undefined || typeof total != "number") {
 		console.warn("utilDataTable >>>>> total");
 		return;
-	} else if(!(option.data instanceof "Array")) {
+	} else if(!(Array.isArray(option.data))) {
 		console.warn("utilDataTable >>>>> data");
 		return;
-	} else if(!(option.columnDefs instanceof "Array") && option.columnDefs.length < 1) {
+	} else if(!(Array.isArray(option.columnDefs)) && option.columnDefs.length < 1) {
 		console.warn("utilDataTable >>>>> columnDefs");
 		return;
 	} else if(targetId == undefined || document.getElementById(targetId) == null) {
@@ -58,7 +58,7 @@ function utilDataTable(targetId, addOption, total) {
 		return;
 	}
 	
-	$("#" + targetId).DataTable(option);
+	DATATABLE = $("#" + targetId).DataTable(option);
 };
 
 function utilDataTablePaging(idTarget, idDataTable, pageMaker) {

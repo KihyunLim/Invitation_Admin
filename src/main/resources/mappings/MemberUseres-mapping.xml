@@ -38,18 +38,7 @@
 	
 	<select id="getMemberListCount" resultType="int">
 		SELECT
-			COUNT(
-				IFNULL((
-					SELECT
-						IL.VISABLE
-					FROM
-						INVITATION_LIST IL
-					WHERE
-						IL.ID = U.ID
-						AND NOW() <![CDATA[>=]]> IL.DATE_BEGIN
-						AND NOW() <![CDATA[<=]]> IL.DATE_END)
-				, 'X')
-			)
+			COUNT(U.ID)
 		FROM
 			USERES U
 		WHERE
@@ -61,8 +50,8 @@
 			AND U.NAME LIKE CONCAT('%', #{keyword}, '%')
 		</if>
 		<if test="condition == 'phone'">
-		</if>
 			AND U.PHONE LIKE CONCAT('%', #{keyword}, '%')
+		</if>
 		;
 	</select>
 </mapper>

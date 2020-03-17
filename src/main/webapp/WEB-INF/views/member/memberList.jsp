@@ -51,7 +51,7 @@
 												<option value="phone">핸드폰</option>
 											</select>
 											<input type="text" id="inputKeyword" />
-											<button type="button" class="btn btn-default">검색</button>
+											<button type="button" class="btn btn-default" id="btnSearch">검색</button>
 										</div>
 									</div>
 								</div>
