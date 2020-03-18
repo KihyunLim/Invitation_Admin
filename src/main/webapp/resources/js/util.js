@@ -33,6 +33,7 @@ function utilDataTable(targetId, addOption, total) {
 		searching : false,
 		ordering : false,
 		autoWidth : false,
+		language : {emptyTable : "조회 결과가 없습니다."},
 		paging : false,
 	    info : true,
 	    infoCallback : function(settings, start, end, max, total, pre) {
@@ -58,7 +59,11 @@ function utilDataTable(targetId, addOption, total) {
 		return;
 	}
 	
-	DATATABLE = $("#" + targetId).DataTable(option);
+	$("#" + targetId).DataTable(option);
+};
+
+function utilDataTableDestroy(targetId) {
+	$("#" + targetId).DataTable().destroy();
 };
 
 function utilDataTablePaging(idTarget, idDataTable, pageMaker) {

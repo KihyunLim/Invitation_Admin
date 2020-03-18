@@ -18,5 +18,3 @@ var MAP_SIDEBAR = {
 		"invitationAdd.do" : "aInvitation_Add"
 	}
 };
-
-var DATATABLE = undefined;

@@ -10,8 +10,7 @@ $(function(){
 	getMemberList(1);
 	
 	$("#btnSearch").on("click", function(){
-		DATATABLE.destroy();
-		
+		utilDataTableDestroy("tableMemberList");
 		getMemberList(1);
 	});
 });
