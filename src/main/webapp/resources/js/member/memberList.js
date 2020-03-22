@@ -14,6 +14,19 @@ $(function(){
 		getMemberList(1);
 	});
 	
+	$("#modal-memberModify").on("show.bs.modal", function (e) {
+		//
+	});
+	$("#tableMemberList").on("dblclick", "tr", function(){
+		/**
+		 * 테이블 렌더할 때 데이터 속성으로 아이디 저장하고
+		 * 더블클릭하면 아이디 읽어와서 전역 변수에 저장하고
+		 * 팝업창 열리면 저장된 아이디로 회원 정보 조회 하도록 ㄱ
+		 */
+		
+		$("#modal-memberModify").modal("show");
+	});
+	
 	$("#divPagingWrap").on("click", ".aPaging", function(e){
 		e.preventDefault();
 		var $this = $(this),
@@ -23,7 +36,6 @@ $(function(){
 			tabindex = $this.parent().prev().find(".aPaging").attr("tabindex");
 		}
 		
-		console.log(tabindex);
 		utilDataTableDestroy("tableMemberList");
 		getMemberList(Number(tabindex));
 	});
@@ -49,7 +61,6 @@ function getMemberList(pageItem) {
 		success : function(result) {
 			console.log(result);
 			
-			// 회원 선택 시 수정 팝업 띄우는 이벤트 추가 필요 (수정 시 필요한 정보는 어디서든 읽어 지겠지 아니면 data 태그라두)
 			var option = {
 				data : result.list,
 				columnDefs : [{
