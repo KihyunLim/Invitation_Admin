@@ -2591,6 +2591,7 @@ public class UserMemberServiceImpl implements UserMemberService {
 - 회원 관리 페이지 수정
   - dataTable.js의 selectbox 쓸려면 js, css 폴더 모두 포함 필요!!
 ```jsp
+<!--memberList.jsp -->
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
@@ -3130,4 +3131,415 @@ public interface UserMemberService {
         }
     }
 }
+```
+
+- 회원 관리 화면 수정
+  - 회원 추가, 삭제, 검색, 페이징 영역 추가
+```jsp
+<!-- memberList.jsp-->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<%@ include file="../include/adminlte3/head.jsp"%>
+	<!-- dataTable-select -->
+	<link rel="stylesheet" href="../adminlte3/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+	<link rel="stylesheet" href="../adminlte3/plugins/datatables-select/css/select.bootstrap4.css">
+	
+	<title>회원 관리</title>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<%@ include file="../include/adminlte3/navbar.jsp"%>
+		<%@ include file="../include/adminlte3/sidebar.jsp"%>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>회원 관리</h1>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-12">
+						<div class="card dataTables_wrapper">
+							<div class="card-header">
+								<!-- <h3 class="card-title">추가/삭제/검색 영역</h3> -->
+								<div class="row">
+									<div class="col-md-6">
+										<button type="button" class="btn btn-danger">삭제</button>
+										<button type="button" class="btn btn-primary">추가</button>
+									</div>
+									<div class="col-md-6">
+										<div class="dataTables_filter">
+											<select id="selectCondition">
+												<option value="id">아이디</option>
+												<option value="name">이름</option>
+												<option value="phone">핸드폰</option>
+											</select>
+											<input type="text" id="inputKeyword" />
+											<button type="button" class="btn btn-default" id="btnSearch">검색</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-12">
+										<table id="tableMemberList" class="table table-bordered table-hover dataTable">
+											<thead>
+												<tr>
+													<th style="width:5%;"></th>
+													<th style="width:25%;">아이디</th>
+													<th style="width:20%;">이름</th>
+													<th style="width:30%;">핸드폰</th>
+													<th style="width:20%;">게시상태</th>
+												</tr>
+											</thead>
+											<tbody></tbody>
+										</table>
+										
+										<!-- <iframe src="http://www.naver.com">
+											iframe를 지원하지 않는 브라우저입니다.
+										</iframe> -->
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12" id="divPagingWrap" style="text-align:center;">
+										<ul class="pagination" style="display:inline-flex;">
+											<li class="paginate_button page-item" id="liRecord" style="display:none">
+												<a href="#" aria-controls="" data-dt-idx="" tabindex="" class="page-link"></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<%@ include file="../include/adminlte3/footer.jsp"%>
+	</div>
+	<!-- ./wrapper -->
+
+	<%@ include file="../include/adminlte3/js.jsp"%>
+	<!-- DataTables -->
+	<script src="../adminlte3/plugins/datatables/jquery.dataTables.js"></script>
+	<script src="../adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+	<script src="../adminlte3/plugins/datatables-select/js/dataTables.select.js"></script>
+	
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/def.js"></script>
+	<script type="text/javascript" src="../js/member/memberList.js"></script>
+</body>
+</html>
+```
+
+- 회원 관리 화면 및 유틸 js 수정
+  - DataTable, Paging 관련 함수 공통함수로 작성
+```js
+// util.js
+
+function utilGoToMain() {
+	// ~~~
+};
+
+function utilDataTable(targetId, addOption, total) {
+	var option = {
+		lengthChange : false,
+		searching : false,
+		ordering : false,
+		autoWidth : false,
+		language : {emptyTable : "조회 결과가 없습니다."},
+		paging : false,
+	    info : true,
+	    infoCallback : function(settings, start, end, max, total_, pre) {
+	    	return "총 겸색 결과 : " + total;
+	    },
+		data : [],
+		columnDefs : []	
+	};
+	
+	option = $.extend(true, option, addOption);
+	
+	if(total == undefined || typeof total != "number") {
+		console.warn("utilDataTable >>>>> total");
+		return;
+	} else if(!(Array.isArray(option.data))) {
+		console.warn("utilDataTable >>>>> data");
+		return;
+	} else if(!(Array.isArray(option.columnDefs)) && option.columnDefs.length < 1) {
+		console.warn("utilDataTable >>>>> columnDefs");
+		return;
+	} else if(targetId == undefined || document.getElementById(targetId) == null) {
+		console.warn("utilDataTable >>>>> targetId");
+		return;
+	}
+	
+	$("#" + targetId).DataTable(option);
+};
+
+function utilDataTableDestroy(targetId) {
+	$("#" + targetId).DataTable().destroy();
+};
+
+function utilDataTablePaging(idTarget, idDataTable, pageMaker) {
+	if(idTarget == undefined) {
+		console.warn("utilDataTable >>>>> idTarget");
+		return;
+	} else if(idDataTable == undefined) {
+		console.warn("utilDataTable >>>>> idDataTable");
+		return;
+	} else if(pageMaker == undefined || typeof pageMaker != "object") {
+		console.warn("utilDataTable >>>>> pageMaker");
+		return;
+	}
+	
+	var $idTarget = $("#" + idTarget),
+		pagePrevious = (pageMaker.startPage - 1) < 1 ? 1 : pageMaker.startPage - 1,
+		pageLast = Math.ceil(pageMaker.totalCount/pageMaker.cri.perPageNum),
+		pageNext = (pageMaker.endPage + 1) > pageLast ? pageLast : pageMaker.endPage + 1
+		pageList = [], 
+		liPage = [],
+		liFirstPrevious = [
+			{
+				"class" : "paginate_button page-item first disabled",
+				"child_a" : {
+					"href" : "#",
+					"aria-controls" : idDataTable,
+					"aria-label" : "First",
+					"data-dt-idx" : "first",
+					"class" : "page-link aPaging",
+					"tabindex" : "1",
+					"text" : "<<"
+				}
+			},
+			{
+				"class" : "paginate_button page-item previous disabled",
+				"child_a" : {
+					"href" : "#",
+					"aria-controls" : idDataTable,
+					"aria-label" : "Previous",
+					"data-dt-idx" : "previous",
+					"class" : "page-link aPaging",
+					"tabindex" : (pageMaker.startPage - 1) < 1 ? 1 : pageMaker.startPage - 1,
+					"text" : "<"
+				}
+			}
+		], liNextLast = [
+			{
+				"class" : "paginate_button page-item next disabled",
+				"child_a" : {
+					"href" : "#",
+					"aria-controls" : idDataTable,
+					"aria-label" : "Next",
+					"data-dt-idx" : "next",
+					"class" : "page-link aPaging",
+					"tabindex" : "",	// next버튼의 페이지는 유동적으로 해야함
+					"text" : ">"
+				}
+			},
+			{
+				"class" : "paginate_button page-item last disabled",
+				"child_a" : {
+					"href" : "#",
+					"aria-controls" : idDataTable,
+					"aria-label" : "Last",
+					"data-dt-idx" : "last",
+					"class" : "page-link aPaging",
+					"tabindex" : Math.ceil(pageMaker.totalCount/pageMaker.cri.perPageNum),
+					"text" : ">>"
+				}
+			}
+		];
+	
+	for(var index1 = pageMaker.startPage ; index1<= pageMaker.endPage ; index1++) {
+		var active = pageMaker.cri.page == index1 ? " active" : "";
+		
+		liPage.push({
+			"class" : "paginate_button page-item" + active,
+			"child_a" : {
+				"href" : "#",
+				"aria-controls" : idDataTable,
+				"aria-label" : "Page",
+				"data-dt-idx" : index1,
+				"class" : "page-link aPaging",
+				"tabindex" : index1,
+				"text" : index1
+			}
+		});
+	}
+	
+	$idTarget.find("li:first").siblings().remove();
+	$idTarget.find("li:first").show();
+	
+	pageList = liFirstPrevious.concat(liPage, liNextLast);
+	pageList.forEach(function(item){
+		var $liPage = $("#liRecord").clone();
+		
+		$liPage.attr({
+			"class" : item["class"],
+			"id" : item["id"]
+		}).find("a").attr({
+			"href" : item["child_a"]["href"],
+			"aria-controls" : item["child_a"]["aria-controls"],
+			"aria-label" : item["child_a"]["aria-label"],
+			"data-dt-idx" : item["child_a"]["data-dt-idx"],
+			"tabindex" : item["child_a"]["tabindex"],
+			"class" : item["child_a"]["class"]
+		}).text(item["child_a"]["text"]);
+		
+		$idTarget.find("ul").append($liPage);
+	});
+	
+	$idTarget.find("li:first").hide();
+	
+	if(pageMaker.prev) {
+		$idTarget.find(".first").removeClass("disabled");
+		$idTarget.find(".previous").removeClass("disabled");
+	} else {
+		if(pageMaker.cri.page == pageMaker.startPage) {
+			$idTarget.find(".first").addClass("disabled");
+			$idTarget.find(".previous").addClass("disabled");
+		} else {
+			$idTarget.find(".first").removeClass("disabled");
+			$idTarget.find(".previous").removeClass("disabled");
+		}
+	}
+	
+	if(pageMaker.next) {
+		$idTarget.find(".next").removeClass("disabled");
+		$idTarget.find(".last").removeClass("disabled");
+	} else {
+		if(pageMaker.cri.page == pageMaker.endPage) {
+			$idTarget.find(".next").addClass("disabled");
+			$idTarget.find(".last").addClass("disabled");
+		} else {
+			$idTarget.find(".next").removeClass("disabled");
+			$idTarget.find(".last").removeClass("disabled");
+		}
+	}
+};
+```
+
+```js
+// memberList.js
+
+/**
+ * 
+ */
+
+console.log("########## memberList.js ##########");
+
+$(function(){
+	setActiveSidebar();
+	
+	getMemberList(1);
+	
+	$("#btnSearch").on("click", function(){
+		utilDataTableDestroy("tableMemberList");
+		getMemberList(1);
+	});
+	
+	$("#divPagingWrap").on("click", ".aPaging", function(e){
+		e.preventDefault();
+		var $this = $(this),
+			tabindex = $this.attr("tabindex");
+		
+		if($this.data("dt-idx") == "next") {
+			tabindex = $this.parent().prev().find(".aPaging").attr("tabindex");
+		}
+		
+		console.log(tabindex);
+		utilDataTableDestroy("tableMemberList");
+		getMemberList(Number(tabindex));
+	});
+});
+
+function getMemberList(pageItem) {
+	var requestParam = {
+			page : pageItem,
+			searchCondition : "",
+			searchKeyword : $("#inputKeyword").val().trim()
+	};
+	
+	if(requestParam.searchKeyword != "") {
+		requestParam.searchCondition = $("#selectCondition").val();
+	}
+	
+	$.ajax({
+		url : "/admin/member/getMemberList?" + $.param(requestParam),
+		type : "GET",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			// 회원 선택 시 수정 팝업 띄우는 이벤트 추가 필요 (수정 시 필요한 정보는 어디서든 읽어 지겠지 아니면 data 태그라두)
+			var option = {
+				data : result.list,
+				columnDefs : [{
+					targets : 0,
+					defaultContent : '',
+					data : null,
+					className : 'select-checkbox'
+				}, {
+					targets : 1,
+					data : 'id'
+				}, {
+					targets : 2,
+					data : 'name'
+				}, {
+					targets : 3,
+					data : 'phone'
+				}, {
+					targets : 4,
+					data : function(row, type, val, meta) {
+						var statusSee = '';
+						
+						if(row.statusSee == 'Y') {
+							statusSee = '게시';
+						} else if(row.statusSee == 'N') {
+							statusSee = '비게시'; 
+						} else {
+							statusSee = '-';
+						}
+						
+						return statusSee;
+					}
+				}],
+				select : {
+					style : 'os',
+					selector : 'td:first-child'
+				}
+			};
+			
+			utilDataTable("tableMemberList", option, result.pageMaker.totalCount);
+			utilDataTablePaging("divPagingWrap", "tableMemberList", result.pageMaker);
+		}
+	});
+};
 ```

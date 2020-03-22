@@ -36,7 +36,7 @@ function utilDataTable(targetId, addOption, total) {
 		language : {emptyTable : "조회 결과가 없습니다."},
 		paging : false,
 	    info : true,
-	    infoCallback : function(settings, start, end, max, total, pre) {
+	    infoCallback : function(settings, start, end, max, total_, pre) {
 	    	return "총 겸색 결과 : " + total;
 	    },
 		data : [],
@@ -67,7 +67,6 @@ function utilDataTableDestroy(targetId) {
 };
 
 function utilDataTablePaging(idTarget, idDataTable, pageMaker) {
-	// 클론해서 쓰는 걸로
 	if(idTarget == undefined) {
 		console.warn("utilDataTable >>>>> idTarget");
 		return;
@@ -80,58 +79,57 @@ function utilDataTablePaging(idTarget, idDataTable, pageMaker) {
 	}
 	
 	var $idTarget = $("#" + idTarget),
+		pagePrevious = (pageMaker.startPage - 1) < 1 ? 1 : pageMaker.startPage - 1,
+		pageLast = Math.ceil(pageMaker.totalCount/pageMaker.cri.perPageNum),
+		pageNext = (pageMaker.endPage + 1) > pageLast ? pageLast : pageMaker.endPage + 1
 		pageList = [], 
 		liPage = [],
 		liFirstPrevious = [
 			{
 				"class" : "paginate_button page-item first disabled",
-				"id" : idDataTable + "_first",
 				"child_a" : {
 					"href" : "#",
 					"aria-controls" : idDataTable,
 					"aria-label" : "First",
-					"data-dt-idx" : "",
-					"class" : "page-link",
+					"data-dt-idx" : "first",
+					"class" : "page-link aPaging",
 					"tabindex" : "1",
 					"text" : "<<"
 				}
 			},
 			{
 				"class" : "paginate_button page-item previous disabled",
-				"id" : idDataTable + "_previous",
 				"child_a" : {
 					"href" : "#",
 					"aria-controls" : idDataTable,
-					"aria-label" : "First",
-					"data-dt-idx" : "",
-					"class" : "page-link",
-					"tabindex" : pageMaker.startPage - 1,
+					"aria-label" : "Previous",
+					"data-dt-idx" : "previous",
+					"class" : "page-link aPaging",
+					"tabindex" : (pageMaker.startPage - 1) < 1 ? 1 : pageMaker.startPage - 1,
 					"text" : "<"
 				}
 			}
 		], liNextLast = [
 			{
 				"class" : "paginate_button page-item next disabled",
-				"id" : idDataTable + "_next",
 				"child_a" : {
 					"href" : "#",
 					"aria-controls" : idDataTable,
-					"aria-label" : "First",
-					"data-dt-idx" : "",
-					"class" : "page-link",
-					"tabindex" : pageMaker.endPage + 1,
+					"aria-label" : "Next",
+					"data-dt-idx" : "next",
+					"class" : "page-link aPaging",
+					"tabindex" : "",	// next버튼의 페이지는 유동적으로 해야함
 					"text" : ">"
 				}
 			},
 			{
 				"class" : "paginate_button page-item last disabled",
-				"id" : idDataTable + "_last",
 				"child_a" : {
 					"href" : "#",
 					"aria-controls" : idDataTable,
-					"aria-label" : "First",
-					"data-dt-idx" : "",
-					"class" : "page-link",
+					"aria-label" : "Last",
+					"data-dt-idx" : "last",
+					"class" : "page-link aPaging",
 					"tabindex" : Math.ceil(pageMaker.totalCount/pageMaker.cri.perPageNum),
 					"text" : ">>"
 				}
@@ -143,13 +141,12 @@ function utilDataTablePaging(idTarget, idDataTable, pageMaker) {
 		
 		liPage.push({
 			"class" : "paginate_button page-item" + active,
-			"id" : "",
 			"child_a" : {
 				"href" : "#",
 				"aria-controls" : idDataTable,
-				"aria-label" : "",
+				"aria-label" : "Page",
 				"data-dt-idx" : index1,
-				"class" : "page-link",
+				"class" : "page-link aPaging",
 				"tabindex" : index1,
 				"text" : index1
 			}
@@ -184,15 +181,25 @@ function utilDataTablePaging(idTarget, idDataTable, pageMaker) {
 		$idTarget.find(".first").removeClass("disabled");
 		$idTarget.find(".previous").removeClass("disabled");
 	} else {
-		$idTarget.find(".first").addClass("disabled");
-		$idTarget.find(".previous").addClass("disabled");
+		if(pageMaker.cri.page == pageMaker.startPage) {
+			$idTarget.find(".first").addClass("disabled");
+			$idTarget.find(".previous").addClass("disabled");
+		} else {
+			$idTarget.find(".first").removeClass("disabled");
+			$idTarget.find(".previous").removeClass("disabled");
+		}
 	}
 	
 	if(pageMaker.next) {
 		$idTarget.find(".next").removeClass("disabled");
 		$idTarget.find(".last").removeClass("disabled");
 	} else {
-		$idTarget.find(".next").addClass("disabled");
-		$idTarget.find(".last").addClass("disabled");
+		if(pageMaker.cri.page == pageMaker.endPage) {
+			$idTarget.find(".next").addClass("disabled");
+			$idTarget.find(".last").addClass("disabled");
+		} else {
+			$idTarget.find(".next").removeClass("disabled");
+			$idTarget.find(".last").removeClass("disabled");
+		}
 	}
 };

@@ -58,21 +58,22 @@
 							</div>
 							<!-- /.card-header -->
 							<div class="card-body">
-								<!-- iframe으로 여기만 따로 잡아주는 것두?? -->
-							
-								<table id="tableMemberList" class="table table-bordered table-hover dataTable">
-									<thead>
-										<tr>
-											<th style="width:5%;"></th>
-											<th style="width:25%;">아이디</th>
-											<th style="width:20%;">이름</th>
-											<th style="width:30%;">핸드폰</th>
-											<th style="width:20%;">게시상태</th>
-										</tr>
-									</thead>
-									<tbody></tbody>
-								</table>
-								
+								<div class="row">
+									<div class="col-md-12">
+										<table id="tableMemberList" class="table table-bordered table-hover dataTable">
+											<thead>
+												<tr>
+													<th style="width:5%;"></th>
+													<th style="width:25%;">아이디</th>
+													<th style="width:20%;">이름</th>
+													<th style="width:30%;">핸드폰</th>
+													<th style="width:20%;">게시상태</th>
+												</tr>
+											</thead>
+											<tbody></tbody>
+										</table>
+									</div>
+								</div>
 								<div class="row">
 									<div class="col-md-12" id="divPagingWrap" style="text-align:center;">
 										<ul class="pagination" style="display:inline-flex;">

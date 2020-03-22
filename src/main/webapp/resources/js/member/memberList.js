@@ -13,6 +13,20 @@ $(function(){
 		utilDataTableDestroy("tableMemberList");
 		getMemberList(1);
 	});
+	
+	$("#divPagingWrap").on("click", ".aPaging", function(e){
+		e.preventDefault();
+		var $this = $(this),
+			tabindex = $this.attr("tabindex");
+		
+		if($this.data("dt-idx") == "next") {
+			tabindex = $this.parent().prev().find(".aPaging").attr("tabindex");
+		}
+		
+		console.log(tabindex);
+		utilDataTableDestroy("tableMemberList");
+		getMemberList(Number(tabindex));
+	});
 });
 
 function getMemberList(pageItem) {
