@@ -4,6 +4,8 @@
 
 console.log("########## memberList.js ##########");
 
+var modifyId = "";
+
 $(function(){
 	setActiveSidebar();
 	
@@ -15,14 +17,18 @@ $(function(){
 	});
 	
 	$("#modal-memberModify").on("show.bs.modal", function (e) {
-		//
+		getMemberInfo();
+	});
+	$("#modal-memberModify").on("hide.bs.modal", function (e) {
+		modifyId = "";
 	});
 	$("#tableMemberList").on("dblclick", "tr", function(){
 		/**
-		 * 테이블 렌더할 때 데이터 속성으로 아이디 저장하고
-		 * 더블클릭하면 아이디 읽어와서 전역 변수에 저장하고
+		 * - 테이블 렌더할 때 데이터 속성으로 아이디 저장하고
+		 * - 더블클릭하면 아이디 읽어와서 전역 변수에 저장하고
 		 * 팝업창 열리면 저장된 아이디로 회원 정보 조회 하도록 ㄱ
 		 */
+		var modifyId = $(this).attr("id");
 		
 		$("#modal-memberModify").modal("show");
 	});
@@ -96,11 +102,29 @@ function getMemberList(pageItem) {
 				select : {
 					style : 'os',
 					selector : 'td:first-child'
+				},
+				rowId : function(row) {
+					return row.id;
 				}
 			};
 			
 			utilDataTable("tableMemberList", option, result.pageMaker.totalCount);
 			utilDataTablePaging("divPagingWrap", "tableMemberList", result.pageMaker);
+		}
+	});
+};
+
+function getMemberInfo() {
+	$.ajax({
+		url : "/admin/member/getMemberInfo?" + $.param({memberId : modifyId}),
+		type : "GET",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			
 		}
 	});
 };
