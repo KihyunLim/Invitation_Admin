@@ -16,19 +16,24 @@ $(function(){
 		getMemberList(1);
 	});
 	
+	$("#modal-memberRegister").on("hide.bs.modal", function(e){
+//		getMemberList(1);
+	})
+	$("#btnMemberRegister").on("click", function(){
+		$("#modal-memberRegister").modal("show");
+	});
+	
 	$("#modal-memberModify").on("show.bs.modal", function (e) {
-		getMemberInfo();
+//		getMemberInfo();
+		console.log(modifyId);
 	});
 	$("#modal-memberModify").on("hide.bs.modal", function (e) {
 		modifyId = "";
+		
+		console.log(modifyId);
 	});
 	$("#tableMemberList").on("dblclick", "tr", function(){
-		/**
-		 * - 테이블 렌더할 때 데이터 속성으로 아이디 저장하고
-		 * - 더블클릭하면 아이디 읽어와서 전역 변수에 저장하고
-		 * 팝업창 열리면 저장된 아이디로 회원 정보 조회 하도록 ㄱ
-		 */
-		var modifyId = $(this).attr("id");
+		modifyId = $(this).attr("id");
 		
 		$("#modal-memberModify").modal("show");
 	});

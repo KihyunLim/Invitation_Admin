@@ -41,7 +41,7 @@
 								<div class="row">
 									<div class="col-md-6">
 										<button type="button" class="btn btn-danger">삭제</button>
-										<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-memberRegister">추가</button>
+										<button type="button" class="btn btn-primary" id="btnMemberRegister" data-toggle="modal" data-target="#modal-memberRegister">추가</button>
 									</div>
 									<div class="col-md-6">
 										<div class="dataTables_filter">
@@ -96,17 +96,39 @@
 					<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h4 class="modal-title">추가</h4>
+								<h4 class="modal-title">회원 추가</h4>
 								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body">
-								<p>One fine body&hellip;</p>
+								<form role="form">
+									<div class="form-group">
+										<label>아이디</label> 
+									</div>
+									<div class="input-group mb-3">
+										<input type="text" class="form-control">
+										<span class="input-group-append">
+											<button type="button" class="btn btn-info btn-flat">중복확인</button>
+										</span>
+									</div>
+									<div class="form-group mb-3">
+										<label>비밀번호</label> 
+										<input type="text" class="form-control" id="">
+									</div>
+									<div class="form-group mb-3">
+										<label>이름</label> 
+										<input type="text" class="form-control" id="">
+									</div>
+									<div class="form-group mb-3">
+										<label>전화번호</label> 
+										<input type="text" class="form-control" id="">
+									</div>
+								</form>
 							</div>
 							<div class="modal-footer justify-content-between">
-								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary">Save changes</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+								<button type="button" class="btn btn-primary">추가</button>
 							</div>
 						</div>
 						<!-- /.modal-content -->
@@ -117,17 +139,42 @@
 					<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h4 class="modal-title">수정</h4>
+								<h4 class="modal-title">회원 상세 및 수정</h4>
 								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body">
-								<p>One fine body&hellip;</p>
+								<form role="form">
+									<div class="form-group mb-3">
+										<label>아이디</label> 
+										<input type="text" class="form-control" id="" disabled>
+									</div>
+									<div class="form-group mb-3">
+										<label>비밀번호</label> 
+										<input type="text" class="form-control" id="">
+									</div>
+									<div class="form-group mb-3">
+										<label>이름</label> 
+										<input type="text" class="form-control" id="">
+									</div>
+									<div class="form-group mb-3">
+										<label>전화번호</label> 
+										<input type="text" class="form-control" id="">
+									</div>
+									<div class="form-group mb-3">
+										<label>가입일</label> 
+										<input type="text" class="form-control" id="" disabled>
+									</div>
+									<div class="form-group mb-3">
+										<label>청첩장 게시일</label> 
+										<input type="text" class="form-control" id="" disabled>
+									</div>
+								</form>
 							</div>
 							<div class="modal-footer justify-content-between">
-								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary">Save changes</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+								<button type="button" class="btn btn-primary">수정</button>
 							</div>
 						</div>
 						<!-- /.modal-content -->
