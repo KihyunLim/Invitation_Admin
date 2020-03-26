@@ -54,4 +54,31 @@
 		</if>
 		;
 	</select>
+	
+	<select id="getOverlapCheck" resultType="int">
+		SELECT
+			COUNT(ID)
+		FROM
+			USERES
+		WHERE
+			ID = #{id}
+		;
+	</select>
+	
+	<insert id="registerMember">
+		INSERT INTO
+			USERES 
+		(
+			ID
+			, PASSWORD
+			, NAME
+			, PHONE
+		)
+		VALUES (
+			#{id}
+			, #{password}
+			, #{name}
+			, #{phone}
+		);
+	</insert>
 </mapper>

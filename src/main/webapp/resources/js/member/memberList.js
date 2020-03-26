@@ -5,6 +5,7 @@
 console.log("########## memberList.js ##########");
 
 var modifyId = "";
+var isOverlapCheck = false;
 
 $(function(){
 	setActiveSidebar();
@@ -16,11 +17,29 @@ $(function(){
 		getMemberList(1);
 	});
 	
+	$("#btnOverlapCheck").on("click", function(){
+		var id = $("#inputRegisterId").val();
+		
+		if(id == "") {
+			alert("ID를 입력해주세요.");
+		} else if(id.length > 20) {
+			alert("ID는 20자 이내로 입력해주세요.");
+		} else {
+			overlapCheck(id);
+		}
+	});
+	
 	$("#modal-memberRegister").on("hide.bs.modal", function(e){
-//		getMemberList(1);
+		getMemberList(1);
 	})
 	$("#btnMemberRegister").on("click", function(){
 		$("#modal-memberRegister").modal("show");
+	});
+	
+	$("#btnRegister").on("click", function() {
+		if(validateInfo()) {
+			registerMember();
+		}
 	});
 	
 	$("#modal-memberModify").on("show.bs.modal", function (e) {
@@ -119,6 +138,31 @@ function getMemberList(pageItem) {
 	});
 };
 
+function overlapCheck(id) {
+	$.ajax({
+		url : "/admin/member/getOverlapCheck?" + $.param({id : id}),
+		type : "GET",
+		error : function(xhr, status, msg) {
+			$("#btnRegister").prop("disabled", true);
+			isOverlapCheck = false;
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			if(result.resFlag) {
+				$("#btnRegister").prop("disabled", false);
+				isOverlapCheck = true;
+			} else {
+				$("#btnRegister").prop("disabled", true);
+				isOverlapCheck = false;
+			}
+			
+			alert(result.resMessage);
+		}
+	});
+};
+
 function getMemberInfo() {
 	$.ajax({
 		url : "/admin/member/getMemberInfo?" + $.param({memberId : modifyId}),
@@ -132,4 +176,60 @@ function getMemberInfo() {
 			
 		}
 	});
+};
+
+function validateInfo() {
+	if($("#inputRegisterId").val() == "") {
+		alert("아이디를 입력해주세요");
+		isOverlapCheck = false;
+		return false;
+	} else if(isOverlapChek == false) {
+		alert("아이디 중복확인을 해주세요");
+		return false;
+	} else if($("#inputRegisterPassword").val() == "") {
+		alert("비밀번호를 입력해주세요.");
+		return false;
+	} else if($("#inputRegisterName").val() == "") {
+		alert("이름을 입력해주세요");
+		return false;
+	} else if($("#inputRegisterPhone").val() == "") {
+		alert("전화번호를 입력해주세요.");
+		return false;
+	} else {
+		return true;
+	}
+};
+
+function registerMember() {
+	var data = {
+		id : $("#inputRegisterId").val(),
+		password : $("#inputRegisterPassword").val(),
+		name : $("#inputRegisterName").val(),
+		phone : $("#inputRegisterPhone").val()
+	};
+	
+	$.ajax({
+		url : "/admin/member/registerMember",
+		type : "POST",
+		dataType : "json",
+		data : JSON.stringify(data),
+		contentType : "application/json",
+		mimeType : "application/json",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			if(result.resFlag) {
+				isOverlapCheck = false;
+			} else {
+				isOverlapCheck = true;
+			}
+			
+			alert(result.resMessage);
+			
+			$("#modal-memberRegister").modal("hide");
+		}
+	})
 };

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.invitation.biz.common.paging.Criteria;
 import com.invitation.biz.member.user.UserMemberListVO;
+import com.invitation.biz.member.user.UserMemberVO;
 
 @Repository
 public class UserMemberDAOMybatis {
@@ -35,5 +36,13 @@ public class UserMemberDAOMybatis {
 		param.put("keyword", keyword);
 		
 		return mybatis.selectOne("MemberUserDAO.getMemberListCount", param);
+	}
+	
+	public int getOverlapCheck(String id) {
+		return mybatis.selectOne("MemberUserDAO.getOverlapCheck", id);
+	}
+	
+	public void registerMember(UserMemberVO vo) {
+		mybatis.insert("MemberUserDAO.registerMember", vo);
 	}
 }
