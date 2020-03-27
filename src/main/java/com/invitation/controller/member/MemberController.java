@@ -84,6 +84,7 @@ public class MemberController {
 	public Map<String, Object> getOverlapCheck(@RequestParam(value="id", required=true) String id) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Boolean resFlag = false;
+		String resOverlapCheckedId = "";
 		String resMessage = "";
 		int resOverlapCheck = 0;
 		
@@ -93,6 +94,7 @@ public class MemberController {
 			
 			if(resOverlapCheck == 0) {
 				resFlag = true;
+				resOverlapCheckedId = id;
 				resMessage = "사용 가능한 아이디입니다.";
 			} else {
 				resMessage = "사용중인 아이디입니다.";
@@ -105,6 +107,7 @@ public class MemberController {
 			resMessage = "아이디 중복확인에 실패했습니다.";
 		} finally {
 			result.put("resFlag", resFlag);
+			result.put("resOverlapCheckedId", resOverlapCheckedId);
 			result.put("resMessage",  resMessage);
 		}
 		

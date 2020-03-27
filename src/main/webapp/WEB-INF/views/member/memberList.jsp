@@ -107,28 +107,28 @@
 										<label>아이디</label> 
 									</div>
 									<div class="input-group mb-3">
-										<input type="text" class="form-control" id="inputRegisterId" maxlength="20">
+										<input type="text" class="form-control resetInput" id="inputRegisterId" maxlength="20">
 										<span class="input-group-append">
 											<button type="button" class="btn btn-info btn-flat" id="btnOverlapCheck">중복확인</button>
 										</span>
 									</div>
 									<div class="form-group mb-3">
 										<label>비밀번호</label> 
-										<input type="text" class="form-control" id="inputRegisterPassword" maxlength="20">
+										<input type="text" class="form-control resetInput" id="inputRegisterPassword" maxlength="20">
 									</div>
 									<div class="form-group mb-3">
 										<label>이름</label> 
-										<input type="text" class="form-control" id="inputRegisterName" maxlength="20">
+										<input type="text" class="form-control resetInput" id="inputRegisterName" maxlength="20">
 									</div>
 									<div class="form-group mb-3">
 										<label>전화번호</label> 
-										<input type="number" class="form-control" id="inputRegisterPhone" maxlength="11">
+										<input type="number" class="form-control resetInput" id="inputRegisterPhone" maxlength="11">
 									</div>
 								</form>
 							</div>
 							<div class="modal-footer justify-content-between">
 								<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-								<button type="button" class="btn btn-primary" id="btnRegister" disabled>추가</button>
+								<button type="button" class="btn btn-primary" id="btnRegister">추가</button>
 							</div>
 						</div>
 						<!-- /.modal-content -->
@@ -148,27 +148,27 @@
 								<form role="form">
 									<div class="form-group mb-3">
 										<label>아이디</label> 
-										<input type="text" class="form-control" id="" disabled>
+										<input type="text" class="form-control resetInput" id="" disabled>
 									</div>
 									<div class="form-group mb-3">
 										<label>비밀번호</label> 
-										<input type="text" class="form-control" id="">
+										<input type="text" class="form-control resetInput" id="">
 									</div>
 									<div class="form-group mb-3">
 										<label>이름</label> 
-										<input type="text" class="form-control" id="">
+										<input type="text" class="form-control resetInput" id="">
 									</div>
 									<div class="form-group mb-3">
 										<label>전화번호</label> 
-										<input type="text" class="form-control" id="">
+										<input type="text" class="form-control resetInput" id="">
 									</div>
 									<div class="form-group mb-3">
 										<label>가입일</label> 
-										<input type="text" class="form-control" id="" disabled>
+										<input type="text" class="form-control resetInput" id="" disabled>
 									</div>
 									<div class="form-group mb-3">
 										<label>청첩장 게시일</label> 
-										<input type="text" class="form-control" id="" disabled>
+										<input type="text" class="form-control resetInput" id="" disabled>
 									</div>
 								</form>
 							</div>

@@ -4,8 +4,10 @@
 
 console.log("########## memberList.js ##########");
 
-var modifyId = "";
-var isOverlapCheck = false;
+var modifyId = "",
+	isOverlapCheck = false,
+	overlapCheckedId = ""
+	isSuccess = false;
 
 $(function(){
 	setActiveSidebar();
@@ -30,7 +32,12 @@ $(function(){
 	});
 	
 	$("#modal-memberRegister").on("hide.bs.modal", function(e){
-		getMemberList(1);
+		$(".resetInput").val("");
+		
+		if(isSuccess) {
+			utilDataTableDestroy("tableMemberList");
+			getMemberList(1);
+		}
 	})
 	$("#btnMemberRegister").on("click", function(){
 		$("#modal-memberRegister").modal("show");
@@ -143,18 +150,16 @@ function overlapCheck(id) {
 		url : "/admin/member/getOverlapCheck?" + $.param({id : id}),
 		type : "GET",
 		error : function(xhr, status, msg) {
-			$("#btnRegister").prop("disabled", true);
 			isOverlapCheck = false;
 			alert("status : " + status + "\nHttp error msg : " + msg);
 		},
 		success : function(result) {
 			console.log(result);
 			
-			if(result.resFlag) {
-				$("#btnRegister").prop("disabled", false);
+			if(result.resFlag || (result.resOverlapCheckedId != "")) {
 				isOverlapCheck = true;
+				overlapCheckedId = result.resOverlapCheckedId;
 			} else {
-				$("#btnRegister").prop("disabled", true);
 				isOverlapCheck = false;
 			}
 			
@@ -183,7 +188,7 @@ function validateInfo() {
 		alert("아이디를 입력해주세요");
 		isOverlapCheck = false;
 		return false;
-	} else if(isOverlapChek == false) {
+	} else if(isOverlapCheck == false) {
 		alert("아이디 중복확인을 해주세요");
 		return false;
 	} else if($("#inputRegisterPassword").val() == "") {
@@ -201,8 +206,16 @@ function validateInfo() {
 };
 
 function registerMember() {
+	if(overlapCheckedId != $("#inputRegisterId").val()) {
+		overlapCheckedId = "";
+		isOverlapCheck = false;
+		
+		alert("아이디가 변경되었습니다. 아이디 중복확인을 해주세요.");
+		return false;
+	}
+	
 	var data = {
-		id : $("#inputRegisterId").val(),
+		id : overlapCheckedId,
 		password : $("#inputRegisterPassword").val(),
 		name : $("#inputRegisterName").val(),
 		phone : $("#inputRegisterPhone").val()
@@ -216,6 +229,9 @@ function registerMember() {
 		contentType : "application/json",
 		mimeType : "application/json",
 		error : function(xhr, status, msg) {
+			isOverlapCheck = true;
+			isSuccess = false;
+			
 			alert("status : " + status + "\nHttp error msg : " + msg);
 		},
 		success : function(result) {
@@ -223,13 +239,17 @@ function registerMember() {
 			
 			if(result.resFlag) {
 				isOverlapCheck = false;
+				overlapCheckedId = "";
+				isSuccess = true;
+				
+				alert(result.resMessage);
+				$("#modal-memberRegister").modal("hide");
 			} else {
 				isOverlapCheck = true;
+				isSuccess = false;
+				
+				alert(result.resMessage);
 			}
-			
-			alert(result.resMessage);
-			
-			$("#modal-memberRegister").modal("hide");
 		}
 	})
 };
