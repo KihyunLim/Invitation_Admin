@@ -4,7 +4,7 @@
 
 console.log("########## memberList.js ##########");
 
-var modifyId = "",
+var modifyTargetId = "",
 	isOverlapCheck = false,
 	overlapCheckedId = ""
 	isSuccess = false;
@@ -50,16 +50,17 @@ $(function(){
 	});
 	
 	$("#modal-memberModify").on("show.bs.modal", function (e) {
-//		getMemberInfo();
-		console.log(modifyId);
+		console.log("target ID : ", modifyTargetId);
+		
+		getMemberInfo();
 	});
 	$("#modal-memberModify").on("hide.bs.modal", function (e) {
-		modifyId = "";
+		modifyTargetId = "";
 		
-		console.log(modifyId);
+		console.log(modifyTargetId);
 	});
 	$("#tableMemberList").on("dblclick", "tr", function(){
-		modifyId = $(this).attr("id");
+		modifyTargetId = $(this).attr("id");
 		
 		$("#modal-memberModify").modal("show");
 	});
@@ -168,21 +169,6 @@ function overlapCheck(id) {
 	});
 };
 
-function getMemberInfo() {
-	$.ajax({
-		url : "/admin/member/getMemberInfo?" + $.param({memberId : modifyId}),
-		type : "GET",
-		error : function(xhr, status, msg) {
-			alert("status : " + status + "\nHttp error msg : " + msg);
-		},
-		success : function(result) {
-			console.log(result);
-			
-			
-		}
-	});
-};
-
 function validateInfo() {
 	if($("#inputRegisterId").val() == "") {
 		alert("아이디를 입력해주세요");
@@ -252,4 +238,19 @@ function registerMember() {
 			}
 		}
 	})
+};
+
+function getMemberInfo() {
+	$.ajax({
+		url : "/admin/member/getMemberInfo?" + $.param({memberId : modifyTargetId}),
+		type : "GET",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			
+		}
+	});
 };

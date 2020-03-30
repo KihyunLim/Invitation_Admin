@@ -7,7 +7,7 @@
 	<typeAliases>
 		<typeAlias alias="userAdmin" type="com.invitation.biz.admin.user.UserAdminVO"></typeAlias> 
 		<typeAlias alias="userMemberList" type="com.invitation.biz.member.user.UserMemberListVO"></typeAlias> 
-		<!-- <typeAlias alias="userMember" type="com.invitation.biz.member.user.UserMemberVO"></typeAlias> -->		<!-- 조회용 --> 
+		<typeAlias alias="userMemberInfo" type="com.invitation.biz.member.user.UserMemberInfoVO"></typeAlias> 
 	</typeAliases>
 	
 	<mappers>

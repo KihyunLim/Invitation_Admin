@@ -81,4 +81,47 @@
 			, #{phone}
 		);
 	</insert>
+	
+	<select id="getMemberInfo" resultType="userMemberInfo">
+		SELECT
+			U.ID
+			, U.PASSWORD
+			, U.NAME
+			, U.PHONE
+			, DATE_FORMAT(U.DATETIME_REGISTER, '%Y-%m-%d') AS REGISTERDATE
+			, ( 
+				SELECT
+					IL_A.DATE_BEGIN
+				FROM 
+					INVITATION_LIST IL_A
+				WHERE 
+					IL_A.DATE_BEGIN = (
+						SELECT
+							MAX(IL_B.DATE_BEGIN)
+						FROM
+							INVITATION_LIST IL_B
+						WHERE
+							IL_B.ID = ${id}
+					)
+			) AS LATESTINVITATIONBEGIN
+			, ( 
+				SELECT
+					IL_A.DATE_END
+				FROM 
+					INVITATION_LIST IL_A
+				WHERE 
+					IL_A.DATE_BEGIN = (
+						SELECT
+							MAX(IL_B.DATE_BEGIN)
+						FROM
+							INVITATION_LIST IL_B
+						WHERE
+							IL_B.ID = ${id}
+					)
+			) AS LATESTINVITATIONBEGIN
+		FROM
+			USERES U
+		WHERE U.ID = ${id}
+		;
+	</select>
 </mapper>
