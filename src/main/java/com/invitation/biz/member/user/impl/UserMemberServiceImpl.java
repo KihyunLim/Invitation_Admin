@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.invitation.biz.common.paging.Criteria;
+import com.invitation.biz.member.user.UserMemberInfoVO;
 import com.invitation.biz.member.user.UserMemberListVO;
 import com.invitation.biz.member.user.UserMemberService;
 import com.invitation.biz.member.user.UserMemberVO;
@@ -34,5 +35,10 @@ public class UserMemberServiceImpl implements UserMemberService {
 	@Override
 	public void registerMember(UserMemberVO vo) {
 		userMemberDAO.registerMember(vo);
+	}
+	
+	@Override
+	public UserMemberInfoVO getMemberInfo(String id) {
+		return userMemberDAO.getMemberInfo(id);
 	}
 }

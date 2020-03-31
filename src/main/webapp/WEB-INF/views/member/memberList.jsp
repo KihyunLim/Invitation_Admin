@@ -128,7 +128,7 @@
 							</div>
 							<div class="modal-footer justify-content-between">
 								<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-								<button type="button" class="btn btn-primary" id="btnRegister">추가</button>
+								<button type="button" class="btn btn-primary" id="btnRegist">추가</button>
 							</div>
 						</div>
 						<!-- /.modal-content -->
@@ -148,33 +148,33 @@
 								<form role="form">
 									<div class="form-group mb-3">
 										<label>아이디</label> 
-										<input type="text" class="form-control resetInput" id="" disabled>
+										<input type="text" class="form-control resetInput" id="inputModifyId" disabled>
 									</div>
 									<div class="form-group mb-3">
 										<label>비밀번호</label> 
-										<input type="text" class="form-control resetInput" id="">
+										<input type="text" class="form-control resetInput" id="inputModifyPassword" maxlength="20">
 									</div>
 									<div class="form-group mb-3">
 										<label>이름</label> 
-										<input type="text" class="form-control resetInput" id="">
+										<input type="text" class="form-control resetInput" id="inputModifyName" maxlength="20">
 									</div>
 									<div class="form-group mb-3">
 										<label>전화번호</label> 
-										<input type="text" class="form-control resetInput" id="">
+										<input type="text" class="form-control resetInput" id="inputModifyPhone" maxlength="11">
 									</div>
 									<div class="form-group mb-3">
 										<label>가입일</label> 
-										<input type="text" class="form-control resetInput" id="" disabled>
+										<input type="text" class="form-control resetInput" id="inputModifyRegDate" disabled>
 									</div>
 									<div class="form-group mb-3">
 										<label>청첩장 게시일</label> 
-										<input type="text" class="form-control resetInput" id="" disabled>
+										<input type="text" class="form-control resetInput" id="inputModifyLatestInvitation" disabled>
 									</div>
 								</form>
 							</div>
 							<div class="modal-footer justify-content-between">
 								<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-								<button type="button" class="btn btn-primary">수정</button>
+								<button type="button" class="btn btn-primary" id="btnModify">수정</button>
 							</div>
 						</div>
 						<!-- /.modal-content -->

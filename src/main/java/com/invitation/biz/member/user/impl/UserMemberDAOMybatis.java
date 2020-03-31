@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.invitation.biz.common.paging.Criteria;
+import com.invitation.biz.member.user.UserMemberInfoVO;
 import com.invitation.biz.member.user.UserMemberListVO;
 import com.invitation.biz.member.user.UserMemberVO;
 
@@ -44,5 +45,9 @@ public class UserMemberDAOMybatis {
 	
 	public void registerMember(UserMemberVO vo) {
 		mybatis.insert("MemberUserDAO.registerMember", vo);
+	}
+	
+	public UserMemberInfoVO getMemberInfo(String id) {
+		return mybatis.selectOne("MemberUserDAO.getMemberInfo", id);
 	}
 }

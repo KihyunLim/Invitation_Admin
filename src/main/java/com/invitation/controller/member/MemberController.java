@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.invitation.biz.common.exception.CommonException;
 import com.invitation.biz.common.paging.Criteria;
 import com.invitation.biz.common.paging.PageMaker;
+import com.invitation.biz.member.user.UserMemberInfoVO;
 import com.invitation.biz.member.user.UserMemberListVO;
 import com.invitation.biz.member.user.UserMemberService;
 import com.invitation.biz.member.user.UserMemberVO;
@@ -136,6 +138,41 @@ public class MemberController {
 		} finally {
 			result.put("resFlag", resFlag);
 			result.put("resMessage",  resMessage);
+		}
+		
+		return result;
+	}
+	
+	@GetMapping(value="/getMemberInfo")
+	@ResponseBody
+	public Map<String, Object> getMemberInfo(@RequestParam(value="id", required=true) String id) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		UserMemberInfoVO resMemberInfo = null;
+		
+		LOGGER.info("getMemberInfo");
+		try {
+			resMemberInfo = userMemberService.getMemberInfo(id);
+			
+			if(resMemberInfo == null) {
+				throw new CommonException("회원정보 불일치!!");
+			}
+		} catch(CommonException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "일치하는 회원이 없습니다.";
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = true;
+			resMessage = "회원 상세조회에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("resMemberInfo", resMemberInfo);
 		}
 		
 		return result;

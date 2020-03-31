@@ -35,6 +35,8 @@ $(function(){
 		$(".resetInput").val("");
 		
 		if(isSuccess) {
+			isSuccess = false;
+			
 			utilDataTableDestroy("tableMemberList");
 			getMemberList(1);
 		}
@@ -43,8 +45,8 @@ $(function(){
 		$("#modal-memberRegister").modal("show");
 	});
 	
-	$("#btnRegister").on("click", function() {
-		if(validateInfo()) {
+	$("#btnRegist").on("click", function() {
+		if(validateRegistInfo()) {
 			registerMember();
 		}
 	});
@@ -58,11 +60,20 @@ $(function(){
 		modifyTargetId = "";
 		
 		console.log(modifyTargetId);
+		
+		$("#btnModify").removeData("resMemberInfo");
+		$(".resetInput").val("");
 	});
 	$("#tableMemberList").on("dblclick", "tr", function(){
 		modifyTargetId = $(this).attr("id");
 		
 		$("#modal-memberModify").modal("show");
+	});
+	
+	$("#btnModify").on("click", function() {
+		if(validateModifyInfo()) {
+			modifyMember();
+		}
 	});
 	
 	$("#divPagingWrap").on("click", ".aPaging", function(e){
@@ -169,7 +180,7 @@ function overlapCheck(id) {
 	});
 };
 
-function validateInfo() {
+function validateRegistInfo() {
 	if($("#inputRegisterId").val() == "") {
 		alert("아이디를 입력해주세요");
 		isOverlapCheck = false;
@@ -250,7 +261,86 @@ function getMemberInfo() {
 		success : function(result) {
 			console.log(result);
 			
-			
+			$("#btnModify").data("resMemberInfo", result.resMemberInfo);
+			$("#inputModifyId").val(result.resMemberInfo.id);
+			$("#inputModifyPassword").val(result.resMemberInfo.password);
+			$("#inputModifyName").val(result.resMemberInfo.name);
+			$("#inputModifyPhone").val(result.resMemberInfo.phone);
+			$("#inputModifyRegDate").val(result.resMemberInfo.registerDate.substr(0,4) 
+					+ result.resMemberInfo.registerDate.substr(4,2) 
+					+ result.resMemberInfo.registerDate.substr(6,2));
+			$("#inputModifyLatestInvitation").val(result.resMemberInfo.latestInvitationBegin.substr(0,2)
+					+ result.resMemberInfo.latestInvitationBegin.substr(2,2)
+					+ result.resMemberInfo.latestInvitationBegin.substr(4,2)
+					+ " ~ " 
+					+ result.resMemberInfo.latestInvitationEnd.substr(0,2)
+					+ result.resMemberInfo.latestInvitationEnd.substr(2,2)
+					+ result.resMemberInfo.latestInvitationEnd.substr(4,2));
 		}
 	});
 };
+
+function validateRegistInfo() {
+	if($("#inputModifyPassword").val() == "") {
+		alert("비밀번호를 입력해주세요.");
+		return false;
+	} else if($("#inputModifyName").val() == "") {
+		alert("이름을 입력해주세요");
+		return false;
+	} else if($("#inputModifyPhone").val() == "") {
+		alert("전화번호를 입력해주세요.");
+		return false;
+	} else {
+		return true;
+	}
+};
+
+function modifyMember() {
+	var recordData = $("#btnModify").data("resMemberInfo"),
+		data = {id : recordData.id},
+		inputModifyPassword = $("#inputModifyPassword").val(),
+		inputModifyName = $("#inputModifyName").val(),
+		inputModifyPhone = $("#inputModifyPhone").val();
+	
+	if(recordData.password != inputModifyPassword) {
+		data["password"] = inputModifyPassword;
+	}
+	if(recordData.name != inputModifyName) {
+		data["name"] = inputModifyName;
+	}
+	if(recordData.phone != inputModifyPhone) {
+		data["phone"] = inputModifyPhone;
+	}
+	
+	$.ajax({
+		url : "/admin/member/modifyMember",
+		type : "PATCH",
+		dataType : "json",
+		data : JSON.stringify(data),
+		contentType : "application/json",
+		mimeType : "application/json",
+		error : function(xhr, status, msg) {
+			isSuccess = false;
+			
+			alert("status : ", status, "\nHttp error msg : ", msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			if(result.resFlag) {
+				isSuccess = true;
+				
+				alert(result.resMessage);
+				
+				$("#btnModify").removeData("resMemberInfo");
+				$(".resetInput").val("");
+				
+				getMemberInfo();
+			} else {
+				isSuccess = false;
+				
+				alert(result.resMessage);
+			}
+		}
+	});
+}

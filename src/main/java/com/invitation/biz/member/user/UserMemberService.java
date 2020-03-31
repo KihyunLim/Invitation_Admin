@@ -13,4 +13,6 @@ public interface UserMemberService {
 	int getOverlapCheck(String id);
 	
 	void registerMember(UserMemberVO vo);
+	
+	UserMemberInfoVO getMemberInfo(String id);
 }
