@@ -51,25 +51,25 @@
 	<!-- Application Loggers -->
 	<logger name="com.invitation" level="info" additivity="false">
 		<appender-ref ref="console" />
-		<!-- <appender-ref ref="file" /> -->
+		<appender-ref ref="file" />
 	</logger>
 	
 	<!-- Query Loggers -->
 	<logger name="jdbc.sqlonly" level="info" additivity="false">
 		<appender-ref ref="console" />
-		<!-- <appender-ref ref="file" /> -->
+		<appender-ref ref="file" />
 	</logger>
 	
 	<logger name="jdbc.resultsettable" level="info" additivity="false">
 		<appender-ref ref="console" />
-		<!-- <appender-ref ref="file" /> -->
+		<appender-ref ref="file" />
 	</logger>
 
 	<!-- 3rdparty Loggers -->
 	<!-- 여기 로그는 언제 나올지 확인 필요 -->
 	<logger name="org.springframework.core" level="info">
 		<appender-ref ref="confirmation_needed" />
-		<!-- <appender-ref ref="file" /> -->
+		<appender-ref ref="file" />
 	</logger>
 
 	<!-- Root Logger와 로그가 겹쳐 주석 처리 -->
@@ -91,7 +91,7 @@
 	<!-- Root Logger -->
 	<root level="info">
 		<appender-ref ref="console" />
-		<!-- <appender-ref ref="file" /> -->
+		<appender-ref ref="file" />
 	</root>
 	
 </configuration>

@@ -101,7 +101,7 @@
 						FROM
 							INVITATION_LIST IL_B
 						WHERE
-							IL_B.ID = ${id}
+							IL_B.ID = #{id}
 					)
 			) AS LATESTINVITATIONBEGIN
 			, ( 
@@ -116,12 +116,12 @@
 						FROM
 							INVITATION_LIST IL_B
 						WHERE
-							IL_B.ID = ${id}
+							IL_B.ID = #{id}
 					)
-			) AS LATESTINVITATIONBEGIN
+			) AS LATESTINVITATIONEND
 		FROM
 			USERES U
-		WHERE U.ID = ${id}
+		WHERE U.ID = #{id}
 		;
 	</select>
 </mapper>

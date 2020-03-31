@@ -253,7 +253,7 @@ function registerMember() {
 
 function getMemberInfo() {
 	$.ajax({
-		url : "/admin/member/getMemberInfo?" + $.param({memberId : modifyTargetId}),
+		url : "/admin/member/getMemberInfo?" + $.param({id : modifyTargetId}),
 		type : "GET",
 		error : function(xhr, status, msg) {
 			alert("status : " + status + "\nHttp error msg : " + msg);
@@ -266,16 +266,16 @@ function getMemberInfo() {
 			$("#inputModifyPassword").val(result.resMemberInfo.password);
 			$("#inputModifyName").val(result.resMemberInfo.name);
 			$("#inputModifyPhone").val(result.resMemberInfo.phone);
-			$("#inputModifyRegDate").val(result.resMemberInfo.registerDate.substr(0,4) 
-					+ result.resMemberInfo.registerDate.substr(4,2) 
-					+ result.resMemberInfo.registerDate.substr(6,2));
-			$("#inputModifyLatestInvitation").val(result.resMemberInfo.latestInvitationBegin.substr(0,2)
-					+ result.resMemberInfo.latestInvitationBegin.substr(2,2)
-					+ result.resMemberInfo.latestInvitationBegin.substr(4,2)
-					+ " ~ " 
-					+ result.resMemberInfo.latestInvitationEnd.substr(0,2)
-					+ result.resMemberInfo.latestInvitationEnd.substr(2,2)
-					+ result.resMemberInfo.latestInvitationEnd.substr(4,2));
+			$("#inputModifyRegDate").val(result.resMemberInfo.registerDate);
+			if(result.resMemberInfo.latestInvitationBegin != null && result.resMemberInfo.latestInvitationEnd != null) {
+				$("#inputModifyLatestInvitation").val(result.resMemberInfo.latestInvitationBegin.substr(0,4)
+						+ result.resMemberInfo.latestInvitationBegin.substr(4,2)
+						+ result.resMemberInfo.latestInvitationBegin.substr(6,2)
+						+ " ~ " 
+						+ result.resMemberInfo.latestInvitationEnd.substr(0,4)
+						+ result.resMemberInfo.latestInvitationEnd.substr(4,2)
+						+ result.resMemberInfo.latestInvitationEnd.substr(6,2));
+			}
 		}
 	});
 };
