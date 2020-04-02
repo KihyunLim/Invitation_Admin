@@ -4187,4 +4187,719 @@ function registerMember() {
 };
 ```
 
-## 10 - 3. 회원 관리 화면 구현 - 회원 수정 기능 구현
+---
+
+## 10 - 3. 회원 관리 화면 구현 - 회원 상세 조회 기능 구현
+- VO 추가
+```java
+// UserMemberInfoVO.java
+
+package com.invitation.biz.member.user;
+
+public class UserMemberInfoVO {
+
+	private String id;
+	private String password;
+	private String name;
+	private String phone;
+	private String registerDate;
+	private String latestInvitationBegin;
+	private String latestInvitationEnd;
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getRegisterDate() {
+		return registerDate;
+	}
+	public void setRegisterDate(String registerDate) {
+		this.registerDate = registerDate;
+	}
+	public String getLatestInvitationBegin() {
+		return latestInvitationBegin;
+	}
+	public void setLatestInvitationBegin(String latestInvitationBegin) {
+		this.latestInvitationBegin = latestInvitationBegin;
+	}
+	public String getLatestInvitationEnd() {
+		return latestInvitationEnd;
+	}
+	public void setLatestInvitationEnd(String latestInvitationEnd) {
+		this.latestInvitationEnd = latestInvitationEnd;
+	}
+	
+	@Override
+	public String toString() {
+		return "UserMemberInfoVO [id=" + id + ", password=" + password + ", name=" + name + ", phone=" + phone
+				+ ", registerDate=" + registerDate + ", latestInvitationBegin=" + latestInvitationBegin
+				+ ", latestInvitationEnd=" + latestInvitationEnd + "]";
+	}
+}
+```
+
+- VO alias 추가
+```xml
+<!-- sql-map-config.xml -->
+
+		<!-- ~~~ -->
+		<typeAlias alias="userMemberList" type="com.invitation.biz.member.user.UserMemberListVO"></typeAlias> 
+		<typeAlias alias="userMemberInfo" type="com.invitation.biz.member.user.UserMemberInfoVO"></typeAlias> 
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mappings/AdminUseres-mapping.xml" />
+		<mapper resource="mappings/MemberUseres-mapping.xml" />
+	</mappers>
+</configuration>
+```
+
+- 쿼리 추가
+```xml
+<!-- MemberUseres-mapping.xml -->
+
+	<!-- ~~~ -->
+	</insert>
+	
+	<select id="getMemberInfo" resultType="userMemberInfo">
+		SELECT
+			U.ID
+			, U.PASSWORD
+			, U.NAME
+			, U.PHONE
+			, DATE_FORMAT(U.DATETIME_REGISTER, '%Y-%m-%d') AS REGISTERDATE
+			, ( 
+				SELECT
+					IL_A.DATE_BEGIN
+				FROM 
+					INVITATION_LIST IL_A
+				WHERE 
+					IL_A.DATE_BEGIN = (
+						SELECT
+							MAX(IL_B.DATE_BEGIN)
+						FROM
+							INVITATION_LIST IL_B
+						WHERE
+							IL_B.ID = #{id}
+					)
+			) AS LATESTINVITATIONBEGIN
+			, ( 
+				SELECT
+					IL_A.DATE_END
+				FROM 
+					INVITATION_LIST IL_A
+				WHERE 
+					IL_A.DATE_BEGIN = (
+						SELECT
+							MAX(IL_B.DATE_BEGIN)
+						FROM
+							INVITATION_LIST IL_B
+						WHERE
+							IL_B.ID = #{id}
+					)
+			) AS LATESTINVITATIONEND
+		FROM
+			USERES U
+		WHERE U.ID = #{id}
+		;
+	</select>
+</mapper>
+```
+
+- DAO 추가
+```java
+// UserMemberDAOMybatis.java
+
+		// ~~~
+		mybatis.insert("MemberUserDAO.registerMember", vo);
+	}
+	
+	public UserMemberInfoVO getMemberInfo(String id) {
+		return mybatis.selectOne("MemberUserDAO.getMemberInfo", id);
+	}
+}
+```
+
+- serivce 추가
+```java
+// UserMemberService.java
+
+	// ~~~
+	void registerMember(UserMemberVO vo);
+	
+	UserMemberInfoVO getMemberInfo(String id);
+}
+```
+
+- serviceImpl 추가
+```java
+// UserMemberServiceImpl.java
+
+		// ~~~
+		userMemberDAO.registerMember(vo);
+	}
+	
+	@Override
+	public UserMemberInfoVO getMemberInfo(String id) {
+		return userMemberDAO.getMemberInfo(id);
+	}
+}
+```
+
+- controller 추가
+```java
+// MemberController.java
+
+			// ~~~
+			result.put("resMessage",  resMessage);
+		}
+		
+		return result;
+	}
+	
+	@GetMapping(value="/getMemberInfo")
+	@ResponseBody
+	public Map<String, Object> getMemberInfo(@RequestParam(value="id", required=true) String id) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		UserMemberInfoVO resMemberInfo = null;
+		
+		LOGGER.info("getMemberInfo");
+		try {
+			resMemberInfo = userMemberService.getMemberInfo(id);
+			
+			if(resMemberInfo == null) {
+				throw new CommonException("회원정보 불일치!!");
+			}
+		} catch(CommonException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "일치하는 회원이 없습니다.";
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = true;
+			resMessage = "회원 상세조회에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("resMemberInfo", resMemberInfo);
+		}
+		
+		return result;
+	}
+}
+```
+
+- jsp 수정
+```jsp
+<!-- memberList.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<%@ include file="../include/adminlte3/head.jsp"%>
+	<!-- dataTable-select -->
+	<link rel="stylesheet" href="../adminlte3/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+	<link rel="stylesheet" href="../adminlte3/plugins/datatables-select/css/select.bootstrap4.css">
+	
+	<title>회원 관리</title>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<%@ include file="../include/adminlte3/navbar.jsp"%>
+		<%@ include file="../include/adminlte3/sidebar.jsp"%>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>회원 관리</h1>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-12">
+						<div class="card dataTables_wrapper">
+							<div class="card-header">
+								<!-- <h3 class="card-title">추가/삭제/검색 영역</h3> -->
+								<div class="row">
+									<div class="col-md-6">
+										<button type="button" class="btn btn-danger">삭제</button>
+										<button type="button" class="btn btn-primary" id="btnMemberRegister" data-toggle="modal" data-target="#modal-memberRegister">추가</button>
+									</div>
+									<div class="col-md-6">
+										<div class="dataTables_filter">
+											<select id="selectCondition">
+												<option value="id">아이디</option>
+												<option value="name">이름</option>
+												<option value="phone">핸드폰</option>
+											</select>
+											<input type="text" id="inputKeyword" />
+											<button type="button" class="btn btn-default" id="btnSearch">검색</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-12">
+										<table id="tableMemberList" class="table table-bordered table-hover dataTable">
+											<thead>
+												<tr>
+													<th style="width:5%;"></th>
+													<th style="width:25%;">아이디</th>
+													<th style="width:20%;">이름</th>
+													<th style="width:30%;">핸드폰</th>
+													<th style="width:20%;">게시상태</th>
+												</tr>
+											</thead>
+											<tbody></tbody>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12" id="divPagingWrap" style="text-align:center;">
+										<ul class="pagination" style="display:inline-flex;">
+											<li class="paginate_button page-item" id="liRecord" style="display:none">
+												<a href="#" aria-controls="" data-dt-idx="" tabindex="" class="page-link"></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+
+				<div class="modal fade" id="modal-memberRegister">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title">회원 추가</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form role="form">
+									<div class="form-group">
+										<label>아이디</label> 
+									</div>
+									<div class="input-group mb-3">
+										<input type="text" class="form-control resetInput" id="inputRegisterId" maxlength="20">
+										<span class="input-group-append">
+											<button type="button" class="btn btn-info btn-flat" id="btnOverlapCheck">중복확인</button>
+										</span>
+									</div>
+									<div class="form-group mb-3">
+										<label>비밀번호</label> 
+										<input type="text" class="form-control resetInput" id="inputRegisterPassword" maxlength="20">
+									</div>
+									<div class="form-group mb-3">
+										<label>이름</label> 
+										<input type="text" class="form-control resetInput" id="inputRegisterName" maxlength="20">
+									</div>
+									<div class="form-group mb-3">
+										<label>전화번호</label> 
+										<input type="number" class="form-control resetInput" id="inputRegisterPhone" maxlength="11">
+									</div>
+								</form>
+							</div>
+							<div class="modal-footer justify-content-between">
+								<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+								<button type="button" class="btn btn-primary" id="btnRegist">추가</button>
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal-dialog -->
+				</div>
+				<div class="modal fade" id="modal-memberModify">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title">회원 상세 및 수정</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form role="form">
+									<div class="form-group mb-3">
+										<label>아이디</label> 
+										<input type="text" class="form-control resetInput" id="inputModifyId" disabled>
+									</div>
+									<div class="form-group mb-3">
+										<label>비밀번호</label> 
+										<input type="text" class="form-control resetInput" id="inputModifyPassword" maxlength="20">
+									</div>
+									<div class="form-group mb-3">
+										<label>이름</label> 
+										<input type="text" class="form-control resetInput" id="inputModifyName" maxlength="20">
+									</div>
+									<div class="form-group mb-3">
+										<label>전화번호</label> 
+										<input type="text" class="form-control resetInput" id="inputModifyPhone" maxlength="11">
+									</div>
+									<div class="form-group mb-3">
+										<label>가입일</label> 
+										<input type="text" class="form-control resetInput" id="inputModifyRegDate" disabled>
+									</div>
+									<div class="form-group mb-3">
+										<label>청첩장 게시일</label> 
+										<input type="text" class="form-control resetInput" id="inputModifyLatestInvitation" disabled>
+									</div>
+								</form>
+							</div>
+							<div class="modal-footer justify-content-between">
+								<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+								<button type="button" class="btn btn-primary" id="btnModify">수정</button>
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal-dialog -->
+				</div>
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<%@ include file="../include/adminlte3/footer.jsp"%>
+	</div>
+	<!-- ./wrapper -->
+
+	<%@ include file="../include/adminlte3/js.jsp"%>
+	<!-- DataTables -->
+	<script src="../adminlte3/plugins/datatables/jquery.dataTables.js"></script>
+	<script src="../adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+	<script src="../adminlte3/plugins/datatables-select/js/dataTables.select.js"></script>
+	
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/def.js"></script>
+	<script type="text/javascript" src="../js/member/memberList.js"></script>
+</body>
+</html>
+```
+
+- js 수정
+```js
+// memberList.js
+
+/**
+ * 
+ */
+
+console.log("########## memberList.js ##########");
+
+var modifyTargetId = "",
+	isOverlapCheck = false,
+	overlapCheckedId = ""
+	isSuccess = false;
+
+$(function(){
+	setActiveSidebar();
+	
+	getMemberList(1);
+	
+	$("#btnSearch").on("click", function(){
+		utilDataTableDestroy("tableMemberList");
+		getMemberList(1);
+	});
+	
+	$("#btnOverlapCheck").on("click", function(){
+		var id = $("#inputRegisterId").val();
+		
+		if(id == "") {
+			alert("ID를 입력해주세요.");
+		} else if(id.length > 20) {
+			alert("ID는 20자 이내로 입력해주세요.");
+		} else {
+			overlapCheck(id);
+		}
+	});
+	
+	$("#modal-memberRegister").on("hide.bs.modal", function(e){
+		$(".resetInput").val("");
+		
+		if(isSuccess) {
+			isSuccess = false;
+			
+			utilDataTableDestroy("tableMemberList");
+			getMemberList(1);
+		}
+	})
+	$("#btnMemberRegister").on("click", function(){
+		$("#modal-memberRegister").modal("show");
+	});
+	
+	$("#btnRegist").on("click", function() {
+		if(validateRegistInfo()) {
+			registerMember();
+		}
+	});
+	
+	$("#modal-memberModify").on("show.bs.modal", function (e) {
+		console.log("target ID : ", modifyTargetId);
+		
+		getMemberInfo();
+	});
+	$("#modal-memberModify").on("hide.bs.modal", function (e) {
+		modifyTargetId = "";
+		
+		console.log(modifyTargetId);
+		
+		$("#btnModify").removeData("resMemberInfo");
+		$(".resetInput").val("");
+	});
+	$("#tableMemberList").on("dblclick", "tr", function(){
+		modifyTargetId = $(this).attr("id");
+		
+		$("#modal-memberModify").modal("show");
+	});
+	
+	$("#divPagingWrap").on("click", ".aPaging", function(e){
+		e.preventDefault();
+		var $this = $(this),
+			tabindex = $this.attr("tabindex");
+		
+		if($this.data("dt-idx") == "next") {
+			tabindex = $this.parent().prev().find(".aPaging").attr("tabindex");
+		}
+		
+		utilDataTableDestroy("tableMemberList");
+		getMemberList(Number(tabindex));
+	});
+});
+
+function getMemberList(pageItem) {
+	var requestParam = {
+			page : pageItem,
+			searchCondition : "",
+			searchKeyword : $("#inputKeyword").val().trim()
+	};
+	
+	if(requestParam.searchKeyword != "") {
+		requestParam.searchCondition = $("#selectCondition").val();
+	}
+	
+	$.ajax({
+		url : "/admin/member/getMemberList?" + $.param(requestParam),
+		type : "GET",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			var option = {
+				data : result.list,
+				columnDefs : [{
+					targets : 0,
+					defaultContent : '',
+					data : null,
+					className : 'select-checkbox'
+				}, {
+					targets : 1,
+					data : 'id'
+				}, {
+					targets : 2,
+					data : 'name'
+				}, {
+					targets : 3,
+					data : 'phone'
+				}, {
+					targets : 4,
+					data : function(row, type, val, meta) {
+						var statusSee = '';
+						
+						if(row.statusSee == 'Y') {
+							statusSee = '게시';
+						} else if(row.statusSee == 'N') {
+							statusSee = '비게시'; 
+						} else {
+							statusSee = '-';
+						}
+						
+						return statusSee;
+					}
+				}],
+				select : {
+					style : 'os',
+					selector : 'td:first-child'
+				},
+				rowId : function(row) {
+					return row.id;
+				}
+			};
+			
+			utilDataTable("tableMemberList", option, result.pageMaker.totalCount);
+			utilDataTablePaging("divPagingWrap", "tableMemberList", result.pageMaker);
+		}
+	});
+};
+
+function overlapCheck(id) {
+	$.ajax({
+		url : "/admin/member/getOverlapCheck?" + $.param({id : id}),
+		type : "GET",
+		error : function(xhr, status, msg) {
+			isOverlapCheck = false;
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			if(result.resFlag || (result.resOverlapCheckedId != "")) {
+				isOverlapCheck = true;
+				overlapCheckedId = result.resOverlapCheckedId;
+			} else {
+				isOverlapCheck = false;
+			}
+			
+			alert(result.resMessage);
+		}
+	});
+};
+
+function validateRegistInfo() {
+	if($("#inputRegisterId").val() == "") {
+		alert("아이디를 입력해주세요");
+		isOverlapCheck = false;
+		return false;
+	} else if(isOverlapCheck == false) {
+		alert("아이디 중복확인을 해주세요");
+		return false;
+	} else if($("#inputRegisterPassword").val() == "") {
+		alert("비밀번호를 입력해주세요.");
+		return false;
+	} else if($("#inputRegisterName").val() == "") {
+		alert("이름을 입력해주세요");
+		return false;
+	} else if($("#inputRegisterPhone").val() == "") {
+		alert("전화번호를 입력해주세요.");
+		return false;
+	} else {
+		return true;
+	}
+};
+
+function registerMember() {
+	if(overlapCheckedId != $("#inputRegisterId").val()) {
+		overlapCheckedId = "";
+		isOverlapCheck = false;
+		
+		alert("아이디가 변경되었습니다. 아이디 중복확인을 해주세요.");
+		return false;
+	}
+	
+	var data = {
+		id : overlapCheckedId,
+		password : $("#inputRegisterPassword").val(),
+		name : $("#inputRegisterName").val(),
+		phone : $("#inputRegisterPhone").val()
+	};
+	
+	$.ajax({
+		url : "/admin/member/registerMember",
+		type : "POST",
+		dataType : "json",
+		data : JSON.stringify(data),
+		contentType : "application/json",
+		mimeType : "application/json",
+		error : function(xhr, status, msg) {
+			isOverlapCheck = true;
+			isSuccess = false;
+			
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			if(result.resFlag) {
+				isOverlapCheck = false;
+				overlapCheckedId = "";
+				isSuccess = true;
+				
+				alert(result.resMessage);
+				$("#modal-memberRegister").modal("hide");
+			} else {
+				isOverlapCheck = true;
+				isSuccess = false;
+				
+				alert(result.resMessage);
+			}
+		}
+	})
+};
+
+function getMemberInfo() {
+	$.ajax({
+		url : "/admin/member/getMemberInfo?" + $.param({id : modifyTargetId}),
+		type : "GET",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			$("#btnModify").data("resMemberInfo", result.resMemberInfo);
+			$("#inputModifyId").val(result.resMemberInfo.id);
+			$("#inputModifyPassword").val(result.resMemberInfo.password);
+			$("#inputModifyName").val(result.resMemberInfo.name);
+			$("#inputModifyPhone").val(result.resMemberInfo.phone);
+			$("#inputModifyRegDate").val(result.resMemberInfo.registerDate);
+			if(result.resMemberInfo.latestInvitationBegin != null && result.resMemberInfo.latestInvitationEnd != null) {
+				$("#inputModifyLatestInvitation").val(result.resMemberInfo.latestInvitationBegin.substr(0,4)
+						+ result.resMemberInfo.latestInvitationBegin.substr(4,2)
+						+ result.resMemberInfo.latestInvitationBegin.substr(6,2)
+						+ " ~ " 
+						+ result.resMemberInfo.latestInvitationEnd.substr(0,4)
+						+ result.resMemberInfo.latestInvitationEnd.substr(4,2)
+						+ result.resMemberInfo.latestInvitationEnd.substr(6,2));
+			}
+		}
+	});
+};
+```
