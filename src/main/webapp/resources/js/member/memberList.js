@@ -314,7 +314,7 @@ function modifyMember() {
 	
 	$.ajax({
 		url : "/admin/member/modifyMember",
-		type : "PATCH",
+		type : "PUT",
 		dataType : "json",
 		data : JSON.stringify(data),
 		contentType : "application/json",
