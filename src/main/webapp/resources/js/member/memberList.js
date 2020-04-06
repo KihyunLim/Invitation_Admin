@@ -82,7 +82,9 @@ $(function(){
 			tabindex = $this.attr("tabindex");
 		
 		if($this.data("dt-idx") == "next") {
-			tabindex = $this.parent().prev().find(".aPaging").attr("tabindex");
+			tabindex = Number($(".active .aPaging").attr("tabindex")) + 1;
+		} else if($this.data("dt-idx") == "previous") {
+			tabindex = Number($(".active .aPaging").attr("tabindex")) - 1;
 		}
 		
 		utilDataTableDestroy("tableMemberList");
