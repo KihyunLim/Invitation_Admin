@@ -105,7 +105,7 @@ function utilDataTablePaging(idTarget, idDataTable, pageMaker) {
 					"aria-label" : "Previous",
 					"data-dt-idx" : "previous",
 					"class" : "page-link aPaging",
-					"tabindex" : (pageMaker.startPage - 1) < 1 ? 1 : pageMaker.startPage - 1,
+					"tabindex" : "",	// previous버튼의 페이지는 유동적으로 해야함
 					"text" : "<"
 				}
 			}
