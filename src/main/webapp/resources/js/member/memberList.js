@@ -219,12 +219,11 @@ function registerMember() {
 	};
 	
 	$.ajax({
-		url : "/admin/member/registerMember",
+		url : "/admin/member/",
 		type : "POST",
 		dataType : "json",
 		data : JSON.stringify(data),
-		contentType : "application/json",
-		mimeType : "application/json",
+		contentType : "application/json;charset=utf-8;",
 		error : function(xhr, status, msg) {
 			isOverlapCheck = true;
 			isSuccess = false;
@@ -253,7 +252,7 @@ function registerMember() {
 
 function getMemberInfo() {
 	$.ajax({
-		url : "/admin/member/getMemberInfo?" + $.param({id : modifyTargetId}),
+		url : "/admin/member/" + modifyTargetId,
 		type : "GET",
 		error : function(xhr, status, msg) {
 			alert("status : " + status + "\nHttp error msg : " + msg);
@@ -297,7 +296,7 @@ function validateModifyInfo() {
 
 function modifyMember() {
 	var recordData = $("#btnModify").data("resMemberInfo"),
-		data = {id : recordData.id},
+		data = {},
 		inputModifyPassword = $("#inputModifyPassword").val(),
 		inputModifyName = $("#inputModifyName").val(),
 		inputModifyPhone = $("#inputModifyPhone").val();
@@ -313,12 +312,11 @@ function modifyMember() {
 	}
 	
 	$.ajax({
-		url : "/admin/member/modifyMember",
+		url : "/admin/member/" + data.id,
 		type : "PUT",
 		dataType : "json",
 		data : JSON.stringify(data),
-		contentType : "application/json",
-		mimeType : "application/json",
+		contentType : "application/json;charset=utf-8;",
 		error : function(xhr, status, msg) {
 			isSuccess = false;
 			
