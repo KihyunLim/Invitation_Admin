@@ -15,4 +15,6 @@ public interface UserMemberService {
 	void registerMember(UserMemberVO vo);
 	
 	UserMemberInfoVO getMemberInfo(String id);
+	
+	void modifyMember(UserMemberVO vo);
 }

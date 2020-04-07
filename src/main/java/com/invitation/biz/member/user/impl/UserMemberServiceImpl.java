@@ -41,4 +41,9 @@ public class UserMemberServiceImpl implements UserMemberService {
 	public UserMemberInfoVO getMemberInfo(String id) {
 		return userMemberDAO.getMemberInfo(id);
 	}
+	
+	@Override
+	public void modifyMember(UserMemberVO vo) {
+		userMemberDAO.modifyMember(vo);
+	}
 }

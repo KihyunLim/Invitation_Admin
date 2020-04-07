@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -174,6 +175,42 @@ public class MemberController {
 			result.put("resFlag", resFlag);
 			result.put("resMessage", resMessage);
 			result.put("resMemberInfo", resMemberInfo);
+		}
+		
+		return result;
+	}
+	
+	@PutMapping(value="/{id}", headers= {"Content-type=application/json"})
+	@ResponseBody
+	public Map<String, Object> modifyMember(@PathVariable String id, @RequestBody UserMemberVO vo) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		
+		LOGGER.info("modifyMember");
+		try {
+			if(id.equals(vo.getId()) == false) {
+				throw new CommonException("부적절한 회원정보 수정 요청!!");
+			}
+			
+			userMemberService.modifyMember(vo);
+			
+			resFlag = true;
+			resMessage = "회원정보 수정이 완료되었습니다.";
+		} catch(CommonException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "부적절한 회원정보 수정 요청입니다.";
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = true;
+			resMessage = "회원 정보 수정에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
 		}
 		
 		return result;

@@ -50,4 +50,8 @@ public class UserMemberDAOMybatis {
 	public UserMemberInfoVO getMemberInfo(String id) {
 		return mybatis.selectOne("MemberUserDAO.getMemberInfo", id);
 	}
+	
+	public void modifyMember(UserMemberVO vo) {
+		mybatis.update("MemberUserDAO.modifyMember", vo);
+	}
 }

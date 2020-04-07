@@ -269,12 +269,12 @@ function getMemberInfo() {
 			$("#inputModifyPhone").val(result.resMemberInfo.phone);
 			$("#inputModifyRegDate").val(result.resMemberInfo.registerDate);
 			if(result.resMemberInfo.latestInvitationBegin != null && result.resMemberInfo.latestInvitationEnd != null) {
-				$("#inputModifyLatestInvitation").val(result.resMemberInfo.latestInvitationBegin.substr(0,4)
-						+ result.resMemberInfo.latestInvitationBegin.substr(4,2)
-						+ result.resMemberInfo.latestInvitationBegin.substr(6,2)
+				$("#inputModifyLatestInvitation").val(result.resMemberInfo.latestInvitationBegin.substr(0,4) + "-"
+						+ result.resMemberInfo.latestInvitationBegin.substr(4,2) + "-"
+						+ result.resMemberInfo.latestInvitationBegin.substr(6,2) + "-"
 						+ " ~ " 
-						+ result.resMemberInfo.latestInvitationEnd.substr(0,4)
-						+ result.resMemberInfo.latestInvitationEnd.substr(4,2)
+						+ result.resMemberInfo.latestInvitationEnd.substr(0,4) + "-"
+						+ result.resMemberInfo.latestInvitationEnd.substr(4,2) + "-"
 						+ result.resMemberInfo.latestInvitationEnd.substr(6,2));
 			}
 		}
@@ -298,7 +298,7 @@ function validateModifyInfo() {
 
 function modifyMember() {
 	var recordData = $("#btnModify").data("resMemberInfo"),
-		data = {},
+		data = {id : data.id},
 		inputModifyPassword = $("#inputModifyPassword").val(),
 		inputModifyName = $("#inputModifyName").val(),
 		inputModifyPhone = $("#inputModifyPhone").val();

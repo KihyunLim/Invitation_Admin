@@ -124,4 +124,16 @@
 		WHERE U.ID = #{id}
 		;
 	</select>
+	
+	<update id="modifyMember">
+		UPDATE
+			USERES
+		SET
+			PASSWORD = #{password}
+			, NAME = #{name}
+			, PHONE = #{phone}
+		WHERE
+			ID = #{id}
+		;
+	</update>
 </mapper>
