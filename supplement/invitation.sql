@@ -20,19 +20,92 @@ CREATE TABLE USERES (
 	, NAME VARCHAR(20) NOT NULL
 	, PHONE VARCHAR(11) NOT NULL
 	, DATETIME_REGISTER TIMESTAMP DEFAULT NOW()
+	, DELETEFLAG VARCHAR(1) default 'N'
 );
 
 INSERT INTO
 	USERES
 VALUES
-	("test0", "qwer", "영유저", "01011112222", NULL)
-	, ("test1", "asdf", "일유저", "01022223333", NULL)
-	, ("test2", "zxcv", "이유저", "01033334444", NULL)
-	, ("test3", "wert", "삼유저", "01044445555", NULL)
-	, ("test4", "sdfg", "사유저", "01055556666", NULL)
+	("test0", "qwer", "영유저", "01011112222", NULL, 'N')
+	, ("test1", "asdf", "일유저", "01022223333", NULL, 'N')
+	, ("test2", "zxcv", "이유저", "01033334444", NULL, 'N')
+	, ("test3", "wert", "삼유저", "01044445555", NULL, 'N')
+	, ("test4", "sdfg", "사유저", "01055556666", NULL, 'N')
+	, ("test5", "aaaa", "오유저", "01066667777", NULL, 'N')
 ;
-
+update useres set id='test6' where name='유저6';
+select * from useres where id like '%est%';
 SELECT * FROM USERES;
+select 
+	u.id, u.name, u.phone
+from 
+	useres u; 
+select u.id, u.name, u.phone, (
+		ifnull((
+			select 
+				il.visable
+			from 
+				INVITATION_LIST il 
+			where
+				il.id = u.id
+				and now() >= DATE_BEGIN 
+				and now() <= DATE_END)
+		, 'X')
+	) as statusSee 
+from 
+	useres u
+where
+	u.deleteflag <> 'Y'
+;
+select
+	u.id, u.password, u.name, u.phone, date_format(u.datetime_register, '%Y-%m-%d') as registerDate, (
+		select il_a.date_begin from invitation_list il_a where il_a.date_begin = (select max(il_b.date_begin) from invitation_list il_b where il_b.id='test1')
+	) as latestInvitationBegin, (
+		select il_a.date_end from invitation_list il_a where il_a.date_begin = (select max(il_b.date_begin) from invitation_list il_b where il_b.id='test1')
+	) as latestInvitationEnd
+from useres u
+where u.id='test1';
+
+SELECT
+			U.ID
+			, U.PASSWORD
+			, U.NAME
+			, U.PHONE
+			, DATE_FORMAT(U.DATETIME_REGISTER, '%Y-%m-%d') AS REGISTERDATE
+			, ( 
+				SELECT
+					IL_A.DATE_BEGIN
+				FROM 
+					INVITATION_LIST IL_A
+				WHERE 
+					IL_A.DATE_BEGIN = (
+						SELECT
+							MAX(IL_B.DATE_BEGIN)
+						FROM
+							INVITATION_LIST IL_B
+						WHERE
+							IL_B.ID = 'test2'
+					)
+			) AS LATESTINVITATIONBEGIN
+			, ( 
+				SELECT
+					IL_A.DATE_END
+				FROM 
+					INVITATION_LIST IL_A
+				WHERE 
+					IL_A.DATE_BEGIN = (
+						SELECT
+							MAX(IL_B.DATE_BEGIN)
+						FROM
+							INVITATION_LIST IL_B
+						WHERE
+							IL_B.ID = 'test2'
+					)
+			) AS LATESTINVITATIONEND
+		FROM
+			USERES U
+		WHERE U.ID = 'test2'
+		;
 
 
 -- 청첩장 양식
@@ -65,14 +138,23 @@ CREATE TABLE INVITATION_LIST (
 
 INSERT INTO
 	INVITATION_LIST
-VALUES
+values
 	(NULL, "test0", "영유저", "N", "20191201", "20191225", "hookup")
 	, (NULL, "test3", "삼유저", "Y", "20191229", "20200229", "hookup")
 	, (NULL, "test2", "이유저", "N", "20200301", "20200512", "hookup")
+	, (NULL, "test3", "삼유저", "N", "20200310", "20200329", "hookup")
 ;
 
-SELECT * FROM INVITATION_LIST;
+select * from invitation_list where date_begin = (select max(date_begin) from invitation_list where id='test1');
 
+SELECT * FROM INVITATION_LIST;
+select CURDATE(); -- 2020-02-18
+select NOW(); -- 2020-02-18 23:53:09
+select DATE_FORMAT(NOW(), '%y%m%d'); -- 200218
+select * from INVITATION_LIST 
+where 
+	now() >= DATE_BEGIN 
+	and now() <= DATE_END ;
 
 -- 청첩장 카테고리 분류 (첨부파일이 있는)
 CREATE TABLE CATEGORY (
@@ -150,7 +232,7 @@ CREATE TABLE LOVE_STORY (
 	, IMAGE VARCHAR(150) DEFAULT ''
 	, FOREIGN KEY (INV_SEQ) REFERENCES INVITATION_LIST (SEQ)
 	, FOREIGN KEY (ID) REFERENCES USERES (ID)
-);
+); 
 
 SELECT * FROM LOVE_STORY;
 
