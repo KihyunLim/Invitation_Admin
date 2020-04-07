@@ -46,4 +46,9 @@ public class UserMemberServiceImpl implements UserMemberService {
 	public void modifyMember(UserMemberVO vo) {
 		userMemberDAO.modifyMember(vo);
 	}
+	
+	@Override
+	public void deleteMember(String id) {
+		userMemberDAO.deleteMember(id);
+	}
 }

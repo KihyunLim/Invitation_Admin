@@ -54,4 +54,8 @@ public class UserMemberDAOMybatis {
 	public void modifyMember(UserMemberVO vo) {
 		mybatis.update("MemberUserDAO.modifyMember", vo);
 	}
+	
+	public void deleteMember(String id) {
+		mybatis.update("MemberUserDAO.deleteMember", id);
+	}
 }

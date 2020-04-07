@@ -17,4 +17,6 @@ public interface UserMemberService {
 	UserMemberInfoVO getMemberInfo(String id);
 	
 	void modifyMember(UserMemberVO vo);
+	
+	void deleteMember(String id);
 }

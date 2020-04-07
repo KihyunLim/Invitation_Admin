@@ -136,4 +136,14 @@
 			ID = #{id}
 		;
 	</update>
+	
+	<update id="deleteMember">
+		UPDATE
+			USERES
+		SET
+			DELETEFLAG = "Y"
+		WHERE
+			ID = #{id}
+		;
+	</update>
 </mapper>

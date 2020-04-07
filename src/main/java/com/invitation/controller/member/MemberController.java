@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -206,8 +207,44 @@ public class MemberController {
 			LOGGER.error("error message : " + e.getMessage());
 			LOGGER.error("error trace : ", e);
 			
-			resFlag = true;
+			resFlag = false;
 			resMessage = "회원 정보 수정에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+		}
+		
+		return result;
+	}
+	
+	@DeleteMapping(value="/{id}")
+	@ResponseBody
+	public Map<String, Object> deleteMember(@PathVariable String id) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		
+		LOGGER.info("deleteMember");
+		try {
+			if(id == null) {
+				throw new CommonException("삭제할 아이디 확인 필요!!");
+			}
+			
+			userMemberService.deleteMember(id);
+			
+			resFlag = true;
+			resMessage = "회원 삭제가 완료되었습니다.";
+		} catch(CommonException e) {
+			LOGGER.error("error Message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "삭제할 아이디를 확인해주세요.";
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "회원 삭제에 실패했습니다.";
 		} finally {
 			result.put("resFlag", resFlag);
 			result.put("resMessage", resMessage);

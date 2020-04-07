@@ -19,6 +19,18 @@ $(function(){
 		getMemberList(1);
 	});
 	
+	$("#btnMemberDelete").on("click", function(){
+		var $selected = $(".selected");
+		
+		if($selected.length == 1) {
+			var selectedId = $selected.attr("id");
+			
+			deleteMember(selectedId);
+		} else {
+			alert("삭제할 회원을 1명 선택해주세요.");
+		}
+	});
+	
 	$("#btnOverlapCheck").on("click", function(){
 		var id = $("#inputRegisterId").val();
 		
@@ -341,6 +353,26 @@ function modifyMember() {
 				
 				alert(result.resMessage);
 			}
+		}
+	});
+};
+
+function deleteMember(id) {
+	$.ajax({
+		url : "/admin/member/" + id,
+		type : "DELETE",
+		error : function(xhr, status, msg) {
+			alert("status : ", status, "\nHttp error msg : ", msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			if(result.resFlag) {
+				utilDataTableDestroy("tableMemberList");
+				getMemberList(1);
+			}
+			
+			alert(result.resMessage);
 		}
 	});
 };

@@ -40,7 +40,7 @@
 								<!-- <h3 class="card-title">추가/삭제/검색 영역</h3> -->
 								<div class="row">
 									<div class="col-md-6">
-										<button type="button" class="btn btn-danger">삭제</button>
+										<button type="button" class="btn btn-danger" id="btnMemberDelete">삭제</button>
 										<button type="button" class="btn btn-primary" id="btnMemberRegister" data-toggle="modal" data-target="#modal-memberRegister">추가</button>
 									</div>
 									<div class="col-md-6">
