@@ -33,6 +33,8 @@
 		<if test="condition == 'phone'">
 			AND U.PHONE LIKE CONCAT('%', #{keyword}, '%')
 		</if>
+		ORDER BY 
+			DATETIME_REGISTER DESC
 		LIMIT #{pageStart}, #{perPageNum};
 	</select>
 	

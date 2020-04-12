@@ -310,7 +310,12 @@ function validateModifyInfo() {
 
 function modifyMember() {
 	var recordData = $("#btnModify").data("resMemberInfo"),
-		data = {id : data.id},
+		data = {
+			id : recordData.id,
+			password : recordData.password,
+			name : recordData.name,
+			phone : recordData.phone
+		},
 		inputModifyPassword = $("#inputModifyPassword").val(),
 		inputModifyName = $("#inputModifyName").val(),
 		inputModifyPhone = $("#inputModifyPhone").val();
@@ -348,6 +353,9 @@ function modifyMember() {
 				$(".resetInput").val("");
 				
 				getMemberInfo();
+				
+				utilDataTableDestroy("tableMemberList");
+				getMemberList(Number($(".active .aPaging").attr("tabindex")));
 			} else {
 				isSuccess = false;
 				
