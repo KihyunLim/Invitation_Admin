@@ -283,7 +283,7 @@ function getMemberInfo() {
 			if(result.resMemberInfo.latestInvitationBegin != null && result.resMemberInfo.latestInvitationEnd != null) {
 				$("#inputModifyLatestInvitation").val(result.resMemberInfo.latestInvitationBegin.substr(0,4) + "-"
 						+ result.resMemberInfo.latestInvitationBegin.substr(4,2) + "-"
-						+ result.resMemberInfo.latestInvitationBegin.substr(6,2) + "-"
+						+ result.resMemberInfo.latestInvitationBegin.substr(6,2)
 						+ " ~ " 
 						+ result.resMemberInfo.latestInvitationEnd.substr(0,4) + "-"
 						+ result.resMemberInfo.latestInvitationEnd.substr(4,2) + "-"
