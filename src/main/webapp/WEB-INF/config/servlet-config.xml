@@ -19,6 +19,8 @@
 	
 	<!-- 부트스트랩 추가 -->
 	<mvc:resources mapping="adminlte3/**" location="/resources/bootstrap/adminlte3/"></mvc:resources>
+	<!-- css 추가 -->
+	<mvc:resources mapping="css/**" location="/resources/css/"></mvc:resources>
 	<!-- js파일 매핑 -->
 	<mvc:resources mapping="js/**" location="/resources/js/"></mvc:resources>
 	
