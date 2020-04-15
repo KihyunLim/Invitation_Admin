@@ -5,9 +5,10 @@
 <html>
 <head>
 	<%@ include file="../include/adminlte3/head.jsp"%>
-	<!-- dataTable-select -->
+	<!-- daterange picker -->
+	<link rel="stylesheet" href="../adminlte3/plugins/daterangepicker/daterangepicker.css">
+	<!-- dataTable -->
 	<link rel="stylesheet" href="../adminlte3/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
-	<link rel="stylesheet" href="../adminlte3/plugins/datatables-select/css/select.bootstrap4.css">
 	
 	<title>청첩장 상세</title>
 </head>
@@ -71,10 +72,10 @@
 										<label>체크 시 비공개로 전환</label>
 									</div>
 									<div class="col-md-2">
-										<span>게시 시간 : </span>
+										<span>게시 기간 : </span>
 									</div>
 									<div class="col-md-4">
-										<!-- 브라우저 안가리게 걍 datepicker를 써야할까 -->
+										<input type="text" class="" id="inputViewDate" />
 									</div>
 								</div>
 							</div>
@@ -93,7 +94,31 @@
 							<!-- /.card-header -->
 							<div class="card-body">
 								<div class="row">
-									<div class="col-md-12">
+									<div class="col-md-2">
+										<span>결혼 일자 및 일시 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" class="" id="inputWeddingDateTime" />
+									</div>
+									<div class="col-md-2">
+										<span>장소 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>신랑 간단 소개 : </span>
+									</div>
+									<div class="col-md-4">
+										<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+									</div>
+									<div class="col-md-2">
+										<span>신부 간단 소개 : </span>
+									</div>
+									<div class="col-md-4">
+										<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
 									</div>
 								</div>
 							</div>
@@ -190,6 +215,9 @@
 	<!-- ./wrapper -->
 
 	<%@ include file="../include/adminlte3/js.jsp"%>
+	<!-- date-range-picker -->
+	<script src="../adminlte3/plugins/daterangepicker/moment.min.js"></script>
+	<script src="../adminlte3/plugins/daterangepicker/daterangepicker.js"></script>
 	<!-- DataTables -->
 	<script src="../adminlte3/plugins/datatables/jquery.dataTables.js"></script>
 	<script src="../adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
