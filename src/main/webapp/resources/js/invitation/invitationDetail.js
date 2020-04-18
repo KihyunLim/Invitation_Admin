@@ -7,7 +7,7 @@ console.log("########## invitationDetail.js ##########");
 $(function(){
 	setActiveSidebar();
 	
-	$("#inputViewDate").daterangepicker({
+	$("#inputDateView").daterangepicker({
 		locale : {
 			format : "YYYY-MM-DD"
 		}
@@ -18,12 +18,36 @@ $(function(){
 		  });*/
 	});
 	
-	$("#inputWeddingDateTime").daterangepicker({
+	$("#inputDateTimeWedding").daterangepicker({
 		singleDatePicker : true,
 		timePicker : true,
 		timePicker24Hour : true,
 		locale : {
 			format : "YYYY-MM-DD HH:mm"
 		}
+	});
+	
+	// 유동적으로 추가한것도 먹힐려나??
+	$(".inputDateLoveStory").daterangepicker({
+		singleDatePicker : true,
+		locale : {
+			format : "YYYY-MM-DD"
+		}
+	});
+	
+	$("#inputDateWhenWhere").daterangepicker({
+		singleDatePicker : true,
+		timePicker : true,
+		timePicker24Hour : true,
+		locale : {
+			format : "YYYY-MM-DD HH:mm"
+		}
+	});
+	
+	$(document).on('click', '[data-toggle="lightbox"]', function(event) {
+		event.preventDefault();
+		$(this).ekkoLightbox({
+			alwaysShowClose: true
+		});
 	});
 });

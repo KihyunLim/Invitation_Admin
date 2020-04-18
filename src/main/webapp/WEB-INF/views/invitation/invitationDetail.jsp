@@ -7,6 +7,8 @@
 	<%@ include file="../include/adminlte3/head.jsp"%>
 	<!-- daterange picker -->
 	<link rel="stylesheet" href="../adminlte3/plugins/daterangepicker/daterangepicker.css">
+	<!-- Ekko Lightbox -->
+	<link rel="stylesheet" href="../adminlte3/plugins/ekko-lightbox/ekko-lightbox.css">
 	<!-- dataTable -->
 	<link rel="stylesheet" href="../adminlte3/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
 	
@@ -75,7 +77,7 @@
 										<span>게시 기간 : </span>
 									</div>
 									<div class="col-md-4">
-										<input type="text" class="" id="inputViewDate" />
+										<input type="text" class="" id="inputDateView" />
 									</div>
 								</div>
 							</div>
@@ -98,7 +100,7 @@
 										<span>결혼 일자 및 일시 : </span>
 									</div>
 									<div class="col-md-4">
-										<input type="text" class="" id="inputWeddingDateTime" />
+										<input type="text" class="" id="inputDateTimeWedding" />
 									</div>
 									<div class="col-md-2">
 										<span>장소 : </span>
@@ -121,6 +123,47 @@
 										<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
 									</div>
 								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>메인 사진 : </span>
+									</div>
+									<div class="col-md-4">
+										<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
+										</a>
+										<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+									</div>
+									<div class="col-md-6">
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>신랑 &amp; 신부 사진 사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>신랑 사진 : </span>
+									</div>
+									<div class="col-md-4">
+										<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
+										</a>
+										<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+									</div>
+									<div class="col-md-2">
+										<span>신부 사진 : </span>
+									</div>
+									<div class="col-md-4">
+										<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
+										</a>
+										<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+									</div>
+								</div>
 							</div>
 							<!-- /.card-body -->
 						</div>
@@ -137,7 +180,63 @@
 							<!-- /.card-header -->
 							<div class="card-body">
 								<div class="row">
+									<div class="col-md-2">
+										<span>사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
 									<div class="col-md-12">
+										<span>●를 마우스로 끌어서 순서 변경 가능합니다.</span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<!-- start : tableRecordLoveStory -->
+										<table id="tableRecordLoveStory" class="table table-valign-middle table-bordered dataTable">
+											<tbody>
+												<tr>
+													<td rowspan="3" style="width:10%;" class="text-center">●</td>
+													<td rowspan="3" style="width:20%;" class="text-center">
+														<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														</a>
+													</td>
+													<td style="width:10%;" class="text-center">일자</td>
+													<td style="width:60%;">
+														<input type="text" class="inputDateLoveStory" />
+													</td>
+												</tr>
+												<tr>
+													<td class="text-center">제목</td>
+													<td>
+														<input type="text" class="w-100" id="" />
+													</td>
+												</tr>
+												<tr>
+													<td rowspan="2" class="text-center">내용</td>
+													<td rowspan="2">
+														<textarea rows="3" class="form-control" id="" style="resize:none;"></textarea>
+													</td>
+												</tr>
+												<tr>
+													<td class="text-center">
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</td>
+													<td class="text-center">
+														<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+										<!-- end : tableRecordLoveStory -->
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12 text-center">
+										<button type="button" class="btn btn-default btn-sm" id="">추가</button>
 									</div>
 								</div>
 							</div>
@@ -157,6 +256,76 @@
 							<div class="card-body">
 								<div class="row">
 									<div class="col-md-12">
+										<table class="table table-valign-middle table-bordered dataTable">
+											<tr>
+												<td style="width:15%;" class="text-center">결혼식</td>
+												<td>
+													<input type="checkbox" id="" checked disabled />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">일자 및 일시</td>
+												<td>
+													<input type="text" id="" disabled />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">장소</td>
+												<td>
+													<input type="text" id="" disabled />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">제목</td>
+												<td>
+													<input type="text" class="w-100" id="" />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">내용</td>
+												<td>
+													<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<table class="table table-valign-middle table-bordered dataTable">
+											<tr>
+												<td style="width:15%;" class="text-center">폐백</td>
+												<td>
+													<input type="checkbox" id="" />
+													<span>(선택)</span>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">일자 및 일시</td>
+												<td>
+													<input type="text" id="inputDateWhenWhere" />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">장소</td>
+												<td>
+													<input type="text" id="" disabled />
+													<button type="button" class="btn btn-default btn-sm" id="">검색</button>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">제목</td>
+												<td>
+													<input type="text" class="w-100" id="" />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">내용</td>
+												<td>
+													<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+												</td>
+											</tr>
+										</table>
 									</div>
 								</div>
 							</div>
@@ -175,7 +344,115 @@
 							<!-- /.card-header -->
 							<div class="card-body">
 								<div class="row">
+									<div class="col-md-2">
+										<span>사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
 									<div class="col-md-12">
+										<table class="table table-valign-middle table-bordered dataTable">
+											<tr>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+											</tr>
+										</table>
 									</div>
 								</div>
 							</div>
@@ -194,7 +471,42 @@
 							<!-- /.card-header -->
 							<div class="card-body">
 								<div class="row">
+									<div class="col-md-2">
+										<span>사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
 									<div class="col-md-12">
+										<button type="button" class="btn btn-default btn-sm" id="">방명록 다운로드</button>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<table id="tableMemberList" class="table table-bordered table-hover dataTable">
+											<thead>
+												<tr>
+													<th style="width:5%;" class="text-center">순번</th>
+													<th style="width:10%;" class="text-center">일시</th>
+													<th style="width:10%;" class="text-center">이름</th>
+													<th style="width:50%;" class="text-center">내용</th>
+													<th style="width:10%;" class="text-center">비밀번호</th>
+													<th style="width:5%;" class="text-center">삭제</th>
+												</tr>
+											</thead>
+											<tbody></tbody>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12" id="divPagingWrap" style="text-align:center;">
+										<ul class="pagination" style="display:inline-flex;">
+											<li class="paginate_button page-item" id="liRecord" style="display:none">
+												<a href="#" aria-controls="" data-dt-idx="" tabindex="" class="page-link"></a>
+											</li>
+										</ul>
 									</div>
 								</div>
 							</div>
@@ -218,6 +530,8 @@
 	<!-- date-range-picker -->
 	<script src="../adminlte3/plugins/daterangepicker/moment.min.js"></script>
 	<script src="../adminlte3/plugins/daterangepicker/daterangepicker.js"></script>
+	<!-- Ekko Lightbox -->
+	<script src="../adminlte3/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
 	<!-- DataTables -->
 	<script src="../adminlte3/plugins/datatables/jquery.dataTables.js"></script>
 	<script src="../adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
