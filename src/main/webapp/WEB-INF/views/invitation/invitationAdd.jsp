@@ -97,6 +97,7 @@
 									</div>
 									<div class="col-md-4">
 										<input type="text" id="" />
+										<button type="button" class="btn btn-default btn-sm btnGetAddress">검색</button>
 									</div>
 								</div>
 								<div class="row">

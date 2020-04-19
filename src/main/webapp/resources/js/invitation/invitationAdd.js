@@ -50,4 +50,14 @@ $(function(){
 			alwaysShowClose: true
 		});
 	});
+	
+	$(".btnGetAddress").click(function(){
+		var pop = window.open("/admin/popup/jusoPopup.jsp", "pop", "scrollbars=yes, resizeable=yes");
+	});
 });
+
+function jusoCallBack(r1, r2, r3) {
+	console.log(r1);
+	console.log(r2);
+	console.log(r3);
+}
