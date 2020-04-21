@@ -35,7 +35,7 @@
 			</section>
 
 			<!-- Main content -->
-			<section class="content">
+			<section class="content" id="sectionContent">
 				<div class="row">
 					<div class="col-12">
 						<div class="card">
