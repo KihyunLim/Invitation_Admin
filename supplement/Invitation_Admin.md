@@ -4909,3 +4909,1346 @@ function getMemberInfo() {
 	});
 };
 ```
+
+---
+
+## 11-1 청첩장 화면 구성
+
+- adminlte3 프레임워크 customize css 파일 추가
+  - `src/main/webapp/resources/css/customizeBootstrap.css` 파일 생성
+```css
+/* customizeBootstrap.css */
+
+@charset "UTF-8";
+
+.card-title.header-padding-top {
+	padding-top: 5px;
+}
+
+.img-thumnail-h100px {
+	max-height: 100px;
+	width: auto;
+}
+```
+
+- head.jsp에 customize css 파일 경로 추가
+```jsp
+<!-- head.jsp -->
+
+	<!-- ~~~ -->
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+	
+	<!-- Customize CSS -->
+	<link rel="stylesheet" href="../css/customizeBootstrap.css">
+```
+
+- servlet-config.xml에 css 파일 매핑
+```xml
+<!-- servlet-config.xml -->
+
+	<!-- ~~~ -->
+	<mvc:resources mapping="adminlte3/**" location="/resources/bootstrap/adminlte3/"></mvc:resources>
+	<!-- css 추가 -->
+	<mvc:resources mapping="css/**" location="/resources/css/"></mvc:resources>
+	<!-- js파일 매핑 -->
+	<!-- ~~~ -->
+```
+
+- 청첩장 상세와 청첩장 추가 화면 구현
+  - `src/main/webapp/WEB-INF/views/invitation/invitationDetail.jsp` 파일 생성
+  - `src/main/webapp/WEB-INF/views/invitation/invitationAdd.jsp` 파일 생성
+```jsp
+<!-- invitationDetail.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<%@ include file="../include/adminlte3/head.jsp"%>
+	<!-- daterange picker -->
+	<link rel="stylesheet" href="../adminlte3/plugins/daterangepicker/daterangepicker.css">
+	<!-- Ekko Lightbox -->
+	<link rel="stylesheet" href="../adminlte3/plugins/ekko-lightbox/ekko-lightbox.css">
+	<!-- dataTable -->
+	<link rel="stylesheet" href="../adminlte3/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+	
+	<title>청첩장 상세</title>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<%@ include file="../include/adminlte3/navbar.jsp"%>
+		<%@ include file="../include/adminlte3/sidebar.jsp"%>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>청첩장 상세</h1>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ 기본 정보 (필수)</h3>
+								<div class="row">
+									<div class="col-md-12">
+										<button type="button" class="btn btn-primary btn-sm" id="">수정</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>아이디 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="" disabled />
+										<button type="button" class="btn btn-default btn-sm" id="">검색</button>
+									</div>
+									<div class="col-md-2">
+										<span>이름 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="" disabled />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>게시 상태 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="" disabled />
+										<input type="checkbox" id="" />
+										<label>체크 시 비공개로 전환</label>
+									</div>
+									<div class="col-md-2">
+										<span>게시 기간 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" class="" id="inputDateView" />
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ Home, Groom &amp; Bride (필수)</h3>
+								<div class="row">
+									<div class="col-md-12">
+										<button type="button" class="btn btn-primary btn-sm" id="">수정</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>결혼 일자 및 일시 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" class="" id="inputDateTimeWedding" />
+									</div>
+									<div class="col-md-2">
+										<span>장소 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>신랑 간단 소개 : </span>
+									</div>
+									<div class="col-md-4">
+										<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+									</div>
+									<div class="col-md-2">
+										<span>신부 간단 소개 : </span>
+									</div>
+									<div class="col-md-4">
+										<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>메인 사진 : </span>
+									</div>
+									<div class="col-md-4">
+										<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
+										</a>
+										<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+									</div>
+									<div class="col-md-6">
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>신랑 &amp; 신부 사진 사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>신랑 사진 : </span>
+									</div>
+									<div class="col-md-4">
+										<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
+										</a>
+										<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+									</div>
+									<div class="col-md-2">
+										<span>신부 사진 : </span>
+									</div>
+									<div class="col-md-4">
+										<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
+										</a>
+										<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ Love story (선택)</h3>
+								<div class="row">
+									<div class="col-md-12">
+										<button type="button" class="btn btn-primary btn-sm" id="">수정</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<span>●를 마우스로 끌어서 순서 변경 가능합니다.</span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<!-- start : tableRecordLoveStory -->
+										<table id="tableRecordLoveStory" class="table table-valign-middle table-bordered dataTable">
+											<tbody>
+												<tr>
+													<td rowspan="3" style="width:10%;" class="text-center">●</td>
+													<td rowspan="3" style="width:20%;" class="text-center">
+														<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														</a>
+													</td>
+													<td style="width:10%;" class="text-center">일자</td>
+													<td style="width:60%;">
+														<input type="text" class="inputDateLoveStory" />
+													</td>
+												</tr>
+												<tr>
+													<td class="text-center">제목</td>
+													<td>
+														<input type="text" class="w-100" id="" />
+													</td>
+												</tr>
+												<tr>
+													<td rowspan="2" class="text-center">내용</td>
+													<td rowspan="2">
+														<textarea rows="3" class="form-control" id="" style="resize:none;"></textarea>
+													</td>
+												</tr>
+												<tr>
+													<td class="text-center">
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</td>
+													<td class="text-center">
+														<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+										<!-- end : tableRecordLoveStory -->
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12 text-center">
+										<button type="button" class="btn btn-default btn-sm" id="">추가</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ When Where (필수)</h3>
+								<div class="row">
+									<div class="col-md-12">
+										<button type="button" class="btn btn-primary btn-sm" id="">수정</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-12">
+										<table class="table table-valign-middle table-bordered dataTable">
+											<tr>
+												<td style="width:15%;" class="text-center">결혼식</td>
+												<td>
+													<input type="checkbox" id="" checked disabled />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">일자 및 일시</td>
+												<td>
+													<input type="text" id="" disabled />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">장소</td>
+												<td>
+													<input type="text" id="" disabled />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">제목</td>
+												<td>
+													<input type="text" class="w-100" id="" />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">내용</td>
+												<td>
+													<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<table class="table table-valign-middle table-bordered dataTable">
+											<tr>
+												<td style="width:15%;" class="text-center">폐백</td>
+												<td>
+													<input type="checkbox" id="" />
+													<span>(선택)</span>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">일자 및 일시</td>
+												<td>
+													<input type="text" id="inputDateWhenWhere" />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">장소</td>
+												<td>
+													<input type="text" id="" disabled />
+													<button type="button" class="btn btn-default btn-sm" id="">검색</button>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">제목</td>
+												<td>
+													<input type="text" class="w-100" id="" />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">내용</td>
+												<td>
+													<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ Gallery (선택)</h3>
+								<div class="row">
+									<div class="col-md-12">
+										<button type="button" class="btn btn-primary btn-sm" id="">수정</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<table class="table table-valign-middle table-bordered dataTable">
+											<tr>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ Sweet Message (선택)</h3>
+								<div class="row">
+									<div class="col-md-12">
+										<button type="button" class="btn btn-primary btn-sm" id="">수정</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<button type="button" class="btn btn-default btn-sm" id="">방명록 다운로드</button>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<table id="tableMemberList" class="table table-bordered table-hover dataTable">
+											<thead>
+												<tr>
+													<th style="width:5%;" class="text-center">순번</th>
+													<th style="width:10%;" class="text-center">일시</th>
+													<th style="width:10%;" class="text-center">이름</th>
+													<th style="width:50%;" class="text-center">내용</th>
+													<th style="width:10%;" class="text-center">비밀번호</th>
+													<th style="width:5%;" class="text-center">삭제</th>
+												</tr>
+											</thead>
+											<tbody></tbody>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12" id="divPagingWrap" style="text-align:center;">
+										<ul class="pagination" style="display:inline-flex;">
+											<li class="paginate_button page-item" id="liRecord" style="display:none">
+												<a href="#" aria-controls="" data-dt-idx="" tabindex="" class="page-link"></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<%@ include file="../include/adminlte3/footer.jsp"%>
+	</div>
+	<!-- ./wrapper -->
+
+	<%@ include file="../include/adminlte3/js.jsp"%>
+	<!-- date-range-picker -->
+	<script src="../adminlte3/plugins/daterangepicker/moment.min.js"></script>
+	<script src="../adminlte3/plugins/daterangepicker/daterangepicker.js"></script>
+	<!-- Ekko Lightbox -->
+	<script src="../adminlte3/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
+	<!-- DataTables -->
+	<script src="../adminlte3/plugins/datatables/jquery.dataTables.js"></script>
+	<script src="../adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+	
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/def.js"></script>
+	<script type="text/javascript" src="../js/invitation/invitationDetail.js"></script>
+</body>
+</html>
+```
+
+```jsp
+<!-- invitationAdd.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<%@ include file="../include/adminlte3/head.jsp"%>
+	<!-- daterange picker -->
+	<link rel="stylesheet" href="../adminlte3/plugins/daterangepicker/daterangepicker.css">
+	<!-- Ekko Lightbox -->
+	<link rel="stylesheet" href="../adminlte3/plugins/ekko-lightbox/ekko-lightbox.css">
+	<!-- dataTable -->
+	<link rel="stylesheet" href="../adminlte3/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+	
+	<title>청첩장 추가</title>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<%@ include file="../include/adminlte3/navbar.jsp"%>
+		<%@ include file="../include/adminlte3/sidebar.jsp"%>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>청첩장 추가</h1>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+
+			<!-- Main content -->
+			<section class="content" id="sectionContent">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ 기본 정보 (필수)</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>아이디 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="" disabled />
+										<button type="button" class="btn btn-default btn-sm" id="">검색</button>
+									</div>
+									<div class="col-md-2">
+										<span>이름 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="" disabled />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>게시 상태 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="" disabled />
+										<input type="checkbox" id="" />
+										<label>체크 시 비공개로 전환</label>
+									</div>
+									<div class="col-md-2">
+										<span>게시 기간 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" class="" id="inputDateView" />
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ Home, Groom &amp; Bride (필수)</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>결혼 일자 및 일시 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" class="" id="inputDateTimeWedding" />
+									</div>
+									<div class="col-md-2">
+										<span>장소 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="" />
+										<button type="button" class="btn btn-default btn-sm btnGetAddress">검색</button>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>신랑 간단 소개 : </span>
+									</div>
+									<div class="col-md-4">
+										<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+									</div>
+									<div class="col-md-2">
+										<span>신부 간단 소개 : </span>
+									</div>
+									<div class="col-md-4">
+										<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>메인 사진 : </span>
+									</div>
+									<div class="col-md-4">
+										<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
+										</a>
+										<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+									</div>
+									<div class="col-md-6">
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>신랑 &amp; 신부 사진 사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>신랑 사진 : </span>
+									</div>
+									<div class="col-md-4">
+										<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
+										</a>
+										<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+									</div>
+									<div class="col-md-2">
+										<span>신부 사진 : </span>
+									</div>
+									<div class="col-md-4">
+										<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
+										</a>
+										<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ Love story (선택)</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<span>●를 마우스로 끌어서 순서 변경 가능합니다.</span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<!-- start : tableRecordLoveStory -->
+										<table id="tableRecordLoveStory" class="table table-valign-middle table-bordered dataTable">
+											<tbody>
+												<tr>
+													<td rowspan="3" style="width:10%;" class="text-center">●</td>
+													<td rowspan="3" style="width:20%;" class="text-center">
+														<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														</a>
+													</td>
+													<td style="width:10%;" class="text-center">일자</td>
+													<td style="width:60%;">
+														<input type="text" class="inputDateLoveStory" />
+													</td>
+												</tr>
+												<tr>
+													<td class="text-center">제목</td>
+													<td>
+														<input type="text" class="w-100" id="" />
+													</td>
+												</tr>
+												<tr>
+													<td rowspan="2" class="text-center">내용</td>
+													<td rowspan="2">
+														<textarea rows="3" class="form-control" id="" style="resize:none;"></textarea>
+													</td>
+												</tr>
+												<tr>
+													<td class="text-center">
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</td>
+													<td class="text-center">
+														<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+										<!-- end : tableRecordLoveStory -->
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12 text-center">
+										<button type="button" class="btn btn-default btn-sm" id="">추가</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ When Where (필수)</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-12">
+										<table class="table table-valign-middle table-bordered dataTable">
+											<tr>
+												<td style="width:15%;" class="text-center">결혼식</td>
+												<td>
+													<input type="checkbox" id="" checked disabled />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">일자 및 일시</td>
+												<td>
+													<input type="text" id="" disabled />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">장소</td>
+												<td>
+													<input type="text" id="" disabled />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">제목</td>
+												<td>
+													<input type="text" class="w-100" id="" />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">내용</td>
+												<td>
+													<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<table class="table table-valign-middle table-bordered dataTable">
+											<tr>
+												<td style="width:15%;" class="text-center">폐백</td>
+												<td>
+													<input type="checkbox" id="" />
+													<span>(선택)</span>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">일자 및 일시</td>
+												<td>
+													<input type="text" id="inputDateWhenWhere" />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">장소</td>
+												<td>
+													<input type="text" id="" disabled />
+													<button type="button" class="btn btn-default btn-sm" id="">검색</button>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">제목</td>
+												<td>
+													<input type="text" class="w-100" id="" />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">내용</td>
+												<td>
+													<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ Gallery (선택)</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<table class="table table-valign-middle table-bordered dataTable">
+											<tr>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td style="width:20%;" class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+												<td class="text-center">
+													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+													</a>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+												<td class="text-center">
+													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ Sweet Message (선택)</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<button type="button" class="btn btn-default btn-sm" id="">방명록 다운로드</button>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<table id="tableMemberList" class="table table-bordered table-hover dataTable">
+											<thead>
+												<tr>
+													<th style="width:5%;" class="text-center">순번</th>
+													<th style="width:10%;" class="text-center">일시</th>
+													<th style="width:10%;" class="text-center">이름</th>
+													<th style="width:50%;" class="text-center">내용</th>
+													<th style="width:10%;" class="text-center">비밀번호</th>
+													<th style="width:5%;" class="text-center">삭제</th>
+												</tr>
+											</thead>
+											<tbody></tbody>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12" id="divPagingWrap" style="text-align:center;">
+										<ul class="pagination" style="display:inline-flex;">
+											<li class="paginate_button page-item" id="liRecord" style="display:none">
+												<a href="#" aria-controls="" data-dt-idx="" tabindex="" class="page-link"></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<div class="row">
+									<div class="col-md-12 text-center">
+										<button type="button" class="btn btn-primary btn-lg" id="">저장</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-header -->
+						</div>
+						<!-- /.card -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<%@ include file="../include/adminlte3/footer.jsp"%>
+	</div>
+	<!-- ./wrapper -->
+
+	<%@ include file="../include/adminlte3/js.jsp"%>
+	<!-- date-range-picker -->
+	<script src="../adminlte3/plugins/daterangepicker/moment.min.js"></script>
+	<script src="../adminlte3/plugins/daterangepicker/daterangepicker.js"></script>
+	<!-- Ekko Lightbox -->
+	<script src="../adminlte3/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
+	<!-- DataTables -->
+	<script src="../adminlte3/plugins/datatables/jquery.dataTables.js"></script>
+	<script src="../adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+	
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/def.js"></script>
+	<script type="text/javascript" src="../js/invitation/invitationAdd.js"></script>
+</body>
+</html>
+```
+
+- 청첩장 상세와 청첩장 추가 js 구현
+  - `src/main/webapp/resources/js/invitation/invitationDetail.js` 파일 생성
+  - `src/main/webapp/resources/js/invitation/invitationAdd.js` 파일 생성
+```js
+// invitationDetail.js
+
+/**
+ * 
+ */
+
+console.log("########## invitationDetail.js ##########");
+
+$(function(){
+	setActiveSidebar();
+	
+	$("#inputDateView").daterangepicker({
+		locale : {
+			format : "YYYY-MM-DD"
+		}
+		/*autoUpdateInput: false
+		
+		$('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+		      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+		  });*/
+	});
+	
+	$("#inputDateTimeWedding").daterangepicker({
+		singleDatePicker : true,
+		timePicker : true,
+		timePicker24Hour : true,
+		locale : {
+			format : "YYYY-MM-DD HH:mm"
+		}
+	});
+	
+	// 유동적으로 추가한것도 먹힐려나??
+	$(".inputDateLoveStory").daterangepicker({
+		singleDatePicker : true,
+		locale : {
+			format : "YYYY-MM-DD"
+		}
+	});
+	
+	$("#inputDateWhenWhere").daterangepicker({
+		singleDatePicker : true,
+		timePicker : true,
+		timePicker24Hour : true,
+		locale : {
+			format : "YYYY-MM-DD HH:mm"
+		}
+	});
+	
+	$(document).on('click', '[data-toggle="lightbox"]', function(event) {
+		event.preventDefault();
+		$(this).ekkoLightbox({
+			alwaysShowClose: true
+		});
+	});
+});
+```
+
+```js
+// invitationAdd.js
+
+/**
+ * 
+ */
+
+console.log("########## invitationAdd.js ##########");
+
+$(function(){
+	setActiveSidebar();
+	
+	$("#inputDateView").daterangepicker({
+		locale : {
+			format : "YYYY-MM-DD"
+		}
+		/*autoUpdateInput: false
+		
+		$('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+		      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+		  });*/
+	});
+	
+	$("#inputDateTimeWedding").daterangepicker({
+		singleDatePicker : true,
+		timePicker : true,
+		timePicker24Hour : true,
+		locale : {
+			format : "YYYY-MM-DD HH:mm"
+		}
+	});
+	
+	// 유동적으로 추가한것도 먹힐려나??
+	$(".inputDateLoveStory").daterangepicker({
+		singleDatePicker : true,
+		locale : {
+			format : "YYYY-MM-DD"
+		}
+	});
+	
+	$("#inputDateWhenWhere").daterangepicker({
+		singleDatePicker : true,
+		timePicker : true,
+		timePicker24Hour : true,
+		locale : {
+			format : "YYYY-MM-DD HH:mm"
+		}
+	});
+	
+	$("#sectionContent").on("click", "[data-toggle='lightbox']", function(event) {
+		event.preventDefault();
+		
+		$(this).ekkoLightbox({
+			alwaysShowClose: true
+		});
+	});
+	
+	$(".btnGetAddress").click(function(){
+		var pop = window.open("/admin/popup/jusoPopup.jsp", "pop", "scrollbars=yes, resizeable=yes");
+	});
+});
+
+function jusoCallBack(...res) {
+	// res = ["서울특별시 중구 청구로 지하 77, 걍 써봄 (신당동)", "서울특별시 중구 청구로 지하 77", "걍 써봄", "(신당동)", "B 77, Cheonggu-ro, Jung-gu, Seoul", "서울특별시 중구 신당동 295-2 청구역 5,6호선", "04608", "1114016200", "111403101008", "1114016200102950002000001", "5,6호선", "청구역 5,6호선", "0", "서울특별시", "중구", "신당동", "", "청구로", "1", "77", "0", "0", "295", "2", "01", "957058.9352199801", "1951330.378632207"]
+	console.log(res);
+}
+```
+
+- 주소 검색용 페이지 추가
+  - `src/main/webapp/popup/jusoPopup.jsp`파일 추가
+  - 도로명 주소 api 발급 후 키 정보 등록
+```jsp
+<!-- jusoPopup.jsp -->
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<% 
+	//request.setCharacterEncoding("UTF-8");  //한글깨지면 주석제거
+	//request.setCharacterEncoding("EUC-KR");  //해당시스템의 인코딩타입이 EUC-KR일경우에
+	String inputYn = request.getParameter("inputYn"); 
+	String roadFullAddr = request.getParameter("roadFullAddr"); 
+	String roadAddrPart1 = request.getParameter("roadAddrPart1"); 
+	String roadAddrPart2 = request.getParameter("roadAddrPart2"); 
+	String engAddr = request.getParameter("engAddr"); 
+	String jibunAddr = request.getParameter("jibunAddr"); 
+	String zipNo = request.getParameter("zipNo"); 
+	String addrDetail = request.getParameter("addrDetail"); 
+	String admCd    = request.getParameter("admCd");
+	String rnMgtSn = request.getParameter("rnMgtSn");
+	String bdMgtSn  = request.getParameter("bdMgtSn");
+	String detBdNmList  = request.getParameter("detBdNmList");
+	String bdNm  = request.getParameter("bdNm");
+	String bdKdcd  = request.getParameter("bdKdcd");
+	String siNm  = request.getParameter("siNm");
+	String sggNm  = request.getParameter("sggNm");
+	String emdNm  = request.getParameter("emdNm");
+	String liNm  = request.getParameter("liNm");
+	String rn  = request.getParameter("rn");
+	String udrtYn  = request.getParameter("udrtYn");
+	String buldMnnm  = request.getParameter("buldMnnm");
+	String buldSlno  = request.getParameter("buldSlno");
+	String mtYn  = request.getParameter("mtYn");
+	String lnbrMnnm  = request.getParameter("lnbrMnnm");
+	String lnbrSlno  = request.getParameter("lnbrSlno");
+	String emdNo  = request.getParameter("emdNo");
+	String entX  = request.getParameter("entX");
+	String entY  = request.getParameter("entY");
+
+%>
+</head>
+<script language="javascript">
+// opener관련 오류가 발생하는 경우 아래 주석을 해지하고, 사용자의 도메인정보를 입력합니다. ("주소입력화면 소스"도 동일하게 적용시켜야 합니다.)
+//document.domain = "abc.go.kr";
+
+/*
+			모의 해킹 테스트 시 팝업API를 호출하시면 IP가 차단 될 수 있습니다. 
+			주소팝업API를 제외하시고 테스트 하시기 바랍니다.
+*/
+
+function init(){
+	var url = location.href;
+	var confmKey = "API KEY";
+	var resultType = "4"; // 도로명주소 검색결과 화면 출력내용, 1 : 도로명, 2 : 도로명+지번, 3 : 도로명+상세건물명, 4 : 도로명+지번+상세건물명
+	var inputYn= "<%=inputYn%>";
+	if(inputYn != "Y"){
+		document.form.confmKey.value = confmKey;
+		document.form.returnUrl.value = url;
+		document.form.resultType.value = resultType;
+		document.form.action="http://www.juso.go.kr/addrlink/addrCoordUrl.do"; //인터넷망
+		document.form.submit();
+	}else{
+		opener.jusoCallBack("<%=roadFullAddr%>","<%=roadAddrPart1%>","<%=addrDetail%>","<%=roadAddrPart2%>","<%=engAddr%>","<%=jibunAddr%>","<%=zipNo%>", "<%=admCd%>", "<%=rnMgtSn%>", "<%=bdMgtSn%>", "<%=detBdNmList%>", "<%=bdNm%>", "<%=bdKdcd%>", "<%=siNm%>", "<%=sggNm%>", "<%=emdNm%>", "<%=liNm%>", "<%=rn%>", "<%=udrtYn%>", "<%=buldMnnm%>", "<%=buldSlno%>", "<%=mtYn%>", "<%=lnbrMnnm%>", "<%=lnbrSlno%>", "<%=emdNo%>", "<%=entX%>", "<%=entY%>");
+		window.close();
+		}
+}
+</script>
+<body onload="init();">
+	<form id="form" name="form" method="post">
+		<input type="hidden" id="confmKey" name="confmKey" value=""/>
+		<input type="hidden" id="returnUrl" name="returnUrl" value=""/>
+		<input type="hidden" id="resultType" name="resultType" value=""/>
+		<!-- 해당시스템의 인코딩타입이 EUC-KR일경우에만 추가 START-->
+		<!-- 
+		<input type="hidden" id="encodingType" name="encodingType" value="EUC-KR"/>
+		 -->
+		<!-- 해당시스템의 인코딩타입이 EUC-KR일경우에만 추가 END-->
+	</form>
+</body>
+</html>
+```
+
+### 11-2 
