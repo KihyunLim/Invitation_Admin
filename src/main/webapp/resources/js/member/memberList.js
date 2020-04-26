@@ -274,20 +274,24 @@ function getMemberInfo() {
 		success : function(result) {
 			console.log(result);
 			
-			$("#btnModify").data("resMemberInfo", result.resMemberInfo);
-			$("#inputModifyId").val(result.resMemberInfo.id);
-			$("#inputModifyPassword").val(result.resMemberInfo.password);
-			$("#inputModifyName").val(result.resMemberInfo.name);
-			$("#inputModifyPhone").val(result.resMemberInfo.phone);
-			$("#inputModifyRegDate").val(result.resMemberInfo.registerDate);
-			if(result.resMemberInfo.latestInvitationBegin != null && result.resMemberInfo.latestInvitationEnd != null) {
-				$("#inputModifyLatestInvitation").val(result.resMemberInfo.latestInvitationBegin.substr(0,4) + "-"
-						+ result.resMemberInfo.latestInvitationBegin.substr(4,2) + "-"
-						+ result.resMemberInfo.latestInvitationBegin.substr(6,2)
-						+ " ~ " 
-						+ result.resMemberInfo.latestInvitationEnd.substr(0,4) + "-"
-						+ result.resMemberInfo.latestInvitationEnd.substr(4,2) + "-"
-						+ result.resMemberInfo.latestInvitationEnd.substr(6,2));
+			if(result.resFlag){
+				$("#btnModify").data("resMemberInfo", result.resMemberInfo);
+				$("#inputModifyId").val(result.resMemberInfo.id);
+				$("#inputModifyPassword").val(result.resMemberInfo.password);
+				$("#inputModifyName").val(result.resMemberInfo.name);
+				$("#inputModifyPhone").val(result.resMemberInfo.phone);
+				$("#inputModifyRegDate").val(result.resMemberInfo.registerDate);
+				if(result.resMemberInfo.latestInvitationBegin != null && result.resMemberInfo.latestInvitationEnd != null) {
+					$("#inputModifyLatestInvitation").val(result.resMemberInfo.latestInvitationBegin.substr(0,4) + "-"
+							+ result.resMemberInfo.latestInvitationBegin.substr(4,2) + "-"
+							+ result.resMemberInfo.latestInvitationBegin.substr(6,2)
+							+ " ~ " 
+							+ result.resMemberInfo.latestInvitationEnd.substr(0,4) + "-"
+							+ result.resMemberInfo.latestInvitationEnd.substr(4,2) + "-"
+							+ result.resMemberInfo.latestInvitationEnd.substr(6,2));
+				}
+			} else {
+				alert(result.resMessage);
 			}
 		}
 	});

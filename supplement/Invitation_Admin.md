@@ -6251,4 +6251,359 @@ function init(){
 </html>
 ```
 
-### 11-2 
+## 11-2 청첩장 추가 - 기본 정보
+- 아이디 검색용 vo 작성
+```java
+// MemberInfoVO.java
+
+package com.invitation.biz.invitation;
+
+public class MemberInfoVO {
+
+	private String id;
+	private String name;
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	@Override
+	public String toString() {
+		return "UserMemberInfoVO [id=" + id + ", name=" + name + "]";
+	}
+}
+```
+
+- 아이디 검색용 xml 작성
+  - `src/main/resources/mappings/Invitation-mapping.xml` 파일 생성
+```xml
+<!-- sql-map-config.xml -->
+
+		<!-- ~~~ -->
+		<typeAlias alias="userMemberInfo" type="com.invitation.biz.member.user.UserMemberInfoVO"></typeAlias> 
+		<typeAlias alias="memberInfo" type="com.invitation.biz.invitation.MemberInfoVO"></typeAlias> 
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mappings/AdminUseres-mapping.xml" />
+		<mapper resource="mappings/MemberUseres-mapping.xml" />
+		<mapper resource="mappings/Invitation-mapping.xml" />
+	</mappers>
+</configuration>
+```
+
+```xml
+<!-- invitation-mapping.xml -->
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="InvitationDAO">
+	<select id="getMemberInfo" resultType="memberInfo">
+		SELECT
+			ID,
+			NAME
+		FROM
+			USERES
+		WHERE
+			ID = #{id}
+		;
+	</select>
+</mapper>
+```
+
+- 아이디 검색용 DAO, service, sericeImpl 파일 생성
+  - `src/main/java/com/invitation/biz/invitation/impl 생성
+```java
+// InvitationDAOMybatis.java
+
+package com.invitation.biz.invitation.impl;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.invitation.biz.invitation.MemberInfoVO;
+
+@Repository
+public class InvitationDAOMybatis {
+
+	@Autowired
+	private SqlSessionTemplate mybatis;
+	
+	public MemberInfoVO getMemberInfo(String id) {
+		return mybatis.selectOne("InvitationDAO.getMemberInfo", id);
+	}
+}
+```
+
+```java
+// InvitationService.java
+
+package com.invitation.biz.invitation;
+
+public interface InvitationService {
+
+	MemberInfoVO getMemberInfo(String id);
+
+}
+```
+
+```java
+// InvitationServiceImpl.java
+
+package com.invitation.biz.invitation.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.invitation.biz.invitation.InvitationService;
+import com.invitation.biz.invitation.MemberInfoVO;
+
+@Service("invitation")
+public class InvitationServiceImpl implements InvitationService {
+
+	@Autowired
+	private InvitationDAOMybatis invitationDAO;
+	
+	@Override
+	public MemberInfoVO getMemberInfo(String id) {
+		return invitationDAO.getMemberInfo(id);
+	}
+}
+```
+
+- 아이디 검색용 controller 수정
+```java
+// InvitationController.java
+
+		// ~~~
+		return "invitation/invitationList";
+	}
+	
+	@GetMapping(value="/getMemberInfo")
+	@ResponseBody
+	public Map<String, Object> getMemberInfo(@RequestParam(value="id", required=true) String id) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		MemberInfoVO resMemberInfo = null;
+		
+		LOGGER.info("getMemberInfo");
+		try {
+			resMemberInfo = invitationService.getMemberInfo(id);
+			
+			if(resMemberInfo == null) {
+				throw new CommonException("조회 결과 없음!!");
+			}
+			
+			resFlag = true;
+		} catch(CommonException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "일치하는 회원이 없습니다.";
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "회원 조회에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage",  resMessage);
+			result.put("resMemberInfo", resMemberInfo);
+		}
+		
+		return result;
+	}
+}
+```
+
+- 기본 정보 화면 구현
+  - 아이디 검색 추가
+  - 등록 전 유효성 검사 체크 로직 추가
+```jsp
+<!-- invitationAdd.jsp -->
+
+						<!-- ~~~ -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ 기본 정보 (필수)</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>아이디 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="inputId" />
+										<button type="button" class="btn btn-default btn-sm" id="btnMemberSearch">검색</button>
+									</div>
+									<div class="col-md-2">
+										<span>이름 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="inputName" disabled />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>게시 기간 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="text" class="" id="inputDatePeriod" /> <label><input type="checkbox" name="checkboxOpenYN" />체크 시 비공개로 등록</label>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- ~~~ -->
+```
+
+```js
+// invitationAdd.js
+
+$(function(){
+	setActiveSidebar();
+	
+	$("#btnMemberSearch").on("click", function(){
+		var inputId = $("#inputId").val();
+		
+		if(inputId == "") {
+			alert("아이디를 입력해주세요.");
+		} else {
+			getMemberInfo(inputId);
+		}
+	});
+	
+	$("#inputDatePeriod").daterangepicker({
+		locale : {
+			format : "YYYY-MM-DD"
+		}
+		/*autoUpdateInput: false
+		
+		$('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+		      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+		  });*/
+	});
+	
+	//------------------------------------------------------------------------------------------------------
+	
+	//#inputDateWhenWhere 형식 같은데 묶어봐
+	$("#inputDateTimeWedding").daterangepicker({
+		singleDatePicker : true,
+		timePicker : true,
+		timePicker24Hour : true,
+		locale : {
+			format : "YYYY-MM-DD HH:mm"
+		}
+	});
+	
+	// 유동적으로 추가한것도 먹힐려나??
+	$(".inputDateLoveStory").daterangepicker({
+		singleDatePicker : true,
+		locale : {
+			format : "YYYY-MM-DD"
+		}
+	});
+	
+	$("#inputDateWhenWhere").daterangepicker({
+		singleDatePicker : true,
+		timePicker : true,
+		timePicker24Hour : true,
+		locale : {
+			format : "YYYY-MM-DD HH:mm"
+		}
+	});
+	
+	$("#sectionContent").on("click", "[data-toggle='lightbox']", function(event) {
+		event.preventDefault();
+		
+		$(this).ekkoLightbox({
+			alwaysShowClose: true
+		});
+	});
+	
+	$(".btnGetAddress").on("click", function(){
+		$btnGetAddress = $(".btnGetAddress").index($(this));
+		var pop = window.open("/admin/popup/jusoPopup.jsp", "pop", "scrollbars=yes, resizeable=yes");
+	});
+	
+	$("#btnRegisterInvitation").on("click", function(){
+		var result = validateData();
+		
+		if(result.resFlag) {
+			console.log(result.resData);
+		} else {
+			alert(result.resMessage);
+		}
+	});
+});
+
+function getMemberInfo(id) {
+	$("#inputId").removeData("id");
+	$("#inputName").val("");
+	
+	$.ajax({
+		url : "/admin/invitation/getMemberInfo?" + $.param({id : id}),
+		type : "GET",
+		error : function(xhr, status, msg) {
+			alert("status : ", status, "\nHttp error msg : ", msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			if(result.resFlag) {
+				$("#inputId").data("id", result.resMemberInfo.id);
+				$("#inputName").val(result.resMemberInfo.name);
+			} else {
+				alert(result.resMessage);
+			}
+		}
+	});
+}
+
+function jusoCallBack(...res) {
+	// res = ["서울특별시 중구 청구로 지하 77, 걍 써봄 (신당동)", "서울특별시 중구 청구로 지하 77", "걍 써봄", "(신당동)", "B 77, Cheonggu-ro, Jung-gu, Seoul", "서울특별시 중구 신당동 295-2 청구역 5,6호선", "04608", "1114016200", "111403101008", "1114016200102950002000001", "5,6호선", "청구역 5,6호선", "0", "서울특별시", "중구", "신당동", "", "청구로", "1", "77", "0", "0", "295", "2", "01", "957058.9352199801", "1951330.378632207"]
+	console.log(res);
+}
+
+function validateData() {
+	var result = {
+			resFlag : true,
+			resData : {
+				id : $("#inputId").data("id") || "",
+				invitationBegin : ($("#inputDatePeriod").val().split(" - "))[0] || "",
+				invitationEnd : ($("#inputDatePeriod").val().split(" - "))[1] || "",
+				openYN : "Y"
+			},
+			resMessage : ""
+	};
+	
+	if(id == "") {
+		result.resFlag = false;
+		result.resMessage = "아이디를 입력해주세요."
+	} else if(invitationBegin == "" || invitationEnd == "") {
+		result.resFlag = false;
+		result.resMessage = "게시기간을 선택해주세요.";
+	}
+	
+	return result;
+}	
+```
+
+---
+
+## 11-2 청첩장 추가 - Home, Groom & Bride

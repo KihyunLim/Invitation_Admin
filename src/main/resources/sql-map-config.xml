@@ -8,10 +8,12 @@
 		<typeAlias alias="userAdmin" type="com.invitation.biz.admin.user.UserAdminVO"></typeAlias> 
 		<typeAlias alias="userMemberList" type="com.invitation.biz.member.user.UserMemberListVO"></typeAlias> 
 		<typeAlias alias="userMemberInfo" type="com.invitation.biz.member.user.UserMemberInfoVO"></typeAlias> 
+		<typeAlias alias="memberInfo" type="com.invitation.biz.invitation.MemberInfoVO"></typeAlias> 
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="mappings/AdminUseres-mapping.xml" />
 		<mapper resource="mappings/MemberUseres-mapping.xml" />
+		<mapper resource="mappings/Invitation-mapping.xml" />
 	</mappers>
 </configuration>

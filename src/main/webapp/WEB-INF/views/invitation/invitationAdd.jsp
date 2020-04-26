@@ -49,37 +49,29 @@
 										<span>아이디 : </span>
 									</div>
 									<div class="col-md-4">
-										<input type="text" id="" disabled />
-										<button type="button" class="btn btn-default btn-sm" id="">검색</button>
+										<input type="text" id="inputId" />
+										<button type="button" class="btn btn-default btn-sm" id="btnMemberSearch">검색</button>
 									</div>
 									<div class="col-md-2">
 										<span>이름 : </span>
 									</div>
 									<div class="col-md-4">
-										<input type="text" id="" disabled />
+										<input type="text" id="inputName" disabled />
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-md-2">
-										<span>게시 상태 : </span>
-									</div>
-									<div class="col-md-4">
-										<input type="text" id="" disabled />
-										<input type="checkbox" id="" />
-										<label>체크 시 비공개로 전환</label>
-									</div>
-									<div class="col-md-2">
 										<span>게시 기간 : </span>
 									</div>
-									<div class="col-md-4">
-										<input type="text" class="" id="inputDateView" />
+									<div class="col-md-10">
+										<input type="text" class="" id="inputDatePeriod" /> <label><input type="checkbox" name="checkboxOpenYN" />체크 시 비공개로 등록</label>
 									</div>
 								</div>
 							</div>
 							<!-- /.card-body -->
 						</div>
 						<!-- /.card -->
-						<div class="card">
+						<div class="card" id="divHomeGroomBride">
 							<div class="card-header">
 								<h3 class="card-title header-padding-top">▶ Home, Groom &amp; Bride (필수)</h3>
 							</div>
@@ -90,13 +82,13 @@
 										<span>결혼 일자 및 일시 : </span>
 									</div>
 									<div class="col-md-4">
-										<input type="text" class="" id="inputDateTimeWedding" />
+										<input type="text" class="inputDateTime" id="inputDateTimeWedding" />
 									</div>
 									<div class="col-md-2">
 										<span>장소 : </span>
 									</div>
 									<div class="col-md-4">
-										<input type="text" id="" />
+										<input type="text" class="w70p inputAddrWeddingPlace" id="infoWeddingPlace" disabled />
 										<button type="button" class="btn btn-default btn-sm btnGetAddress">검색</button>
 									</div>
 								</div>
@@ -105,13 +97,13 @@
 										<span>신랑 간단 소개 : </span>
 									</div>
 									<div class="col-md-4">
-										<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+										<textarea rows="5" class="form-control" id="contentGroom" style="resize:none;"></textarea>
 									</div>
 									<div class="col-md-2">
 										<span>신부 간단 소개 : </span>
 									</div>
 									<div class="col-md-4">
-										<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+										<textarea rows="5" class="form-control" id="contentBride" style="resize:none;"></textarea>
 									</div>
 								</div>
 								<div class="row">
@@ -247,13 +239,13 @@
 											<tr>
 												<td class="text-center">일자 및 일시</td>
 												<td>
-													<input type="text" id="" disabled />
+													<input type="text" id="inputDateTimeWedding_copy" disabled />
 												</td>
 											</tr>
 											<tr>
 												<td class="text-center">장소</td>
 												<td>
-													<input type="text" id="" disabled />
+													<input type="text" class="w70p inputAddrWeddingPlace" disabled />
 												</td>
 											</tr>
 											<tr>
@@ -284,14 +276,14 @@
 											<tr>
 												<td class="text-center">일자 및 일시</td>
 												<td>
-													<input type="text" id="inputDateWhenWhere" />
+													<input type="text" class="inputDateTime" id="inputDatePyebaek" />
 												</td>
 											</tr>
 											<tr>
 												<td class="text-center">장소</td>
 												<td>
-													<input type="text" id="" disabled />
-													<button type="button" class="btn btn-default btn-sm" id="">검색</button>
+													<input type="text" class="w70p" id="inputAddrPyebaek" disabled />
+													<button type="button" class="btn btn-default btn-sm btnGetAddress">검색</button>
 												</td>
 											</tr>
 											<tr>
@@ -488,7 +480,7 @@
 							<div class="card-header">
 								<div class="row">
 									<div class="col-md-12 text-center">
-										<button type="button" class="btn btn-primary btn-lg" id="">저장</button>
+										<button type="button" class="btn btn-primary btn-lg" id="btnRegisterInvitation">저장</button>
 									</div>
 								</div>
 							</div>

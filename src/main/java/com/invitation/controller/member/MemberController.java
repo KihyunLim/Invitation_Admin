@@ -161,6 +161,8 @@ public class MemberController {
 			if(resMemberInfo == null) {
 				throw new CommonException("회원정보 불일치!!");
 			}
+			
+			resFlag = true;
 		} catch(CommonException e) {
 			LOGGER.error("error message : " + e.getMessage());
 			
@@ -170,7 +172,7 @@ public class MemberController {
 			LOGGER.error("error message : " + e.getMessage());
 			LOGGER.error("error trace : ", e);
 			
-			resFlag = true;
+			resFlag = false;
 			resMessage = "회원 상세조회에 실패했습니다.";
 		} finally {
 			result.put("resFlag", resFlag);
