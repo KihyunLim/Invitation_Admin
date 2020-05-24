@@ -15,5 +15,6 @@
 		<mapper resource="mappings/AdminUseres-mapping.xml" />
 		<mapper resource="mappings/MemberUseres-mapping.xml" />
 		<mapper resource="mappings/Invitation-mapping.xml" />
+		<mapper resource="mappings/Upload-mapping.xml" />
 	</mappers>
 </configuration>

@@ -110,11 +110,15 @@
 									<div class="col-md-2">
 										<span>메인 사진 : </span>
 									</div>
-									<div class="col-md-4">
-										<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+									<div class="col-md-4 wrapUploadFile">
+										<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
 											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
 										</a>
-										<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+										<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<!-- <form method="post" enctype="multipart/form-data">
+											<input type="file" class="btnUploadFile" id="" />
+										</form> -->
+										<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
 									</div>
 									<div class="col-md-6">
 									</div>
@@ -131,20 +135,22 @@
 									<div class="col-md-2">
 										<span>신랑 사진 : </span>
 									</div>
-									<div class="col-md-4">
-										<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+									<div class="col-md-4 wrapUploadFile">
+										<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
 											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
 										</a>
-										<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+										<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
+										<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
 									</div>
 									<div class="col-md-2">
 										<span>신부 사진 : </span>
 									</div>
-									<div class="col-md-4">
-										<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+									<div class="col-md-4 wrapUploadFile">
+										<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
 											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
 										</a>
-										<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+										<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
+										<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
 									</div>
 								</div>
 							</div>
@@ -174,11 +180,11 @@
 									<div class="col-md-12">
 										<!-- start : tableRecordLoveStory -->
 										<table id="tableRecordLoveStory" class="table table-valign-middle table-bordered dataTable">
-											<tbody>
+											<tbody class="wrapUploadFile">
 												<tr>
 													<td rowspan="3" style="width:10%;" class="text-center">●</td>
 													<td rowspan="3" style="width:20%;" class="text-center">
-														<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
 															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
 														</a>
 													</td>
@@ -204,7 +210,8 @@
 														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
 													</td>
 													<td class="text-center">
-														<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
+														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
 													</td>
 												</tr>
 											</tbody>
@@ -323,101 +330,117 @@
 									<div class="col-md-12">
 										<table class="table table-valign-middle table-bordered dataTable">
 											<tr>
-												<td style="width:20%;" class="text-center">
-													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
-													</a>
+												<td style="width:20%;" class="text-center wrapUploadFile">
+													<div>
+														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</div>
 												</td>
-												<td style="width:20%;" class="text-center">
-													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
-													</a>
+												<td style="width:20%;" class="text-center wrapUploadFile">
+													<div>
+														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</div>
 												</td>
-												<td style="width:20%;" class="text-center">
-													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
-													</a>
+												<td style="width:20%;" class="text-center wrapUploadFile">
+													<div>
+														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</div>
 												</td>
-												<td style="width:20%;" class="text-center">
-													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
-													</a>
+												<td style="width:20%;" class="text-center wrapUploadFile">
+													<div>
+														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</div>
 												</td>
-												<td style="width:20%;" class="text-center">
-													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
-													</a>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-center">
-													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
-													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
-												</td>
-												<td class="text-center">
-													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
-													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
-												</td>
-												<td class="text-center">
-													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
-													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
-												</td>
-												<td class="text-center">
-													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
-													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
-												</td>
-												<td class="text-center">
-													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
-													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-center">
-													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
-													</a>
-												</td>
-												<td class="text-center">
-													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
-													</a>
-												</td>
-												<td class="text-center">
-													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
-													</a>
-												</td>
-												<td class="text-center">
-													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
-													</a>
-												</td>
-												<td class="text-center">
-													<a href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-														<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
-													</a>
+												<td style="width:20%;" class="text-center wrapUploadFile">
+													<div>
+														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</div>
 												</td>
 											</tr>
 											<tr>
-												<td class="text-center">
-													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
-													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												<td style="width:20%;" class="text-center wrapUploadFile">
+													<div>
+														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</div>
 												</td>
-												<td class="text-center">
-													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
-													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												<td style="width:20%;" class="text-center wrapUploadFile">
+													<div>
+														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</div>
 												</td>
-												<td class="text-center">
-													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
-													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												<td style="width:20%;" class="text-center wrapUploadFile">
+													<div>
+														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</div>
 												</td>
-												<td class="text-center">
-													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
-													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												<td style="width:20%;" class="text-center wrapUploadFile">
+													<div>
+														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</div>
 												</td>
-												<td class="text-center">
-													<button type="button" class="btn btn-default btn-sm" id="">사진 첨부</button>
-													<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+												<td style="width:20%;" class="text-center wrapUploadFile">
+													<div>
+														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</div>
 												</td>
 											</tr>
 										</table>

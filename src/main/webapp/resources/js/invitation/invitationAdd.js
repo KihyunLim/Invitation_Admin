@@ -61,6 +61,12 @@ $(function(){
 		}
 	});
 	
+	$(".btnUploadFile").change(function(e){
+		uploadFile($(this), function(res){
+			renderFile(res);
+		});
+	});
+	
 	//------------------------------------------------------------------------------------------------------
 	
 	// 유동적으로 추가한것도 먹힐려나??
@@ -160,4 +166,8 @@ function validateData() {
 	}
 	
 	return result;
+}
+
+function renderFile(data) {
+	console.log(data);
 }

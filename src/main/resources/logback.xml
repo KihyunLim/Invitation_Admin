@@ -49,18 +49,18 @@
 	</appender>
 
 	<!-- Application Loggers -->
-	<logger name="com.invitation" level="info" additivity="false">
+	<logger name="com.invitation" level="debug" additivity="false">
 		<appender-ref ref="console" />
 		<appender-ref ref="file" />
 	</logger>
 	
 	<!-- Query Loggers -->
-	<logger name="jdbc.sqlonly" level="info" additivity="false">
+	<logger name="jdbc.sqlonly" level="debug" additivity="false">
 		<appender-ref ref="console" />
 		<appender-ref ref="file" />
 	</logger>
 	
-	<logger name="jdbc.resultsettable" level="info" additivity="false">
+	<logger name="jdbc.resultsettable" level="debug" additivity="false">
 		<appender-ref ref="console" />
 		<appender-ref ref="file" />
 	</logger>

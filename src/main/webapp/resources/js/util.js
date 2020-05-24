@@ -203,3 +203,85 @@ function utilDataTablePaging(idTarget, idDataTable, pageMaker) {
 		}
 	}
 };
+
+function uploadFile($this, callback) {
+	var file = $($this)[0].files[0],
+		$fileUploadForm = $("<form>"),
+		formData = new FormData($fileUploadForm[0]);
+	
+	formData.append("file", file);
+	
+	$.ajax({
+		url : "/admin/common/fileUpload.do",
+		data : formData,
+		dataType : "text",
+		processData : false,
+		contentType : false,
+		type : "POST",
+		enctype : "multipart/form-data",
+		cache : false,
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			callback(setFileInfo(result));
+		}
+	});
+};
+
+function setFileInfo(fullName) {
+	var originalFileName, imgSrc, originalFileUrl, uuidFileName;
+	
+	if(checkImageType(fullName)) {
+		imgSrc = IMG_SRC + fullName;
+		uuidFileName = fullName.substr(14);
+		var originalImg = fullName.substr(0, 12) + fullName.substr(14);
+		
+		originalFileUrl = ORIGINAL_FILE_URL + originalImg;
+	} else {
+		imgSrc = IMG_SRC_ICO;
+		uuidFileName = fullName.substr(12);
+		originalFileUrl = ORIGINAL_FILE_URL + fullName;
+	}
+	originalFileName = uuidFileName.substr(uuidFileName.indexOf("_") + 1);
+	
+	return {
+		originalFileName : originalFileName,
+		imgSrc : imgSrc,
+		originalFileUrl : originalFileUrl,
+		fullName : fullName
+	}
+};
+
+function checkImageType(fullName) {
+	return fullName.match(/jpg$|gif$|jpeg$|png$/i);
+};
+
+$(function(){
+	/**
+	 * 업로드 이벤트 공통으로 할랫는데 렌더할 경우를 위해
+	 * 태그 자체 이벤트는 각 페이지에서 하고
+	 * 업로드하는 로직만 공통으로 뺌
+	 */
+	/*$(".btnUploadFile").change(function(e){
+//		var file = $(this)[0].files[0],
+//			formData = new FormData();
+//		
+//		formData.append("file", file);
+//		
+//		if(formData.get("file") != undefined) {
+//			console.log(formData.get("file"));
+//			uploadFile(formData, $(this));
+//		}
+		
+		var file = $(this)[0].files[0],
+//			$fileUploadForm = $("<form>").prop({"method" : "POST", "enctype" : "multipart/form-data"}),
+			$fileUploadForm = $("<form>"),
+			formData = new FormData($fileUploadForm[0]);
+		
+		formData.append("file", file);
+		uploadFile(formData, $(this));
+	});*/
+})
