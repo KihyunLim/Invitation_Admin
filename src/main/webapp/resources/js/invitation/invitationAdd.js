@@ -62,8 +62,13 @@ $(function(){
 	});
 	
 	$(".btnUploadFile").change(function(e){
+		var $this = $(this);
+		
 		uploadFile($(this), function(res){
-			renderFile(res);
+			$this.hide()
+					.parents(".wrapUploadFile")
+						.find("a").attr("href", res.originalFileUrl).data("title", res.originalFileName)
+						.find("img").attr("src", res.imgSrc);
 		});
 	});
 	
@@ -166,8 +171,4 @@ function validateData() {
 	}
 	
 	return result;
-}
-
-function renderFile(data) {
-	console.log(data);
 }

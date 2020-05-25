@@ -112,7 +112,7 @@
 									</div>
 									<div class="col-md-4 wrapUploadFile">
 										<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
+											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px" id="imgMain">
 										</a>
 										<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
 										<!-- <form method="post" enctype="multipart/form-data">
