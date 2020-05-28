@@ -118,7 +118,7 @@
 										<!-- <form method="post" enctype="multipart/form-data">
 											<input type="file" class="btnUploadFile" id="" />
 										</form> -->
-										<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 									</div>
 									<div class="col-md-6">
 									</div>
@@ -139,8 +139,8 @@
 										<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
 											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
 										</a>
-										<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
-										<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+										<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 									</div>
 									<div class="col-md-2">
 										<span>신부 사진 : </span>
@@ -149,8 +149,8 @@
 										<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
 											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
 										</a>
-										<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
-										<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+										<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 									</div>
 								</div>
 							</div>
@@ -210,8 +210,8 @@
 														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
 													</td>
 													<td class="text-center">
-														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
-														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 													</td>
 												</tr>
 											</tbody>
@@ -337,8 +337,8 @@
 														</a>
 													</div>
 													<div>
-														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
-														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center wrapUploadFile">
@@ -348,8 +348,8 @@
 														</a>
 													</div>
 													<div>
-														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
-														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center wrapUploadFile">
@@ -359,8 +359,8 @@
 														</a>
 													</div>
 													<div>
-														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
-														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center wrapUploadFile">
@@ -370,8 +370,8 @@
 														</a>
 													</div>
 													<div>
-														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
-														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center wrapUploadFile">
@@ -381,8 +381,8 @@
 														</a>
 													</div>
 													<div>
-														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
-														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 													</div>
 												</td>
 											</tr>
@@ -394,8 +394,8 @@
 														</a>
 													</div>
 													<div>
-														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
-														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center wrapUploadFile">
@@ -405,8 +405,8 @@
 														</a>
 													</div>
 													<div>
-														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
-														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center wrapUploadFile">
@@ -416,8 +416,8 @@
 														</a>
 													</div>
 													<div>
-														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
-														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center wrapUploadFile">
@@ -427,8 +427,8 @@
 														</a>
 													</div>
 													<div>
-														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
-														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center wrapUploadFile">
@@ -438,8 +438,8 @@
 														</a>
 													</div>
 													<div>
-														<button type="button" class="btn btn-default btn-sm btnUploadFile" id="">사진 첨부</button>
-														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
 													</div>
 												</td>
 											</tr>

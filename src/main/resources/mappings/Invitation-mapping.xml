@@ -11,6 +11,7 @@
 			USERES
 		WHERE
 			ID = #{id}
+			AND DELETEFLAG = 'N'
 		;
 	</select>
 </mapper>

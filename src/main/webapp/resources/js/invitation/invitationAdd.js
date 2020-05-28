@@ -72,6 +72,14 @@ $(function(){
 		});
 	});
 	
+	$(".btnDeleteImage").on("click", function(){
+		var $wrapUploadFile = $(this).parents(".wrapUploadFile");
+		
+		$wrapUploadFile.find("a").attr("href", "").removeData("title", "")
+								.find("img").attr("src", "");
+		$wrapUploadFile.find(".btnUploadFile").val("").show();
+	});
+	
 	//------------------------------------------------------------------------------------------------------
 	
 	// 유동적으로 추가한것도 먹힐려나??
@@ -84,10 +92,13 @@ $(function(){
 	
 	$("#sectionContent").on("click", "[data-toggle='lightbox']", function(event) {
 		event.preventDefault();
-		
-		$(this).ekkoLightbox({
-			alwaysShowClose: true
-		});
+		var $this = $(this);
+
+		if($this.attr("href") != "") {
+			$this.ekkoLightbox({
+				alwaysShowClose: true
+			});
+		}
 	});
 });
 

@@ -1,13 +1,18 @@
 package com.invitation.controller.common.fileUpload;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -89,6 +94,29 @@ public class FileUploadController {
 		} catch(Exception e) {
 			LOGGER.error("error message : " + e.getMessage());
 			LOGGER.error("error trace : ", e);
+			
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
+	
+	@RequestMapping(value="/fileDisplay.do", method=RequestMethod.GET)
+	public ResponseEntity<byte[]> displayFile(String fileName, HttpServletRequest request) throws Exception {
+		HttpHeaders httpHeaders = UploadFileUtils.getHttpHeaders(fileName);
+		String rootPath = UploadFileUtils.getRootPath(fileName, request);
+		ResponseEntity<byte[]> entity = null;
+		
+		LOGGER.info("fileDisplay.do");
+		try(InputStream inputStream = new FileInputStream(rootPath + fileName)) {
+			entity = new ResponseEntity<>(IOUtils.toByteArray(inputStream), httpHeaders, HttpStatus.OK);
+		} catch(FileNotFoundException e) {
+			LOGGER.info("info message : 파일을 찾지 못함!! " + e.getMessage());
+			
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error treace : ", e);
 			
 			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
