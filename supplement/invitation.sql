@@ -35,6 +35,7 @@ VALUES
 update useres set id='test6' where name='유저6';
 select * from useres where id like '%est%';
 SELECT * FROM USERES order by DATETIME_REGISTER desc;
+select * from useres where id = 'test10' and DELETEFLAG = 'N';
 
 SELECT
 	U.ID
@@ -131,14 +132,14 @@ CREATE TABLE INVITATION_LIST (
 	SEQ INT PRIMARY KEY AUTO_INCREMENT
 	, ID VARCHAR(20) NOT NULL
 	, NAME VARCHAR(20) NOT NULL
-	, VISABLE VARCHAR(1) DEFAULT 'N'
+	, VISIBLE VARCHAR(1) DEFAULT 'N'
 	, DATE_BEGIN VARCHAR(8) NOT NULL
 	, DATE_END VARCHAR(8) NOT NULL
 	, FORMCODE VARCHAR(10) NOT NULL
 	, FOREIGN KEY (ID) REFERENCES USERES (ID)
 	, FOREIGN KEY (FORMCODE) REFERENCES INVITATION_FORM (FORMCODE)
 );
-
+alter table invitation_list change visible VISIBLE varchar(20) not null;
 INSERT INTO
 	INVITATION_LIST
 values

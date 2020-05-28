@@ -211,7 +211,7 @@
 													</td>
 													<td class="text-center">
 														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+														<button type="button" class="btn btn-default btn-sm " id="">삭제</button>
 													</td>
 												</tr>
 											</tbody>
