@@ -12,7 +12,7 @@
 	<!-- dataTable -->
 	<link rel="stylesheet" href="../adminlte3/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
 	
-	<title>청첩장 추가</title>
+	<title>IA</title>
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -110,15 +110,16 @@
 									<div class="col-md-2">
 										<span>메인 사진 : </span>
 									</div>
-									<div class="col-md-4 wrapUploadFile">
-										<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px" id="imgMain">
+									<div class="col-md-4 uploadbox wrapUploadFile">
+										<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/uploadImage.png" class="mb-2 img-thumnail-h100px">
 										</a>
-										<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<label for="imgHGB1">업로드</label>
+										<input type="file" class="btnUploadFile" id="imgHGB1" accept="image/png, image/jpeg, image/jpg, image/gif" />
 										<!-- <form method="post" enctype="multipart/form-data">
 											<input type="file" class="btnUploadFile" id="" />
 										</form> -->
-										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 									</div>
 									<div class="col-md-6">
 									</div>
@@ -135,22 +136,24 @@
 									<div class="col-md-2">
 										<span>신랑 사진 : </span>
 									</div>
-									<div class="col-md-4 wrapUploadFile">
-										<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
+									<div class="col-md-4 uploadbox wrapUploadFile">
+										<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/uploadImage.png" class="mb-2 img-thumnail-h100px">
 										</a>
-										<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+										<label for="imgHGB2">업로드</label>
+										<input type="file" class="btnUploadFile" id="imgHGB2" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 									</div>
 									<div class="col-md-2">
 										<span>신부 사진 : </span>
 									</div>
-									<div class="col-md-4 wrapUploadFile">
-										<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-											<img src="../css/img/sample1.jpg" class="mb-2 img-thumnail-h100px">
+									<div class="col-md-4 uploadbox wrapUploadFile">
+										<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/uploadImage.png" class="mb-2 img-thumnail-h100px">
 										</a>
-										<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+										<label for="imgHGB3">업로드</label>
+										<input type="file" class="btnUploadFile" id="imgHGB3" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 									</div>
 								</div>
 							</div>
@@ -180,12 +183,12 @@
 									<div class="col-md-12">
 										<!-- start : tableRecordLoveStory -->
 										<table id="tableRecordLoveStory" class="table table-valign-middle table-bordered dataTable">
-											<tbody class="wrapUploadFile">
+											<tbody class="uploadbox wrapUploadFile">
 												<tr>
 													<td rowspan="3" style="width:10%;" class="text-center">●</td>
 													<td rowspan="3" style="width:20%;" class="text-center">
-														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
 														</a>
 													</td>
 													<td style="width:10%;" class="text-center">일자</td>
@@ -210,8 +213,9 @@
 														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
 													</td>
 													<td class="text-center">
-														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm " id="">삭제</button>
+														<label for="imgLS1">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgLS1" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 													</td>
 												</tr>
 											</tbody>
@@ -330,116 +334,126 @@
 									<div class="col-md-12">
 										<table class="table table-valign-middle table-bordered dataTable">
 											<tr>
-												<td style="width:20%;" class="text-center wrapUploadFile">
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
 													<div>
-														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
 														</a>
 													</div>
 													<div>
-														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+														<label for="imgG1">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG1" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 													</div>
 												</td>
-												<td style="width:20%;" class="text-center wrapUploadFile">
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
 													<div>
-														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
 														</a>
 													</div>
 													<div>
-														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+														<label for="imgG2">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG2" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 													</div>
 												</td>
-												<td style="width:20%;" class="text-center wrapUploadFile">
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
 													<div>
-														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
 														</a>
 													</div>
 													<div>
-														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+														<label for="imgG3">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG3" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 													</div>
 												</td>
-												<td style="width:20%;" class="text-center wrapUploadFile">
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
 													<div>
-														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
 														</a>
 													</div>
 													<div>
-														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+														<label for="imgG4">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG4" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 													</div>
 												</td>
-												<td style="width:20%;" class="text-center wrapUploadFile">
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
 													<div>
-														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
 														</a>
 													</div>
 													<div>
-														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+														<label for="imgG5">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG5" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 													</div>
 												</td>
 											</tr>
 											<tr>
-												<td style="width:20%;" class="text-center wrapUploadFile">
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
 													<div>
-														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
 														</a>
 													</div>
 													<div>
-														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+														<label for="imgG6">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG6" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 													</div>
 												</td>
-												<td style="width:20%;" class="text-center wrapUploadFile">
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
 													<div>
-														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
 														</a>
 													</div>
 													<div>
-														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+														<label for="imgG7">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG7" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 													</div>
 												</td>
-												<td style="width:20%;" class="text-center wrapUploadFile">
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
 													<div>
-														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
 														</a>
 													</div>
 													<div>
-														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+														<label for="imgG8">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG8" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 													</div>
 												</td>
-												<td style="width:20%;" class="text-center wrapUploadFile">
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
 													<div>
-														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
 														</a>
 													</div>
 													<div>
-														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+														<label for="imgG9">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG9" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 													</div>
 												</td>
-												<td style="width:20%;" class="text-center wrapUploadFile">
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
 													<div>
-														<a class="aFileData" href="../css/img/sample2.jpg" data-toggle="lightbox" data-title="image title">
-															<img src="../css/img/sample1.jpg" class="img-thumnail-h100px">
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
 														</a>
 													</div>
 													<div>
-														<input type="file" class="btnUploadFile" id="" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="">삭제</button>
+														<label for="imgG10">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG10" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
 													</div>
 												</td>
 											</tr>
@@ -462,37 +476,6 @@
 									</div>
 									<div class="col-md-10">
 										<input type="checkbox" id="" />
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<button type="button" class="btn btn-default btn-sm" id="">방명록 다운로드</button>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<table id="tableMemberList" class="table table-bordered table-hover dataTable">
-											<thead>
-												<tr>
-													<th style="width:5%;" class="text-center">순번</th>
-													<th style="width:10%;" class="text-center">일시</th>
-													<th style="width:10%;" class="text-center">이름</th>
-													<th style="width:50%;" class="text-center">내용</th>
-													<th style="width:10%;" class="text-center">비밀번호</th>
-													<th style="width:5%;" class="text-center">삭제</th>
-												</tr>
-											</thead>
-											<tbody></tbody>
-										</table>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-12" id="divPagingWrap" style="text-align:center;">
-										<ul class="pagination" style="display:inline-flex;">
-											<li class="paginate_button page-item" id="liRecord" style="display:none">
-												<a href="#" aria-controls="" data-dt-idx="" tabindex="" class="page-link"></a>
-											</li>
-										</ul>
 									</div>
 								</div>
 							</div>

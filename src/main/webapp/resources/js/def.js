@@ -8,6 +8,7 @@ var GO_TO_MAIN = "/admin/member/memberList.do";
 var IMG_SRC = "/admin/common/fileDisplay.do?fileName=";
 var IMG_SRC_ICO = "resources/upload/files/fileIcon.png";
 var ORIGINAL_FILE_URL = "/admin/common/fileDisplay.do?fileName=";
+var DEFAULT_IMG_SRC = "../css/img/uploadImage.png";
 
 var MAP_SIDEBAR = {
 	"member" : {

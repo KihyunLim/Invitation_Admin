@@ -65,19 +65,34 @@ $(function(){
 		var $this = $(this);
 		
 		uploadFile($(this), function(res){
+			$this.prev().hide();
 			$this.hide()
 					.parents(".wrapUploadFile")
 						.find("a").attr("href", res.originalFileUrl).data("title", res.originalFileName)
 						.find("img").attr("src", res.imgSrc);
+			$this.next().show();
 		});
+	});
+	
+	$("#sectionContent").on("click", "[data-toggle='lightbox']", function(event) {
+		event.preventDefault();
+		var $this = $(this);
+
+		if($this.attr("href") != "" && $this.find("img").attr("src") != DEFAULT_IMG_SRC) {
+			$this.ekkoLightbox({
+				alwaysShowClose: true
+			});
+		}
 	});
 	
 	$(".btnDeleteImage").on("click", function(){
 		var $wrapUploadFile = $(this).parents(".wrapUploadFile");
 		
 		$wrapUploadFile.find("a").attr("href", "").removeData("title", "")
-								.find("img").attr("src", "");
-		$wrapUploadFile.find(".btnUploadFile").val("").show();
+								.find("img").attr("src", DEFAULT_IMG_SRC);
+		$wrapUploadFile.find(".btnUploadFile").val("").show()
+														.prev().show()
+														.next().next().hide();
 	});
 	
 	//------------------------------------------------------------------------------------------------------
@@ -87,17 +102,6 @@ $(function(){
 		singleDatePicker : true,
 		locale : {
 			format : "YYYY-MM-DD"
-		}
-	});
-	
-	$("#sectionContent").on("click", "[data-toggle='lightbox']", function(event) {
-		event.preventDefault();
-		var $this = $(this);
-
-		if($this.attr("href") != "") {
-			$this.ekkoLightbox({
-				alwaysShowClose: true
-			});
 		}
 	});
 });

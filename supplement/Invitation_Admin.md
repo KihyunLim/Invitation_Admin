@@ -6606,4 +6606,1000 @@ function validateData() {
 
 ---
 
-## 11-2 청첩장 추가 - Home, Groom & Bride
+## 11-3 청첩장 추가 - Home, Groom & Bride (파일업로드/이미지보기/썸네일 구현)
+- 파일업로드 구현
+	- `com.invitation.biz.common.fileUpload` 패키지 생성
+	- MediaUtils.java, UploadFileUtils.java 클래스 작성
+
+	- java util 클래스 구현
+		- 파일업로드 시 저장될 파일을 담을 폴더 생성 `upload\images`
+			로컬에서 작업할 경우 : `[해당 프로젝트 워크스페이스]\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\[프로젝트명]\resources\` 하위에 위의 폴더 생성
+```java
+// MediaUtils.java
+
+package com.invitation.biz.common.fileUpload;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.MediaType;
+
+public class MediaUtils {
+
+	private static Map<String, MediaType> mediaTypeMap;
+	
+	static {
+		mediaTypeMap = new HashMap<String, MediaType>();
+		mediaTypeMap.put("JPG", MediaType.IMAGE_JPEG);
+		mediaTypeMap.put("GIF", MediaType.IMAGE_GIF);
+		mediaTypeMap.put("PNG", MediaType.IMAGE_PNG);
+	}
+	
+	public static MediaType getMediaType(String fileName) {
+		String formatName = getFormatName(fileName);
+		
+		return mediaTypeMap.get(formatName);
+	}
+	
+	static String getFormatName(String fileName) {
+		return fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
+	}
+}
+
+```
+
+```java
+// UploadFileUtils.java
+
+package com.invitation.biz.common.fileUpload;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.UUID;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+
+import org.imgscalr.Scalr;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+public class UploadFileUtils {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(UploadFileUtils.class);
+	
+	public static String uploadFile(MultipartFile file, HttpServletRequest request) throws Exception {
+		String originalFileName = file.getOriginalFilename();
+		byte[] fileData = file.getBytes();
+		
+		LOGGER.debug("uploadFile util : " + originalFileName);
+		String uuidFileName = getUuidFileName(originalFileName);
+		
+		String rootPath = getRootPath(originalFileName, request);
+		String datePath = getDatePath(rootPath);
+		
+		File target = new File(rootPath + datePath, uuidFileName);
+		FileCopyUtils.copy(fileData, target);
+		
+		if(MediaUtils.getMediaType(originalFileName) != null) {
+			uuidFileName = makeThumbnail(rootPath, datePath, uuidFileName);
+		}
+		
+		return replaceSavedFilePath(datePath, uuidFileName);
+	}
+	
+	public static void deleteFile(String fileName, HttpServletRequest request) {
+		String rootPath = getRootPath(fileName, request);
+		
+		MediaType mediaType = MediaUtils.getMediaType(fileName);
+		if(mediaType != null) {
+			LOGGER.debug("fileName 0 to end : " + fileName);
+			LOGGER.debug("fileName 0 to 12 : " + fileName.substring(0, 12));
+			LOGGER.debug("fileName 14 to end : " + fileName.substring(14));
+			String originalImg = fileName.substring(0, 12) + fileName.substring(14);
+			
+			new File(rootPath + originalImg.replace('/', File.separatorChar)).delete();
+		}
+		
+		new File(rootPath + fileName.replace('/', File.separatorChar)).delete();
+	}
+	
+	public static HttpHeaders getHttpHeaders(String fileName) throws Exception {
+		MediaType mediaType = MediaUtils.getMediaType(fileName);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		
+		if(mediaType != null) {
+			httpHeaders.setContentType(mediaType);
+			return httpHeaders;
+		}
+		
+		fileName = fileName.substring(fileName.indexOf("_") + 1);
+		httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		httpHeaders.add("Content-Disposition", "attachment); filename=\''" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1") + "\''");
+		
+		LOGGER.debug("################ 여로모로 이상한 라인인디;; ##################");
+		LOGGER.debug("attachment); filename=\''" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1") + "\''");
+		return httpHeaders;
+	}
+	
+	public static String getRootPath(String fileName, HttpServletRequest request) {
+		String rootPath = "/resources/upload";
+		MediaType mediaType = MediaUtils.getMediaType(fileName);
+		
+		LOGGER.debug("getRootPath : " + request.getSession().getServletContext().getRealPath(rootPath));
+		if(mediaType != null) {
+			return request.getSession().getServletContext().getRealPath(rootPath + "/images");
+		}
+		
+		return request.getSession().getServletContext().getRealPath(rootPath + "/files");
+	}
+	
+	private static String getDatePath(String uploadPath) {
+		Calendar calendar = Calendar.getInstance();
+		String yearPath = File.separator + calendar.get(Calendar.YEAR);
+		String monthPath = yearPath + File.separator + new DecimalFormat("00").format(calendar.get(Calendar.MONTH) + 1);
+		String datePath = monthPath + File.separator + new DecimalFormat("00").format(calendar.get(Calendar.DATE));
+		
+		makeDateDir(uploadPath, yearPath, monthPath, datePath);
+		
+		return datePath;
+	}
+	
+	private static void makeDateDir(String uploadPath, String... paths) {
+		if(new File(uploadPath + paths[paths.length - 1]).exists()) {
+			return;
+		}
+		
+		for(String path : paths) {
+			File dirPath = new File(uploadPath + path);
+			if(!dirPath.exists()) {
+				dirPath.mkdir();
+			}
+		}
+	}
+	
+	private static String replaceSavedFilePath(String datePath, String fileName) {
+		String savedFilePath = datePath + File.separator + fileName;
+		
+		return savedFilePath.replace(File.separatorChar, '/');
+	}
+	
+	private static String getUuidFileName(String originalFileName) {
+		return UUID.randomUUID().toString() + "_" + originalFileName;
+	}
+	
+	private static String makeThumbnail(String uploadRootPath, String datePath, String fileName) throws Exception {
+		BufferedImage originalImg = ImageIO.read(new File(uploadRootPath + datePath, fileName));
+		
+		BufferedImage thumnailImg = Scalr.resize(originalImg, Scalr.Method.AUTOMATIC, Scalr.Mode.FIT_TO_HEIGHT, 100);
+		String thumbnailImgName = "s_" + fileName;
+		
+		String fullPath = uploadRootPath + datePath + File.separator + thumbnailImgName;
+		File newFile = new File(fullPath);
+		String formatName = MediaUtils.getFormatName(fileName);
+		
+		ImageIO.write(thumnailImg, formatName, newFile);
+		
+		return thumbnailImgName;
+	}
+}
+```
+
+	- 파일업로드를 위한 설정 추가
+```xml
+<!-- pom.xml -->
+
+	<!-- ~~~ -->
+	<dependencies>
+		<!-- file upload -->
+		<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+		<dependency>
+		    <groupId>commons-fileupload</groupId>
+		    <artifactId>commons-fileupload</artifactId>
+		    <version>1.4</version>
+		</dependency>
+		
+		<!-- image resize -->
+		<!-- https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib -->
+		<dependency>
+		    <groupId>org.imgscalr</groupId>
+		    <artifactId>imgscalr-lib</artifactId>
+		    <version>4.2</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		    <version>2.11.0</version>
+		</dependency>
+	
+		<!-- json -->
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.11.0</version>
+		</dependency>
+	
+		<!-- database -->
+		<!-- ~~~ -->
+```
+
+```xml
+<!-- servlet-config.xml -->
+
+	<!-- ~~~ -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="10485760"></property>
+	</bean>
+</beans>
+```
+
+	- 파일업로드 컨트롤러 추가 (파일업로드, 썸네일 이미지, 이미지 보기 구현)
+		- `com.invitation.controller.common.fileUpload` 패키지 생성
+```java
+// FileUploadController.java
+
+package com.invitation.controller.common.fileUpload;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.invitation.biz.common.fileUpload.MediaUtils;
+import com.invitation.biz.common.fileUpload.UploadFileUtils;
+
+@Controller
+@RequestMapping(value="/common")
+public class FileUploadController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadController.class);
+	
+	@RequestMapping(value="/fileUpload.do", method=RequestMethod.POST, produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> uploadFile(MultipartFile file, HttpServletRequest request) {
+		String resSavedFilePath = "";
+		
+		ResponseEntity<String> entity = null;
+		
+		LOGGER.info("fileUpload.do");
+		try {
+			resSavedFilePath = UploadFileUtils.uploadFile(file, request);
+//			/2020/05/18/s_88385895-783f-4dd8-bb2a-35fa13ff12ae_sample1.jpg
+			
+			entity = new ResponseEntity<>(resSavedFilePath, HttpStatus.CREATED);
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
+	
+	@RequestMapping(value="/fileDisplay.do", method=RequestMethod.GET)
+	public ResponseEntity<byte[]> displayFile(String fileName, HttpServletRequest request) throws Exception {
+		HttpHeaders httpHeaders = UploadFileUtils.getHttpHeaders(fileName);
+		String rootPath = UploadFileUtils.getRootPath(fileName, request);
+		ResponseEntity<byte[]> entity = null;
+		
+		LOGGER.info("fileDisplay.do");
+		try(InputStream inputStream = new FileInputStream(rootPath + fileName)) {
+			entity = new ResponseEntity<>(IOUtils.toByteArray(inputStream), httpHeaders, HttpStatus.OK);
+		} catch(FileNotFoundException e) {
+			LOGGER.info("info message : 파일을 찾지 못함!! " + e.getMessage());
+			
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error treace : ", e);
+			
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
+}
+```
+
+- 파일업로드를 위한 청첩창 주가 화면 수정
+```jsp
+<!-- invitationAdd.jsp -->
+
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<%@ include file="../include/adminlte3/head.jsp"%>
+	<!-- daterange picker -->
+	<link rel="stylesheet" href="../adminlte3/plugins/daterangepicker/daterangepicker.css">
+	<!-- Ekko Lightbox -->
+	<link rel="stylesheet" href="../adminlte3/plugins/ekko-lightbox/ekko-lightbox.css">
+	<!-- dataTable -->
+	<link rel="stylesheet" href="../adminlte3/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+	
+	<title>IA</title>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<%@ include file="../include/adminlte3/navbar.jsp"%>
+		<%@ include file="../include/adminlte3/sidebar.jsp"%>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>청첩장 추가</h1>
+						</div>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+
+			<!-- Main content -->
+			<section class="content" id="sectionContent">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ 기본 정보 (필수)</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>아이디 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="inputId" />
+										<button type="button" class="btn btn-default btn-sm" id="btnMemberSearch">검색</button>
+									</div>
+									<div class="col-md-2">
+										<span>이름 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="inputName" disabled />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>게시 기간 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="text" class="" id="inputDatePeriod" /> <label><input type="checkbox" name="checkboxOpenYN" />체크 시 비공개로 등록</label>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card" id="divHomeGroomBride">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ Home, Groom &amp; Bride (필수)</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>결혼 일자 및 일시 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" class="inputDateTime" id="inputDateTimeWedding" />
+									</div>
+									<div class="col-md-2">
+										<span>장소 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" class="w70p inputAddrWeddingPlace" id="infoWeddingPlace" disabled />
+										<button type="button" class="btn btn-default btn-sm btnGetAddress">검색</button>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>신랑 간단 소개 : </span>
+									</div>
+									<div class="col-md-4">
+										<textarea rows="5" class="form-control" id="contentGroom" style="resize:none;"></textarea>
+									</div>
+									<div class="col-md-2">
+										<span>신부 간단 소개 : </span>
+									</div>
+									<div class="col-md-4">
+										<textarea rows="5" class="form-control" id="contentBride" style="resize:none;"></textarea>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>메인 사진 : </span>
+									</div>
+									<div class="col-md-4 uploadbox wrapUploadFile">
+										<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/uploadImage.png" class="mb-2 img-thumnail-h100px">
+										</a>
+										<label for="imgHGB1">업로드</label>
+										<input type="file" class="btnUploadFile" id="imgHGB1" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<!-- <form method="post" enctype="multipart/form-data">
+											<input type="file" class="btnUploadFile" id="" />
+										</form> -->
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+									</div>
+									<div class="col-md-6">
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>신랑 &amp; 신부 사진 사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
+										<span>신랑 사진 : </span>
+									</div>
+									<div class="col-md-4 uploadbox wrapUploadFile">
+										<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/uploadImage.png" class="mb-2 img-thumnail-h100px">
+										</a>
+										<label for="imgHGB2">업로드</label>
+										<input type="file" class="btnUploadFile" id="imgHGB2" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+									</div>
+									<div class="col-md-2">
+										<span>신부 사진 : </span>
+									</div>
+									<div class="col-md-4 uploadbox wrapUploadFile">
+										<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+											<img src="../css/img/uploadImage.png" class="mb-2 img-thumnail-h100px">
+										</a>
+										<label for="imgHGB3">업로드</label>
+										<input type="file" class="btnUploadFile" id="imgHGB3" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ Love story (선택)</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<span>●를 마우스로 끌어서 순서 변경 가능합니다.</span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<!-- start : tableRecordLoveStory -->
+										<table id="tableRecordLoveStory" class="table table-valign-middle table-bordered dataTable">
+											<tbody class="uploadbox wrapUploadFile">
+												<tr>
+													<td rowspan="3" style="width:10%;" class="text-center">●</td>
+													<td rowspan="3" style="width:20%;" class="text-center">
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
+														</a>
+													</td>
+													<td style="width:10%;" class="text-center">일자</td>
+													<td style="width:60%;">
+														<input type="text" class="inputDateLoveStory" />
+													</td>
+												</tr>
+												<tr>
+													<td class="text-center">제목</td>
+													<td>
+														<input type="text" class="w-100" id="" />
+													</td>
+												</tr>
+												<tr>
+													<td rowspan="2" class="text-center">내용</td>
+													<td rowspan="2">
+														<textarea rows="3" class="form-control" id="" style="resize:none;"></textarea>
+													</td>
+												</tr>
+												<tr>
+													<td class="text-center">
+														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+													</td>
+													<td class="text-center">
+														<label for="imgLS1">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgLS1" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+										<!-- end : tableRecordLoveStory -->
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12 text-center">
+										<button type="button" class="btn btn-default btn-sm" id="">추가</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ When Where (필수)</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-12">
+										<table class="table table-valign-middle table-bordered dataTable">
+											<tr>
+												<td style="width:15%;" class="text-center">결혼식</td>
+												<td>
+													<input type="checkbox" id="" checked disabled />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">일자 및 일시</td>
+												<td>
+													<input type="text" id="inputDateTimeWedding_copy" disabled />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">장소</td>
+												<td>
+													<input type="text" class="w70p inputAddrWeddingPlace" disabled />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">제목</td>
+												<td>
+													<input type="text" class="w-100" id="" />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">내용</td>
+												<td>
+													<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<table class="table table-valign-middle table-bordered dataTable">
+											<tr>
+												<td style="width:15%;" class="text-center">폐백</td>
+												<td>
+													<input type="checkbox" id="" />
+													<span>(선택)</span>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">일자 및 일시</td>
+												<td>
+													<input type="text" class="inputDateTime" id="inputDatePyebaek" />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">장소</td>
+												<td>
+													<input type="text" class="w70p" id="inputAddrPyebaek" disabled />
+													<button type="button" class="btn btn-default btn-sm btnGetAddress">검색</button>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">제목</td>
+												<td>
+													<input type="text" class="w-100" id="" />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">내용</td>
+												<td>
+													<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ Gallery (선택)</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<table class="table table-valign-middle table-bordered dataTable">
+											<tr>
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
+													<div>
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<label for="imgG1">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG1" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+													</div>
+												</td>
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
+													<div>
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<label for="imgG2">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG2" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+													</div>
+												</td>
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
+													<div>
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<label for="imgG3">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG3" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+													</div>
+												</td>
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
+													<div>
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<label for="imgG4">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG4" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+													</div>
+												</td>
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
+													<div>
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<label for="imgG5">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG5" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
+													<div>
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<label for="imgG6">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG6" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+													</div>
+												</td>
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
+													<div>
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<label for="imgG7">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG7" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+													</div>
+												</td>
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
+													<div>
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<label for="imgG8">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG8" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+													</div>
+												</td>
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
+													<div>
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<label for="imgG9">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG9" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+													</div>
+												</td>
+												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
+													<div>
+														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
+															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
+														</a>
+													</div>
+													<div>
+														<label for="imgG10">업로드</label>
+														<input type="file" class="btnUploadFile" id="imgG10" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+													</div>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title header-padding-top">▶ Sweet Message (선택)</h3>
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-2">
+										<span>사용 여부 : </span>
+									</div>
+									<div class="col-md-10">
+										<input type="checkbox" id="" />
+									</div>
+								</div>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+						<div class="card">
+							<div class="card-header">
+								<div class="row">
+									<div class="col-md-12 text-center">
+										<button type="button" class="btn btn-primary btn-lg" id="btnRegisterInvitation">저장</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.card-header -->
+						</div>
+						<!-- /.card -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<%@ include file="../include/adminlte3/footer.jsp"%>
+	</div>
+	<!-- ./wrapper -->
+
+	<%@ include file="../include/adminlte3/js.jsp"%>
+	<!-- date-range-picker -->
+	<script src="../adminlte3/plugins/daterangepicker/moment.min.js"></script>
+	<script src="../adminlte3/plugins/daterangepicker/daterangepicker.js"></script>
+	<!-- Ekko Lightbox -->
+	<script src="../adminlte3/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
+	<!-- DataTables -->
+	<script src="../adminlte3/plugins/datatables/jquery.dataTables.js"></script>
+	<script src="../adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+	
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/def.js"></script>
+	<script type="text/javascript" src="../js/invitation/invitationAdd.js"></script>
+</body>
+</html>
+```
+
+	- 이미지 보기 요청용 url 상수 추가
+```js
+// def.js
+
+// ~~~
+var GO_TO_MAIN = "/admin/member/memberList.do";
+
+// upload file info
+var IMG_SRC = "/admin/common/fileDisplay.do?fileName=";
+var IMG_SRC_ICO = "resources/upload/files/fileIcon.png";
+var ORIGINAL_FILE_URL = "/admin/common/fileDisplay.do?fileName=";
+var DEFAULT_IMG_SRC = "../css/img/uploadImage.png";
+
+var MAP_SIDEBAR = {
+// ~~~
+```
+
+- 파일업로드를 위한 js파일 수정
+	- 이미지 업로드, 썸네일 보기, 이미지 보기, 이미지 삭제 기능 구현
+```js
+// util.js
+
+			// ~~~
+			$idTarget.find(".last").removeClass("disabled");
+		}
+	}
+};
+
+function uploadFile($this, callback) {
+	var file = $($this)[0].files[0],
+		$fileUploadForm = $("<form>"),
+		formData = new FormData($fileUploadForm[0]);
+	
+	formData.append("file", file);
+	
+	$.ajax({
+		url : "/admin/common/fileUpload.do",
+		data : formData,
+		dataType : "text",
+		processData : false,
+		contentType : false,
+		type : "POST",
+		enctype : "multipart/form-data",
+		cache : false,
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			callback(setFileInfo(result));
+		}
+	});
+};
+
+function setFileInfo(fullName) {
+	var originalFileName, imgSrc, originalFileUrl, uuidFileName;
+	
+	if(checkImageType(fullName)) {
+		imgSrc = IMG_SRC + fullName;
+		uuidFileName = fullName.substr(14);
+		var originalImg = fullName.substr(0, 12) + fullName.substr(14);
+		
+		originalFileUrl = ORIGINAL_FILE_URL + originalImg;
+	} else {
+		imgSrc = IMG_SRC_ICO;
+		uuidFileName = fullName.substr(12);
+		originalFileUrl = ORIGINAL_FILE_URL + fullName;
+	}
+	originalFileName = uuidFileName.substr(uuidFileName.indexOf("_") + 1);
+	
+	return {
+		originalFileName : originalFileName,
+		imgSrc : imgSrc,
+		originalFileUrl : originalFileUrl,
+		fullName : fullName
+	}
+};
+
+function checkImageType(fullName) {
+	return fullName.match(/jpg$|gif$|jpeg$|png$/i);
+};
+
+$(function(){
+	// ~~~
+```
+
+```js
+// invitationAdd.js
+
+	// ~~~
+	$("#btnRegisterInvitation").on("click", function(){
+		var result = validateData();
+		
+		if(result.resFlag) {
+			console.log(result.resData);
+		} else {
+			alert(result.resMessage);
+		}
+	});
+	
+	$(".btnUploadFile").change(function(e){
+		var $this = $(this);
+		
+		uploadFile($(this), function(res){
+			$this.prev().hide();
+			$this.hide()
+					.parents(".wrapUploadFile")
+						.find("a").attr("href", res.originalFileUrl).data("title", res.originalFileName)
+						.find("img").attr("src", res.imgSrc);
+			$this.next().show();
+		});
+	});
+	
+	$("#sectionContent").on("click", "[data-toggle='lightbox']", function(event) {
+		event.preventDefault();
+		var $this = $(this);
+
+		if($this.attr("href") != "" && $this.find("img").attr("src") != DEFAULT_IMG_SRC) {
+			$this.ekkoLightbox({
+				alwaysShowClose: true
+			});
+		}
+	});
+	
+	$(".btnDeleteImage").on("click", function(){
+		var $wrapUploadFile = $(this).parents(".wrapUploadFile");
+		
+		$wrapUploadFile.find("a").attr("href", "").removeData("title", "")
+								.find("img").attr("src", DEFAULT_IMG_SRC);
+		$wrapUploadFile.find(".btnUploadFile").val("").show()
+														.prev().show()
+														.next().next().hide();
+	});
+	
+	//------------------------------------------------------------------------------------------------------
+	
+	// 유동적으로 추가한것도 먹힐려나??
+	$(".inputDateLoveStory").daterangepicker({
+		singleDatePicker : true,
+		locale : {
+			format : "YYYY-MM-DD"
+		}
+	});
+});
+// ~~~
+```
