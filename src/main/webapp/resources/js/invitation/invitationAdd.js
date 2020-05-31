@@ -4,10 +4,12 @@
 
 console.log("########## invitationAdd.js ##########");
 
-var $btnGetAddress = "";
+var $btnGetAddress = "",
+	$tableRecordLoveStory = undefined;
 
 $(function(){
 	setActiveSidebar();
+	setClone();
 	
 	$("#btnMemberSearch").on("click", function(){
 		var inputId = $("#inputId").val();
@@ -61,7 +63,7 @@ $(function(){
 		}
 	});
 	
-	$(".btnUploadFile").change(function(e){
+	$("#sectionContent").on("change", ".btnUploadFile", function(){
 		var $this = $(this);
 		
 		uploadFile($(this), function(res){
@@ -69,7 +71,7 @@ $(function(){
 			$this.hide()
 					.parents(".wrapUploadFile")
 						.find("a").attr("href", res.originalFileUrl).data("title", res.originalFileName)
-						.find("img").attr("src", res.imgSrc);
+						.find("img").attr("src", res.imgSrc).data("fullName", res.fullName);
 			$this.next().show();
 		});
 	});
@@ -89,22 +91,65 @@ $(function(){
 		var $wrapUploadFile = $(this).parents(".wrapUploadFile");
 		
 		$wrapUploadFile.find("a").attr("href", "").removeData("title", "")
-								.find("img").attr("src", DEFAULT_IMG_SRC);
+								.find("img").attr("src", DEFAULT_IMG_SRC).removeData("fullName");
 		$wrapUploadFile.find(".btnUploadFile").val("").show()
 														.prev().show()
 														.next().next().hide();
 	});
 	
+	$("#btnAddLS").on("click", function(){
+		cloneLoveStory();
+	});
+	
+	$("#wrapListLS").on("click", ".btnRemoveLS", function(){
+		$(this).parents(".itemLoveStory").remove();
+		
+		resetTagId();
+	});
+	
 	//------------------------------------------------------------------------------------------------------
 	
 	// 유동적으로 추가한것도 먹힐려나??
-	$(".inputDateLoveStory").daterangepicker({
+	/*$(".inputDateLoveStory").daterangepicker({
+		singleDatePicker : true,
+		locale : {
+			format : "YYYY-MM-DD"
+		}
+	});*/
+});
+
+function setClone() {
+	$tableRecordLoveStory = $("#tableRecordLoveStory").clone();
+	$("#tableRecordLoveStory").remove();
+	
+	cloneLoveStory();
+	$("#wrapListLS").sortable();
+}
+
+function cloneLoveStory() {
+	var $itemLoveStory = $tableRecordLoveStory.clone();
+	
+	$itemLoveStory.find(".inputDateLoveStory").daterangepicker({
 		singleDatePicker : true,
 		locale : {
 			format : "YYYY-MM-DD"
 		}
 	});
-});
+	$("#wrapListLS").append($itemLoveStory);
+	
+	resetTagId();
+}
+
+function resetTagId() {
+	var index = 1;
+	
+	$(".itemLoveStory").each(function(i){
+		$(this).find(".btnUploadFile").attr("id", "imgLS" + String(index))
+					.prev().attr("for", "imgLS" + String(index));
+		
+		index = index + 1;
+	});
+}
 
 function getMemberInfo(id) {
 	$("#inputId").removeData("id");
@@ -150,13 +195,30 @@ function jusoCallBack(...res) {
 }
 
 function validateData() {
+	var id = $("#inputId").data("id") || "",
+		invitation = {
+			datePeriod : $("#inputDatePeriod").val().split(" - "),
+			visible : $("input[name=checkboxVisibleYN]").prop("checked") == true ? "N" : "Y"
+		},
+		HGB = {
+			weddingDateTime : $("#inputDateTimeWedding").val(),
+			weddingPlaceInfo : $("#infoWeddingPlace").data("infoWeddingPlace") || "",
+			contentGroom : $("#contentGroom").val(),
+			contentBride : $("#contentBride").val(),
+			imgMain : $("#imgHGB1").parents(".wrapUploadFile").find(".img").data("fullName"),
+			ynUseImage : $("input[name=checkboxEachImgYN]").prop("checked") == true ? "Y" : "N",
+			imgGroom : $("#imgHGB2").parents(".wrapUploadFile").find(".img").data("fullName"),
+			imgBride : $("#imgHGB3").parents(".wrapUploadFile").find(".img").data("fullName"),
+		}
+	
+	
 	var result = {
 			resFlag : true,
 			resData : {
 				id : $("#inputId").data("id") || "",
 				invitationBegin : ($("#inputDatePeriod").val().split(" - "))[0] || "",
 				invitationEnd : ($("#inputDatePeriod").val().split(" - "))[1] || "",
-				openYN : $("input[name=checkboxOpenYN]").prop("checked") == true ? "N" : "Y",
+				openYN : $("input[name=checkboxVisibleYN]").prop("checked") == true ? "N" : "Y",
 				dateTimeWedding : $("#inputDateTimeWedding").val() || "",
 				weddingPlace : $("#infoWeddingPlace").data("infoWeddingPlace") || "",
 				contentGroom : $("#contentGroom").val() || "",

@@ -64,7 +64,7 @@
 										<span>게시 기간 : </span>
 									</div>
 									<div class="col-md-10">
-										<input type="text" class="" id="inputDatePeriod" /> <label><input type="checkbox" name="checkboxOpenYN" />체크 시 비공개로 등록</label>
+										<input type="text" class="" id="inputDatePeriod" /> <label><input type="checkbox" name="checkboxVisibleYN" />체크 시 비공개로 등록</label>
 									</div>
 								</div>
 							</div>
@@ -117,9 +117,9 @@
 										<label for="imgHGB1">업로드</label>
 										<input type="file" class="btnUploadFile" id="imgHGB1" accept="image/png, image/jpeg, image/jpg, image/gif" />
 										<!-- <form method="post" enctype="multipart/form-data">
-											<input type="file" class="btnUploadFile" id="" />
+											<input type="file" class="btnUploadFile" />
 										</form> -->
-										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 									</div>
 									<div class="col-md-6">
 									</div>
@@ -129,7 +129,7 @@
 										<span>신랑 &amp; 신부 사진 사용 여부 : </span>
 									</div>
 									<div class="col-md-10">
-										<input type="checkbox" id="" />
+										<input type="checkbox" name="checkboxEachImgYN" checked />
 									</div>
 								</div>
 								<div class="row">
@@ -142,7 +142,7 @@
 										</a>
 										<label for="imgHGB2">업로드</label>
 										<input type="file" class="btnUploadFile" id="imgHGB2" accept="image/png, image/jpeg, image/jpg, image/gif" />
-										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 									</div>
 									<div class="col-md-2">
 										<span>신부 사진 : </span>
@@ -153,7 +153,7 @@
 										</a>
 										<label for="imgHGB3">업로드</label>
 										<input type="file" class="btnUploadFile" id="imgHGB3" accept="image/png, image/jpeg, image/jpg, image/gif" />
-										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 									</div>
 								</div>
 							</div>
@@ -171,7 +171,7 @@
 										<span>사용 여부 : </span>
 									</div>
 									<div class="col-md-10">
-										<input type="checkbox" id="" />
+										<input type="checkbox" name="checkboxUseLSYN" />
 									</div>
 								</div>
 								<div class="row">
@@ -180,12 +180,12 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-md-12">
+									<div class="col-md-12" id="wrapListLS">
 										<!-- start : tableRecordLoveStory -->
-										<table id="tableRecordLoveStory" class="table table-valign-middle table-bordered dataTable">
+										<table id="tableRecordLoveStory" class="table table-valign-middle table-bordered dataTable itemLoveStory">
 											<tbody class="uploadbox wrapUploadFile">
 												<tr>
-													<td rowspan="3" style="width:10%;" class="text-center">●</td>
+													<td rowspan="3" style="width:10%;" class="text-center tdSortable">●</td>
 													<td rowspan="3" style="width:20%;" class="text-center">
 														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
 															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
@@ -199,23 +199,23 @@
 												<tr>
 													<td class="text-center">제목</td>
 													<td>
-														<input type="text" class="w-100" id="" />
+														<input type="text" class="w-100 inputTitleLS" />
 													</td>
 												</tr>
 												<tr>
 													<td rowspan="2" class="text-center">내용</td>
 													<td rowspan="2">
-														<textarea rows="3" class="form-control" id="" style="resize:none;"></textarea>
+														<textarea rows="3" class="form-control inputContentLS" style="resize:none;"></textarea>
 													</td>
 												</tr>
 												<tr>
 													<td class="text-center">
-														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnRemoveLS">삭제</button>
 													</td>
 													<td class="text-center">
-														<label for="imgLS1">업로드</label>
-														<input type="file" class="btnUploadFile" id="imgLS1" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<label for="">업로드</label>
+														<input type="file" class="btnUploadFile" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</td>
 												</tr>
 											</tbody>
@@ -225,7 +225,7 @@
 								</div>
 								<div class="row">
 									<div class="col-md-12 text-center">
-										<button type="button" class="btn btn-default btn-sm" id="">추가</button>
+										<button type="button" class="btn btn-default btn-sm" id="btnAddLS">추가</button>
 									</div>
 								</div>
 							</div>
@@ -244,7 +244,8 @@
 											<tr>
 												<td style="width:15%;" class="text-center">결혼식</td>
 												<td>
-													<input type="checkbox" id="" checked disabled />
+													<input type="checkbox" checked disabled />
+													<span>(필수)</span>
 												</td>
 											</tr>
 											<tr>
@@ -262,13 +263,13 @@
 											<tr>
 												<td class="text-center">제목</td>
 												<td>
-													<input type="text" class="w-100" id="" />
+													<input type="text" class="w-100" id="inputTitleWedingWW" />
 												</td>
 											</tr>
 											<tr>
 												<td class="text-center">내용</td>
 												<td>
-													<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+													<textarea rows="5" class="form-control" id="inputContentWedingWW" style="resize:none;"></textarea>
 												</td>
 											</tr>
 										</table>
@@ -280,7 +281,7 @@
 											<tr>
 												<td style="width:15%;" class="text-center">폐백</td>
 												<td>
-													<input type="checkbox" id="" />
+													<input type="checkbox" name="checkboxDoPyebaek" />
 													<span>(선택)</span>
 												</td>
 											</tr>
@@ -300,13 +301,13 @@
 											<tr>
 												<td class="text-center">제목</td>
 												<td>
-													<input type="text" class="w-100" id="" />
+													<input type="text" class="w-100" id="inputTitlePyebaekWW" />
 												</td>
 											</tr>
 											<tr>
 												<td class="text-center">내용</td>
 												<td>
-													<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+													<textarea rows="5" class="form-control" id="inputContentPyebaekWW" style="resize:none;"></textarea>
 												</td>
 											</tr>
 										</table>
@@ -327,7 +328,7 @@
 										<span>사용 여부 : </span>
 									</div>
 									<div class="col-md-10">
-										<input type="checkbox" id="" />
+										<input type="checkbox" name="checkboxUseG" />
 									</div>
 								</div>
 								<div class="row">
@@ -343,7 +344,7 @@
 													<div>
 														<label for="imgG1">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG1" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -355,7 +356,7 @@
 													<div>
 														<label for="imgG2">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG2" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -367,7 +368,7 @@
 													<div>
 														<label for="imgG3">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG3" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -379,7 +380,7 @@
 													<div>
 														<label for="imgG4">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG4" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -391,7 +392,7 @@
 													<div>
 														<label for="imgG5">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG5" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 											</tr>
@@ -405,7 +406,7 @@
 													<div>
 														<label for="imgG6">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG6" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -417,7 +418,7 @@
 													<div>
 														<label for="imgG7">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG7" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -429,7 +430,7 @@
 													<div>
 														<label for="imgG8">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG8" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -441,7 +442,7 @@
 													<div>
 														<label for="imgG9">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG9" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -453,7 +454,7 @@
 													<div>
 														<label for="imgG10">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG10" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 											</tr>
@@ -475,7 +476,7 @@
 										<span>사용 여부 : </span>
 									</div>
 									<div class="col-md-10">
-										<input type="checkbox" id="" />
+										<input type="checkbox" name="checkboxUseSM" />
 									</div>
 								</div>
 							</div>
@@ -507,6 +508,8 @@
 	<!-- ./wrapper -->
 
 	<%@ include file="../include/adminlte3/js.jsp"%>
+	<!-- jQuery-ui -->
+	<script src="../adminlte3/plugins/jquery-ui/jquery-ui.min.js"></script>
 	<!-- date-range-picker -->
 	<script src="../adminlte3/plugins/daterangepicker/moment.min.js"></script>
 	<script src="../adminlte3/plugins/daterangepicker/daterangepicker.js"></script>
