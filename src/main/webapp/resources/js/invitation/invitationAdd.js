@@ -122,7 +122,7 @@ function setClone() {
 	$tableRecordLoveStory = $("#tableRecordLoveStory").clone();
 	$("#tableRecordLoveStory").remove();
 	
-	cloneLoveStory();
+//	cloneLoveStory();
 	$("#wrapListLS").sortable();
 }
 
@@ -256,8 +256,7 @@ function validateData() {
 	hgb.contentBride = $("#contentBride").val();
 	
 	hgb.fullNameMain = $("#imgHGB1").parents(".wrapUploadFile").find("img").data("fullName");
-	// hgb.fullNameMain == false 조건 다시 ㄱㄱㄱㄱㄱㄱㄱ@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-	if(hgb.fullNameMain == false || hgb.fullnameMain == undefined || hgb.fullnameMain == "") {
+	if(hgb.fullNameMain == undefined) {
 		result.resFlag = false;
 		result.resMessage = "메인 사진을 확인해주세요.";
 		return result;
@@ -267,13 +266,13 @@ function validateData() {
 	hgb.fullNameBride = $("#imgHGB3").parents(".wrapUploadFile").find("img").data("fullName");
 	hgb.useEachImage = invitation.useEachImage;
 	if(hgb.useEachImage == "Y") {
-		if(hgb.fullNameGroom == false || hgb.fullnameGroom == undefined || hgb.fullnameGroom == "") {
+		if(hgb.fullNameGroom == undefined) {
 			result.resFlag = false;
 			result.resMessage = "신랑 사진을 확인해주세요.";
 			return result;
 		}
 		
-		if(hgb.fullNameBride == false || hgb.fullnameBride == undefined || hgb.fullnameBride == "") {
+		if(hgb.fullNameBride == undefined) {
 			result.resFlag = false;
 			result.resMessage = "신부 사진을 확인해주세요.";
 			return result;
@@ -330,7 +329,6 @@ function validateData() {
 		dateTimePyebaek = dateTimePyebaek.split(" ");
 		
 		var infoAddrPyebaek = $("#inputAddrPyebaek").data("infoPyebaek") || "";
-		hgb.address = infoAddrPyebaek.addr || "";
 		
 		if(infoAddrPyebaek == undefined || infoAddrPyebaek == "") {
 			result.resFlag = false;
