@@ -6606,7 +6606,7 @@ function validateData() {
 
 ---
 
-## 11-3 청첩장 추가 - Home, Groom & Bride (파일업로드/이미지보기/썸네일 구현)
+## 11-3 청첩장 추가 - 파일업로드/이미지보기/썸네일 구현
 - 파일업로드 구현
 	- `com.invitation.biz.common.fileUpload` 패키지 생성
 	- MediaUtils.java, UploadFileUtils.java 클래스 작성
@@ -6927,7 +6927,43 @@ public class FileUploadController {
 }
 ```
 
-- 파일업로드를 위한 청첩창 주가 화면 수정
+- 청첩창 주가 화면 수정 (파일업로드 및 기타 이벤트)
+	- 파일업로드용 input 태그 customize
+```css
+/* customizeBootstrap.css */
+
+/* ~~~ */
+.w70p {
+	width: 70%;
+}
+
+.uploadbox label {
+	display: inline-block;
+	padding: .25rem .5rem;
+	color: #444;
+	font-size: .875rem;
+	font-weight: 400 !important;
+	line-height: 1.5;
+	vertical-align: middle;
+	background-color: #f8f9fa;
+	cursor: pointer;
+	border: 1px solid #ddd;
+	border-radius: .2rem;
+	margin-bottom: 0;
+}
+.uploadbox input[type="file"] {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0,0,0,0);
+	border: 0;
+}
+```
+
+	- 파일 업로드 전 `src/main/webapp/resources/css/img`에 기본 썸네일 이미지 파일(uploadImage.png) 추가
 ```jsp
 <!-- invitationAdd.jsp -->
 
@@ -6997,7 +7033,7 @@ public class FileUploadController {
 										<span>게시 기간 : </span>
 									</div>
 									<div class="col-md-10">
-										<input type="text" class="" id="inputDatePeriod" /> <label><input type="checkbox" name="checkboxOpenYN" />체크 시 비공개로 등록</label>
+										<input type="text" class="" id="inputDatePeriod" /> <label><input type="checkbox" name="checkboxVisibleYN" />체크 시 비공개로 등록</label>
 									</div>
 								</div>
 							</div>
@@ -7050,9 +7086,9 @@ public class FileUploadController {
 										<label for="imgHGB1">업로드</label>
 										<input type="file" class="btnUploadFile" id="imgHGB1" accept="image/png, image/jpeg, image/jpg, image/gif" />
 										<!-- <form method="post" enctype="multipart/form-data">
-											<input type="file" class="btnUploadFile" id="" />
+											<input type="file" class="btnUploadFile" />
 										</form> -->
-										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 									</div>
 									<div class="col-md-6">
 									</div>
@@ -7062,7 +7098,7 @@ public class FileUploadController {
 										<span>신랑 &amp; 신부 사진 사용 여부 : </span>
 									</div>
 									<div class="col-md-10">
-										<input type="checkbox" id="" />
+										<input type="checkbox" name="checkboxEachImgYN" checked />
 									</div>
 								</div>
 								<div class="row">
@@ -7075,7 +7111,7 @@ public class FileUploadController {
 										</a>
 										<label for="imgHGB2">업로드</label>
 										<input type="file" class="btnUploadFile" id="imgHGB2" accept="image/png, image/jpeg, image/jpg, image/gif" />
-										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 									</div>
 									<div class="col-md-2">
 										<span>신부 사진 : </span>
@@ -7086,7 +7122,7 @@ public class FileUploadController {
 										</a>
 										<label for="imgHGB3">업로드</label>
 										<input type="file" class="btnUploadFile" id="imgHGB3" accept="image/png, image/jpeg, image/jpg, image/gif" />
-										<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+										<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 									</div>
 								</div>
 							</div>
@@ -7104,7 +7140,7 @@ public class FileUploadController {
 										<span>사용 여부 : </span>
 									</div>
 									<div class="col-md-10">
-										<input type="checkbox" id="" />
+										<input type="checkbox" name="checkboxUseLSYN" />
 									</div>
 								</div>
 								<div class="row">
@@ -7113,12 +7149,12 @@ public class FileUploadController {
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-md-12">
+									<div class="col-md-12" id="wrapListLS">
 										<!-- start : tableRecordLoveStory -->
-										<table id="tableRecordLoveStory" class="table table-valign-middle table-bordered dataTable">
+										<table id="tableRecordLoveStory" class="table table-valign-middle table-bordered dataTable itemLoveStory">
 											<tbody class="uploadbox wrapUploadFile">
 												<tr>
-													<td rowspan="3" style="width:10%;" class="text-center">●</td>
+													<td rowspan="3" style="width:10%;" class="text-center tdSortable">●</td>
 													<td rowspan="3" style="width:20%;" class="text-center">
 														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
 															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
@@ -7132,23 +7168,23 @@ public class FileUploadController {
 												<tr>
 													<td class="text-center">제목</td>
 													<td>
-														<input type="text" class="w-100" id="" />
+														<input type="text" class="w-100 inputTitleLS" />
 													</td>
 												</tr>
 												<tr>
 													<td rowspan="2" class="text-center">내용</td>
 													<td rowspan="2">
-														<textarea rows="3" class="form-control" id="" style="resize:none;"></textarea>
+														<textarea rows="3" class="form-control inputContentLS" style="resize:none;"></textarea>
 													</td>
 												</tr>
 												<tr>
 													<td class="text-center">
-														<button type="button" class="btn btn-default btn-sm" id="">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnRemoveLS">삭제</button>
 													</td>
 													<td class="text-center">
-														<label for="imgLS1">업로드</label>
-														<input type="file" class="btnUploadFile" id="imgLS1" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<label for="">업로드</label>
+														<input type="file" class="btnUploadFile" accept="image/png, image/jpeg, image/jpg, image/gif" />
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</td>
 												</tr>
 											</tbody>
@@ -7158,7 +7194,7 @@ public class FileUploadController {
 								</div>
 								<div class="row">
 									<div class="col-md-12 text-center">
-										<button type="button" class="btn btn-default btn-sm" id="">추가</button>
+										<button type="button" class="btn btn-default btn-sm" id="btnAddLS">추가</button>
 									</div>
 								</div>
 							</div>
@@ -7177,7 +7213,8 @@ public class FileUploadController {
 											<tr>
 												<td style="width:15%;" class="text-center">결혼식</td>
 												<td>
-													<input type="checkbox" id="" checked disabled />
+													<input type="checkbox" checked disabled />
+													<span>(필수)</span>
 												</td>
 											</tr>
 											<tr>
@@ -7195,13 +7232,13 @@ public class FileUploadController {
 											<tr>
 												<td class="text-center">제목</td>
 												<td>
-													<input type="text" class="w-100" id="" />
+													<input type="text" class="w-100" id="inputTitleWedingWW" />
 												</td>
 											</tr>
 											<tr>
 												<td class="text-center">내용</td>
 												<td>
-													<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+													<textarea rows="5" class="form-control" id="inputContentWedingWW" style="resize:none;"></textarea>
 												</td>
 											</tr>
 										</table>
@@ -7213,7 +7250,7 @@ public class FileUploadController {
 											<tr>
 												<td style="width:15%;" class="text-center">폐백</td>
 												<td>
-													<input type="checkbox" id="" />
+													<input type="checkbox" name="checkboxDoPyebaek" />
 													<span>(선택)</span>
 												</td>
 											</tr>
@@ -7233,13 +7270,13 @@ public class FileUploadController {
 											<tr>
 												<td class="text-center">제목</td>
 												<td>
-													<input type="text" class="w-100" id="" />
+													<input type="text" class="w-100" id="inputTitlePyebaekWW" />
 												</td>
 											</tr>
 											<tr>
 												<td class="text-center">내용</td>
 												<td>
-													<textarea rows="5" class="form-control" id="" style="resize:none;"></textarea>
+													<textarea rows="5" class="form-control" id="inputContentPyebaekWW" style="resize:none;"></textarea>
 												</td>
 											</tr>
 										</table>
@@ -7260,7 +7297,7 @@ public class FileUploadController {
 										<span>사용 여부 : </span>
 									</div>
 									<div class="col-md-10">
-										<input type="checkbox" id="" />
+										<input type="checkbox" name="checkboxUseG" />
 									</div>
 								</div>
 								<div class="row">
@@ -7276,7 +7313,7 @@ public class FileUploadController {
 													<div>
 														<label for="imgG1">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG1" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -7288,7 +7325,7 @@ public class FileUploadController {
 													<div>
 														<label for="imgG2">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG2" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -7300,7 +7337,7 @@ public class FileUploadController {
 													<div>
 														<label for="imgG3">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG3" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -7312,7 +7349,7 @@ public class FileUploadController {
 													<div>
 														<label for="imgG4">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG4" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -7324,7 +7361,7 @@ public class FileUploadController {
 													<div>
 														<label for="imgG5">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG5" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 											</tr>
@@ -7338,7 +7375,7 @@ public class FileUploadController {
 													<div>
 														<label for="imgG6">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG6" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -7350,7 +7387,7 @@ public class FileUploadController {
 													<div>
 														<label for="imgG7">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG7" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -7362,7 +7399,7 @@ public class FileUploadController {
 													<div>
 														<label for="imgG8">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG8" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -7374,7 +7411,7 @@ public class FileUploadController {
 													<div>
 														<label for="imgG9">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG9" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
@@ -7386,7 +7423,7 @@ public class FileUploadController {
 													<div>
 														<label for="imgG10">업로드</label>
 														<input type="file" class="btnUploadFile" id="imgG10" accept="image/png, image/jpeg, image/jpg, image/gif" />
-														<button type="button" class="btn btn-default btn-sm btnDeleteImage" id="" style="display:none;">삭제</button>
+														<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 													</div>
 												</td>
 											</tr>
@@ -7408,7 +7445,7 @@ public class FileUploadController {
 										<span>사용 여부 : </span>
 									</div>
 									<div class="col-md-10">
-										<input type="checkbox" id="" />
+										<input type="checkbox" name="checkboxUseSM" />
 									</div>
 								</div>
 							</div>
@@ -7440,6 +7477,8 @@ public class FileUploadController {
 	<!-- ./wrapper -->
 
 	<%@ include file="../include/adminlte3/js.jsp"%>
+	<!-- jQuery-ui -->
+	<script src="../adminlte3/plugins/jquery-ui/jquery-ui.min.js"></script>
 	<!-- date-range-picker -->
 	<script src="../adminlte3/plugins/daterangepicker/moment.min.js"></script>
 	<script src="../adminlte3/plugins/daterangepicker/daterangepicker.js"></script>
@@ -7473,7 +7512,7 @@ var MAP_SIDEBAR = {
 // ~~~
 ```
 
-- 파일업로드를 위한 js파일 수정
+- js파일 수정 (파일업로드 및 기타 이벤트)
 	- 이미지 업로드, 썸네일 보기, 이미지 보기, 이미지 삭제 기능 구현
 ```js
 // util.js
@@ -7557,7 +7596,7 @@ $(function(){
 		}
 	});
 	
-	$(".btnUploadFile").change(function(e){
+	$("#sectionContent").on("change", ".btnUploadFile", function(){
 		var $this = $(this);
 		
 		uploadFile($(this), function(res){
@@ -7565,7 +7604,7 @@ $(function(){
 			$this.hide()
 					.parents(".wrapUploadFile")
 						.find("a").attr("href", res.originalFileUrl).data("title", res.originalFileName)
-						.find("img").attr("src", res.imgSrc);
+						.find("img").attr("src", res.imgSrc).data("fullName", res.fullName);
 			$this.next().show();
 		});
 	});
@@ -7585,21 +7624,162 @@ $(function(){
 		var $wrapUploadFile = $(this).parents(".wrapUploadFile");
 		
 		$wrapUploadFile.find("a").attr("href", "").removeData("title", "")
-								.find("img").attr("src", DEFAULT_IMG_SRC);
+								.find("img").attr("src", DEFAULT_IMG_SRC).removeData("fullName");
 		$wrapUploadFile.find(".btnUploadFile").val("").show()
 														.prev().show()
 														.next().next().hide();
 	});
 	
+	$("#btnAddLS").on("click", function(){
+		cloneLoveStory();
+	});
+	
+	$("#wrapListLS").on("click", ".btnRemoveLS", function(){
+		$(this).parents(".itemLoveStory").remove();
+		
+		resetTagId();
+	});
+	
 	//------------------------------------------------------------------------------------------------------
 	
 	// 유동적으로 추가한것도 먹힐려나??
-	$(".inputDateLoveStory").daterangepicker({
+	/*$(".inputDateLoveStory").daterangepicker({
+		singleDatePicker : true,
+		locale : {
+			format : "YYYY-MM-DD"
+		}
+	});*/
+});
+
+function setClone() {
+	$tableRecordLoveStory = $("#tableRecordLoveStory").clone();
+	$("#tableRecordLoveStory").remove();
+	
+	cloneLoveStory();
+	$("#wrapListLS").sortable();
+}
+
+function cloneLoveStory() {
+	var $itemLoveStory = $tableRecordLoveStory.clone();
+	
+	$itemLoveStory.find(".inputDateLoveStory").daterangepicker({
 		singleDatePicker : true,
 		locale : {
 			format : "YYYY-MM-DD"
 		}
 	});
-});
-// ~~~
+	$("#wrapListLS").append($itemLoveStory);
+	
+	resetTagId();
+}
+
+function resetTagId() {
+	var index = 1;
+	
+	$(".itemLoveStory").each(function(i){
+		$(this).find(".btnUploadFile").attr("id", "imgLS" + String(index))
+					.prev().attr("for", "imgLS" + String(index));
+		
+		index = index + 1;
+	});
+}
+
+function getMemberInfo(id) {
+	$("#inputId").removeData("id");
+	$("#inputName").val("");
+	
+	$.ajax({
+		url : "/admin/invitation/getMemberInfo?" + $.param({id : id}),
+		type : "GET",
+		error : function(xhr, status, msg) {
+			alert("status : ", status, "\nHttp error msg : ", msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			if(result.resFlag) {
+				$("#inputId").data("id", result.resMemberInfo.id);
+				$("#inputName").val(result.resMemberInfo.name);
+			} else {
+				alert(result.resMessage);
+			}
+		}
+	});
+}
+
+function jusoCallBack(...res) {
+	// res = ["서울특별시 중구 청구로 지하 77, 걍 써봄 (신당동)", "서울특별시 중구 청구로 지하 77", "걍 써봄", "(신당동)", "B 77, Cheonggu-ro, Jung-gu, Seoul", "서울특별시 중구 신당동 295-2 청구역 5,6호선", "04608", "1114016200", "111403101008", "1114016200102950002000001", "5,6호선", "청구역 5,6호선", "0", "서울특별시", "중구", "신당동", "", "청구로", "1", "77", "0", "0", "295", "2", "01", "957058.9352199801", "1951330.378632207"]
+	console.log(res);
+	
+	if($btnGetAddress == 0) {
+		$(".inputAddrWeddingPlace").val(res[0]);
+		$("#infoWeddingPlace").data("infoWeddingPlace", {
+			addr : res[0],
+			placeX : res[25],
+			placeY : res[26]
+		});
+	} else {
+		$("#inputAddrPyebaek").val(res[0]).data("infoPyebaek", {
+			addr : res[0],
+			placeX : res[25],
+			placeY : res[26]
+		});
+	}
+}
+
+function validateData() {
+	var id = $("#inputId").data("id") || "",
+		invitation = {
+			datePeriod : $("#inputDatePeriod").val().split(" - "),
+			visible : $("input[name=checkboxVisibleYN]").prop("checked") == true ? "N" : "Y"
+		},
+		HGB = {
+			weddingDateTime : $("#inputDateTimeWedding").val(),
+			weddingPlaceInfo : $("#infoWeddingPlace").data("infoWeddingPlace") || "",
+			contentGroom : $("#contentGroom").val(),
+			contentBride : $("#contentBride").val(),
+			imgMain : $("#imgHGB1").parents(".wrapUploadFile").find(".img").data("fullName"),
+			ynUseImage : $("input[name=checkboxEachImgYN]").prop("checked") == true ? "Y" : "N",
+			imgGroom : $("#imgHGB2").parents(".wrapUploadFile").find(".img").data("fullName"),
+			imgBride : $("#imgHGB3").parents(".wrapUploadFile").find(".img").data("fullName"),
+		}
+	
+	
+	var result = {
+			resFlag : true,
+			resData : {
+				id : $("#inputId").data("id") || "",
+				invitationBegin : ($("#inputDatePeriod").val().split(" - "))[0] || "",
+				invitationEnd : ($("#inputDatePeriod").val().split(" - "))[1] || "",
+				openYN : $("input[name=checkboxVisibleYN]").prop("checked") == true ? "N" : "Y",
+				dateTimeWedding : $("#inputDateTimeWedding").val() || "",
+				weddingPlace : $("#infoWeddingPlace").data("infoWeddingPlace") || "",
+				contentGroom : $("#contentGroom").val() || "",
+				contentBride : $("#contentBride").val() || ""
+			},
+			resMessage : ""
+	};
+	
+	if(result.resData.id == "") {
+		result.resFlag = false;
+		result.resMessage = "아이디를 입력해주세요."
+	} else if(result.resData.invitationBegin == "" || result.resData.invitationEnd == "") {
+		result.resFlag = false;
+		result.resMessage = "게시기간을 선택해주세요.";
+	} else if(result.resData.dateTimeWedding == "") {
+		result.resFlag = false;
+		result.resMessage = "결혼식 일자를 선택해주세요.";
+	} else if(result.resData.weddingPlace == "") {
+		result.resFlag = false;
+		result.resMessage = "결혼식 장소를 입력해주세요.";
+	} else if(result.resData.contentGroom.length >= 500) {
+		result.resFlag = false;
+		result.resMessage = "신랑 간단소개는 500자 이내로 입력해주세요.";
+	} else if(result.resData.contentBride.length >= 500) {
+		result.resFlag = false;
+		result.resMessage = "신부 간단소개는 500자 이내로 입력해주세요.";
+	}
+	
+	return result;
+}
 ```

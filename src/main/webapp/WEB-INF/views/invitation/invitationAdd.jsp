@@ -185,7 +185,7 @@
 										<table id="tableRecordLoveStory" class="table table-valign-middle table-bordered dataTable itemLoveStory">
 											<tbody class="uploadbox wrapUploadFile">
 												<tr>
-													<td rowspan="3" style="width:10%;" class="text-center tdSortable">●</td>
+													<td rowspan="3" style="width:10%;" class="text-center">●</td>
 													<td rowspan="3" style="width:20%;" class="text-center">
 														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
 															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
@@ -263,13 +263,13 @@
 											<tr>
 												<td class="text-center">제목</td>
 												<td>
-													<input type="text" class="w-100" id="inputTitleWedingWW" />
+													<input type="text" class="w-100" id="inputTitleWeddingWW" />
 												</td>
 											</tr>
 											<tr>
 												<td class="text-center">내용</td>
 												<td>
-													<textarea rows="5" class="form-control" id="inputContentWedingWW" style="resize:none;"></textarea>
+													<textarea rows="5" class="form-control" id="inputContentWeddingWW" style="resize:none;"></textarea>
 												</td>
 											</tr>
 										</table>
@@ -333,7 +333,7 @@
 								</div>
 								<div class="row">
 									<div class="col-md-12">
-										<table class="table table-valign-middle table-bordered dataTable">
+										<table class="table table-valign-middle table-bordered dataTable" id="tableGallery">
 											<tr>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
 													<div>

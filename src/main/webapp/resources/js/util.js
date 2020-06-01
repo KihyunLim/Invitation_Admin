@@ -259,6 +259,17 @@ function checkImageType(fullName) {
 	return fullName.match(/jpg$|gif$|jpeg$|png$/i);
 };
 
+function getFormattedDate(newDate) {
+	var year = newDate.getFullYear(),
+		month = newDate.getMonth() + 1,
+		date = newDate.getDate();
+	
+	month = month < 10 ? "0" + String(month) : month;
+	date = date < 10 ? "0" + String(date) : date;
+	
+	return String(year) + String(month) + String(date);
+};
+
 $(function(){
 	/**
 	 * 업로드 이벤트 공통으로 할랫는데 렌더할 경우를 위해

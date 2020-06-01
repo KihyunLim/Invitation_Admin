@@ -195,56 +195,189 @@ function jusoCallBack(...res) {
 }
 
 function validateData() {
-	var id = $("#inputId").data("id") || "",
-		invitation = {
-			datePeriod : $("#inputDatePeriod").val().split(" - "),
-			visible : $("input[name=checkboxVisibleYN]").prop("checked") == true ? "N" : "Y"
-		},
-		HGB = {
-			weddingDateTime : $("#inputDateTimeWedding").val(),
-			weddingPlaceInfo : $("#infoWeddingPlace").data("infoWeddingPlace") || "",
-			contentGroom : $("#contentGroom").val(),
-			contentBride : $("#contentBride").val(),
-			imgMain : $("#imgHGB1").parents(".wrapUploadFile").find(".img").data("fullName"),
-			ynUseImage : $("input[name=checkboxEachImgYN]").prop("checked") == true ? "Y" : "N",
-			imgGroom : $("#imgHGB2").parents(".wrapUploadFile").find(".img").data("fullName"),
-			imgBride : $("#imgHGB3").parents(".wrapUploadFile").find(".img").data("fullName"),
-		}
-	
-	
-	var result = {
+	var invitation = {}, hgb = {}, ls = {}, ww = {}, g = {}, sm = {},
+		result = {
 			resFlag : true,
-			resData : {
-				id : $("#inputId").data("id") || "",
-				invitationBegin : ($("#inputDatePeriod").val().split(" - "))[0] || "",
-				invitationEnd : ($("#inputDatePeriod").val().split(" - "))[1] || "",
-				openYN : $("input[name=checkboxVisibleYN]").prop("checked") == true ? "N" : "Y",
-				dateTimeWedding : $("#inputDateTimeWedding").val() || "",
-				weddingPlace : $("#infoWeddingPlace").data("infoWeddingPlace") || "",
-				contentGroom : $("#contentGroom").val() || "",
-				contentBride : $("#contentBride").val() || ""
-			},
+			resData : {},
 			resMessage : ""
-	};
+		};
 	
-	if(result.resData.id == "") {
+	invitation.id = $("#inputId").data("id") || "";
+	if(invitation.id == "") {
 		result.resFlag = false;
-		result.resMessage = "아이디를 입력해주세요."
-	} else if(result.resData.invitationBegin == "" || result.resData.invitationEnd == "") {
+		result.resMessage = "아이디를 확인해주세요.";
+		return result;
+	}
+	
+	var datePeriod = $("#inputDatePeriod").val().split(" - "),
+		today = getFormattedDate(new Date());
+	invitation.periodBegin = (datePeriod[0]).replace(/-/g, "");
+	invitation.periodEnd = (datePeriod[1]).replace(/-/g, "");
+	if(Number(today) > Number(invitation.periodEnd)) {
 		result.resFlag = false;
-		result.resMessage = "게시기간을 선택해주세요.";
-	} else if(result.resData.dateTimeWedding == "") {
+		result.resMessage = "게시 기간을 확인해주세요.";
+		return result;
+	}
+	
+	invitation.visible = $("input[name=checkboxVisibleYN]").prop("checked") == true ? "N" : "Y";
+	invitation.formCode = "hookup";
+	invitation.useEachImage = $("input[name=checkboxEachImgYN]").prop("checked") == true ? "Y" : "N";
+	invitation.useLS = $("input[name=checkboxUseLSYN]").prop("checked") == true ? "Y" : "N";
+	invitation.usePyebaek = $("input[name=checkboxDoPyebaek]").prop("checked") == true ? "Y" : "N";
+	invitation.useG = $("input[name=checkboxUseG]").prop("checked") == true ? "Y" : "N";
+	invitation.useSM = $("input[name=checkboxUseSM]").prop("checked") == true ? "Y" : "N";
+	
+	var dateTimeWedding = $("#inputDateTimeWedding").val() || "";
+	dateTimeWedding = dateTimeWedding.split(" ");
+	hgb.dateWedding = (dateTimeWedding[0]).replace(/-/g, "");
+	hgb.timeWedding = (dateTimeWedding[1]).replace(/:/g, "");
+	if(Number(hgb.dateWedding) < Number(invitation.periodBegin) || Number(hgb.dateWedding) > Number(invitation.periodEnd)) {
 		result.resFlag = false;
-		result.resMessage = "결혼식 일자를 선택해주세요.";
-	} else if(result.resData.weddingPlace == "") {
+		result.resMessage = "결혼 일자를 확인해주세요.";
+		return result;
+	}
+	
+	var infoAddr = $("#infoWeddingPlace").data("infoWeddingPlace") || "";
+	hgb.address = infoAddr.addr || "";
+	hgb.placeX = infoAddr.placeX || "";
+	hgb.placeY = infoAddr.placeY || "";
+	if(infoAddr == undefined || infoAddr == "") {
 		result.resFlag = false;
-		result.resMessage = "결혼식 장소를 입력해주세요.";
-	} else if(result.resData.contentGroom.length >= 500) {
+		result.resMessage = "결혼식 장소를 확인해주세요.";
+		return result;
+	}
+	if(hgb.address == "" || hgb.placeX == "" || hgb.placeY == "") {
 		result.resFlag = false;
-		result.resMessage = "신랑 간단소개는 500자 이내로 입력해주세요.";
-	} else if(result.resData.contentBride.length >= 500) {
+		result.resMessage = "결혼식 장소를 확인해주세요.";
+		return result;
+	}
+	
+	hgb.contentGroom = $("#contentGroom").val();
+	hgb.contentBride = $("#contentBride").val();
+	
+	hgb.fullNameMain = $("#imgHGB1").parents(".wrapUploadFile").find("img").data("fullName");
+	// hgb.fullNameMain == false 조건 다시 ㄱㄱㄱㄱㄱㄱㄱ@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	if(hgb.fullNameMain == false || hgb.fullnameMain == undefined || hgb.fullnameMain == "") {
 		result.resFlag = false;
-		result.resMessage = "신부 간단소개는 500자 이내로 입력해주세요.";
+		result.resMessage = "메인 사진을 확인해주세요.";
+		return result;
+	}
+	
+	hgb.fullNameGroom = $("#imgHGB2").parents(".wrapUploadFile").find("img").data("fullName");
+	hgb.fullNameBride = $("#imgHGB3").parents(".wrapUploadFile").find("img").data("fullName");
+	hgb.useEachImage = invitation.useEachImage;
+	if(hgb.useEachImage == "Y") {
+		if(hgb.fullNameGroom == false || hgb.fullnameGroom == undefined || hgb.fullnameGroom == "") {
+			result.resFlag = false;
+			result.resMessage = "신랑 사진을 확인해주세요.";
+			return result;
+		}
+		
+		if(hgb.fullNameBride == false || hgb.fullnameBride == undefined || hgb.fullnameBride == "") {
+			result.resFlag = false;
+			result.resMessage = "신부 사진을 확인해주세요.";
+			return result;
+		}
+	} else {
+		hgb.fullNameGroom = "";
+		hgb.fullNameBride = "";
+	}
+	
+	ls.listLS = [];
+	var noImageCount = 0;
+	$(".itemLoveStory").each(function(){
+		var $this = $(this),
+			fullNameImg = $this.find("img").data("fullName") || "";
+		
+		if(fullNameImg == "") {
+			noImageCount++;
+		}
+		
+		ls.listLS.push({
+			dateStory : ($this.find(".inputDateLoveStory").val()).replace(/-/g, ""),
+			title : $this.find(".inputTitleLS").val(),
+			content : $this.find(".inputContentLS").val(),
+			fullNameImg : fullNameImg 
+		});
+	});
+	if(noImageCount > 0){
+		result.resFlag = false;
+		result.resMessage = "Love Story에 사진을 확인해주세요.";
+		return result;
+	} else if(invitation.useLS == "Y" && ls.listLS.length < 1) {
+		result.resFlag = false;
+		result.resMessage = "Love Story에 사진을 확인해주세요.";
+		return result;
+	} else if(invitation.useLS == "N" && ls.listLS.length > 0) {
+		result.resFlag = false;
+		result.resMessage = "Love Story의 사용 여부를 확인해주세요.";
+		return result;
+	}
+	
+	ww.listWW = [];
+	ww.listWW.push({
+		isPyebaek : false,
+		dateWedding : hgb.dateWedding,
+		timeWedding : hgb.timeWedding,
+		address : hgb.address,
+		placeX : hgb.placeX,
+		placeY : hgb.placeY,
+		title : $("#inputTitleWeddingWW").val(),
+		content : $("#inputContentWeddingWW").val()
+	});
+	if(invitation.usePyebaek == "Y") {
+		var dateTimePyebaek = $("#inputDatePyebaek").val() || "";
+		dateTimePyebaek = dateTimePyebaek.split(" ");
+		
+		var infoAddrPyebaek = $("#inputAddrPyebaek").data("infoPyebaek") || "";
+		hgb.address = infoAddrPyebaek.addr || "";
+		
+		if(infoAddrPyebaek == undefined || infoAddrPyebaek == "") {
+			result.resFlag = false;
+			result.resMessage = "폐백 장소를 확인해주세요.";
+			return result;
+		}
+		if(infoAddrPyebaek.address == "" || infoAddrPyebaek.placeX == "" || infoAddrPyebaek.placeY == "") {
+			result.resFlag = false;
+			result.resMessage = "폐백 장소를 확인해주세요.";
+			return result;
+		}
+		
+		ww.listWW.push({
+			isPyebaek : true,
+			dateWedding : (dateTimePyebaek[0]).replace(/-/g, ""),
+			timeWedding : (dateTimePyebaek[1]).replace(/:/g, ""),
+			address : infoAddrPyebaek.addr || "",
+			placeX : infoAddrPyebaek.placeX || "",
+			placeY : infoAddrPyebaek.placeY || "",
+			title : $("#inputTitlePyebaekWW").val(),
+			content : $("#inputContentPyebaekWW").val()
+		});
+	}
+	
+	g.listG = [];
+	if(invitation.useG == "Y") {
+		$("#tableGallery").find(".wrapUploadFile").each(function(){
+			var fullName = $(this).find("img").data("fullName") || "";
+			
+			if(fullName != "") {
+				g.listG.push(fullName);
+			}
+		});
+		
+		if(g.listG.length < 1) {
+			result.resFlag = false;
+			result.resMessage = "Gallery에 사진을 확인해주세요.";
+			return result;
+		}
+	}
+	
+	result.resData = {
+		invitation : invitation,
+		hgb : hgb,
+		ls : ls,
+		ww : ww,
+		g : g
 	}
 	
 	return result;
