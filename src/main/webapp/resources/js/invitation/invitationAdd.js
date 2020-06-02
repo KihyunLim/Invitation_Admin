@@ -58,6 +58,7 @@ $(function(){
 		
 		if(result.resFlag) {
 			console.log(result.resData);
+			registerInvitation(result.resData);
 		} else {
 			alert(result.resMessage);
 		}
@@ -106,23 +107,11 @@ $(function(){
 		
 		resetTagId();
 	});
-	
-	//------------------------------------------------------------------------------------------------------
-	
-	// 유동적으로 추가한것도 먹힐려나??
-	/*$(".inputDateLoveStory").daterangepicker({
-		singleDatePicker : true,
-		locale : {
-			format : "YYYY-MM-DD"
-		}
-	});*/
 });
 
 function setClone() {
 	$tableRecordLoveStory = $("#tableRecordLoveStory").clone();
 	$("#tableRecordLoveStory").remove();
-	
-//	cloneLoveStory();
 	$("#wrapListLS").sortable();
 }
 
@@ -195,7 +184,7 @@ function jusoCallBack(...res) {
 }
 
 function validateData() {
-	var invitation = {}, hgb = {}, ls = {}, ww = {}, g = {}, sm = {},
+	var invitation = {}, hgb = {}, ls = {}, ww = {}, gallery = {}, sm = {},
 		result = {
 			resFlag : true,
 			resData : {},
@@ -226,7 +215,7 @@ function validateData() {
 	invitation.usePyebaek = $("input[name=checkboxDoPyebaek]").prop("checked") == true ? "Y" : "N";
 	invitation.useG = $("input[name=checkboxUseG]").prop("checked") == true ? "Y" : "N";
 	invitation.useSM = $("input[name=checkboxUseSM]").prop("checked") == true ? "Y" : "N";
-	
+	/*
 	var dateTimeWedding = $("#inputDateTimeWedding").val() || "";
 	dateTimeWedding = dateTimeWedding.split(" ");
 	hgb.dateWedding = (dateTimeWedding[0]).replace(/-/g, "");
@@ -353,30 +342,53 @@ function validateData() {
 		});
 	}
 	
-	g.listG = [];
+	gallery.listG = [];
 	if(invitation.useG == "Y") {
 		$("#tableGallery").find(".wrapUploadFile").each(function(){
 			var fullName = $(this).find("img").data("fullName") || "";
 			
 			if(fullName != "") {
-				g.listG.push(fullName);
+				gallery.listG.push(fullName);
 			}
 		});
 		
-		if(g.listG.length < 1) {
+		if(gallery.listG.length < 1) {
 			result.resFlag = false;
 			result.resMessage = "Gallery에 사진을 확인해주세요.";
 			return result;
 		}
-	}
+	}*/
 	
 	result.resData = {
-		invitation : invitation,
+		invitationVO : invitation,
 		hgb : hgb,
 		ls : ls,
 		ww : ww,
-		g : g
+		gallery : gallery
 	}
 	
 	return result;
+}
+
+function registerInvitation(data) {
+	$.ajax({
+		url : "/admin/invitation/registerInvitation.do",
+		type : "POST",
+		dataType : "json",
+		data : JSON.stringify(data),
+		contentType : "application/json;charset=utf-8;",
+		error : function(xhr, status, msg) {
+			allert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			/*if(result.resFlag) {
+				alert(result.resMessage);
+				location.reload();
+			} else {
+				alert(result.resMessage);
+			}*/
+		}
+	});
 }
