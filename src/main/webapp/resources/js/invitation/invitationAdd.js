@@ -215,7 +215,7 @@ function validateData() {
 	invitation.usePyebaek = $("input[name=checkboxDoPyebaek]").prop("checked") == true ? "Y" : "N";
 	invitation.useG = $("input[name=checkboxUseG]").prop("checked") == true ? "Y" : "N";
 	invitation.useSM = $("input[name=checkboxUseSM]").prop("checked") == true ? "Y" : "N";
-	/*
+	
 	var dateTimeWedding = $("#inputDateTimeWedding").val() || "";
 	dateTimeWedding = dateTimeWedding.split(" ");
 	hgb.dateWedding = (dateTimeWedding[0]).replace(/-/g, "");
@@ -357,11 +357,11 @@ function validateData() {
 			result.resMessage = "Gallery에 사진을 확인해주세요.";
 			return result;
 		}
-	}*/
+	}
 	
 	result.resData = {
 		invitationVO : invitation,
-		hgb : hgb,
+		mainInfoVO : hgb,
 		ls : ls,
 		ww : ww,
 		gallery : gallery
