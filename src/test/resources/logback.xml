@@ -55,10 +55,10 @@
 	</logger>
 	
 	<!-- Query Loggers -->
-	<!-- <logger name="jdbc.sqlonly" level="debug" additivity="false">
+	<logger name="jdbc.sqlonly" level="debug" additivity="false">
 		<appender-ref ref="console" />
 		<appender-ref ref="file" />
-	</logger> -->
+	</logger>
 	
 	<!-- <logger name="jdbc.resultsettable" level="debug" additivity="false">
 		<appender-ref ref="console" />

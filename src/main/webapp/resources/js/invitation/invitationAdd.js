@@ -348,7 +348,7 @@ function validateData() {
 			var fullName = $(this).find("img").data("fullName") || "";
 			
 			if(fullName != "") {
-				gallery.listG.push(fullName);
+				gallery.listG.push({fullName : fullName});
 			}
 		});
 		
@@ -362,9 +362,9 @@ function validateData() {
 	result.resData = {
 		invitationVO : invitation,
 		mainInfoVO : hgb,
-		ls : ls,
-		ww : ww,
-		gallery : gallery
+		loveStoryVO : ls.listLS,
+		whenWhereVO : ww.listWW,
+		galleryVO : gallery.listG
 	}
 	
 	return result;
@@ -378,7 +378,7 @@ function registerInvitation(data) {
 		data : JSON.stringify(data),
 		contentType : "application/json;charset=utf-8;",
 		error : function(xhr, status, msg) {
-			allert("status : " + status + "\nHttp error msg : " + msg);
+			alert("status : " + status + "\nHttp error msg : " + msg);
 		},
 		success : function(result) {
 			console.log(result);

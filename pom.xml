@@ -32,6 +32,15 @@
 		<exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
 	</properties>
 	<dependencies>
+		<!-- mockmvc (junit test) -->
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+		<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-all</artifactId>
+		    <version>1.10.19</version>
+		    <scope>test</scope>
+		</dependency>
+	
 		<!-- file upload -->
 		<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
 		<dependency>

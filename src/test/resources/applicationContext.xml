@@ -11,6 +11,7 @@
 
 	<!-- 자동 스캔 추가 -->
 	<context:component-scan base-package="com.invitation.biz"></context:component-scan>
+	<context:component-scan base-package="com.invitation.controller"></context:component-scan>
 	
 	<!-- AOP -->
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>

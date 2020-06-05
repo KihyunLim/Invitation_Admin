@@ -98,7 +98,6 @@ public class InvitationController {
 		LOGGER.info("registerInvitation.do");
 		try {
 			LOGGER.debug(vo.toString());
-			LOGGER.debug(vo.getInvitationVO().toString());
 			
 			resFlag = true;
 		} catch(Exception e) {
