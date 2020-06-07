@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -89,17 +90,57 @@ public class InvitationController {
 	}
 	
 	@PostMapping(value="/registerInvitation.do", headers= {"Content-type=application/json"})
+	@Transactional
 	@ResponseBody
 	public Map<String, Object> registerInvitaiton(@RequestBody SyntheticInvitationVO vo) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Boolean resFlag = false;
 		String resMessage = "";
+		Integer lastInsertID_vo = null;
 		
 		LOGGER.info("registerInvitation.do");
 		try {
 			LOGGER.debug(vo.toString());
 			
+			/**
+			 * - invitationVO insert
+			 * - get lastInsertId_inv and set lastInsertId_inv
+			 * - set mainInfoVO >>> lastInserId 험 찍어봐 디비버에서!!
+			 * 	- mainInfoVO_fullName1 > addFile
+			 * 	- get lastInsertId_fullName and set seqImg1
+			 * 	- mainInfoVO_fullName2 > addFile
+			 * 	- get lastInsertId_fullName and set seqImg2
+			 * 	- mainInfoVO_fullName3 > addFile
+			 * 	- get lastInsertId_fullName and set seqImg3
+			 * 	- mainInfoVO insert
+			 * - set loveStoryVO >>> for(loveStoryVO.length)
+			 * 	- loveStoryVO[i]_fullName > addFile
+			 * 	- get lastInsertId_fullName and set seqImg[i]
+			 * 	- loveStoryVO[i] insert
+			 * - set whenWhereVO >>> for(whereWhenVO.length)
+			 * 	- whenWhereVO[i] insert
+			 * - set galleryVO >>> for(galleryVO.length)
+			 * 	- galleryVO[i]_fullName and set seqImg[i]
+			 * 	- get lastInertId_fullName and set seqImg[i]
+			 * 	- galleryVO[i] insert
+			 */
+			invitationService.registerInvitaiton(vo);
+			lastInsertID_vo = invitationService.getLastInsertID();
+			LOGGER.debug("##### lastInsertID_vo : " + lastInsertID_vo);
+			if(lastInsertID_vo.equals(null)) {
+				throw new CommonException("lastInsertID_vo is null");
+			}
+			
 			resFlag = true;
+		} catch(CommonException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			if(e.getMessage().equals("lastInsertID_vo is null")) {
+				resMessage = "청첩장 추가 실패";
+			}
+			
+			resFlag = false;
 		} catch(Exception e) {
 			LOGGER.error("error message : " + e.getMessage());
 			LOGGER.error("error trace : ", e);

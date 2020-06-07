@@ -41,6 +41,7 @@ public class DataSourceTest {
 	
 	@Inject
 	private DataSource ds;
+	
 	private MockMvc mock;
 	
 	@Autowired
@@ -50,8 +51,8 @@ public class DataSourceTest {
 	
 	@Before
 	public void setup() {
-		mock = MockMvcBuilders.standaloneSetup(loginController).build();
-//		mock = MockMvcBuilders.standaloneSetup(invitationController).build();
+//		mock = MockMvcBuilders.standaloneSetup(loginController).build();
+		mock = MockMvcBuilders.standaloneSetup(invitationController).build();
 	}
 	
 //	@Test
@@ -67,8 +68,8 @@ public class DataSourceTest {
 	
 	
 	
-	@Test
-//	@Ignore
+//	@Test
+	@Ignore
 	public void test_doLogin() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		UserAdminVO userAdminVO = new UserAdminVO();
@@ -100,5 +101,11 @@ public class DataSourceTest {
 		.andExpect(status().isOk())
 		.andExpect(handler().handlerType(InvitationController.class))
 		.andExpect(handler().methodName("getMemberInfo"));
+	}
+	
+	@Test
+//	@Ignore
+	public void test_registerInvitaiton() throws Exception {
+		
 	}
 }

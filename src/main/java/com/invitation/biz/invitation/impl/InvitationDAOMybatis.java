@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.invitation.biz.invitation.MemberInfoVO;
+import com.invitation.biz.invitation.SyntheticInvitationVO;
 
 @Repository
 public class InvitationDAOMybatis {
@@ -14,5 +15,13 @@ public class InvitationDAOMybatis {
 	
 	public MemberInfoVO getMemberInfo(String id) {
 		return mybatis.selectOne("InvitationDAO.getMemberInfo", id);
+	}
+	
+	public int getLastInsertID() {
+		return mybatis.selectOne("InvitationDAO.getLastInsertID");
+	}
+	
+	public int registerInvitaiton(SyntheticInvitationVO syntheticInvitationVO) {
+		return mybatis.insert("InvitationDAO.registerInvitation", syntheticInvitationVO);
 	}
 }

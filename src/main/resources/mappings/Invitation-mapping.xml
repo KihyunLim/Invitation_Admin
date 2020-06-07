@@ -14,4 +14,47 @@
 			AND DELETEFLAG = 'N'
 		;
 	</select>
+	
+	<select id="getLastInsertID" resultType="int">
+		SELECT
+			LAST_INSERT_ID()
+		;
+	</select>
+	
+	<insert id="registerInvitation">
+		INSERT INTO
+			INVITATION_LIST(
+				SEQ
+				, ID
+				, NAME
+				, VISIBLE
+				, DATE_BEGIN
+				, DATE_END
+				, FORMCODE
+				, USE_EACH_IMAGE
+				, USE_LS
+				, USE_PYEBAEK
+				, USE_G
+				, USE_SM
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			) 
+			VALUES (
+				null
+				, #{invitationVO.id}
+				, #{invitationVO.name}
+				, #{invitationVO.visible}
+				, #{invitationVO.periodBegin}
+				, #{invitationVO.periodEnd}
+				, #{invitationVO.formCode}
+				, #{invitationVO.useEachImage}
+				, #{invitationVO.useLS}
+				, #{invitationVO.usePyebaek}
+				, #{invitationVO.useG}
+				, #{invitationVO.useSM}
+				, null
+				, null
+			)
+		;
+	</insert>
 </mapper>
