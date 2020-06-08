@@ -24,7 +24,7 @@ public class InvitationServiceImpl implements InvitationService {
 	}
 
 	@Override
-	public int registerInvitaiton(SyntheticInvitationVO syntheticInvitationVO) {
-		return invitationDAO.registerInvitaiton(syntheticInvitationVO);
+	public void registerInvitaiton(SyntheticInvitationVO syntheticInvitationVO) {
+		invitationDAO.registerInvitaiton(syntheticInvitationVO);
 	}
 }

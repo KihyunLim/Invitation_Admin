@@ -3,14 +3,24 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="UploadDAO">
-	<!-- <select id="getMemberInfo" resultType="memberInfo">
-		SELECT
-			ID,
-			NAME
-		FROM
-			USERES
-		WHERE
-			ID = #{id}
+	<insert id="insertFileInfo">
+		INSERT INTO
+			ATTACH(
+				SEQ
+				, INV_SEQ
+				, FULLNAME
+				, CATEGORY
+				, FORMCODE
+				, DATETIME_REGISTER
+			)
+			VALUES(
+				null
+				, #{invSeq}
+				, #{fullName}
+				, #{category}
+				, #{formCode}
+				, null
+			)
 		;
-	</select> -->
+	</insert>
 </mapper>

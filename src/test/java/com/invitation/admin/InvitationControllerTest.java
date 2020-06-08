@@ -35,7 +35,8 @@ import com.invitation.controller.invitation.InvitationController;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("file:src/test/resources/applicationContext.xml")
+@ContextConfiguration(locations= {"file:src/main/resources/applicationContext.xml", 
+								"file:src/main/webapp/WEB-INF/config/servlet-config.xml"})
 public class InvitationControllerTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceTest.class);

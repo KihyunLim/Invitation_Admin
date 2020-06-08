@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.invitation.biz.common.exception.CommonException;
+import com.invitation.biz.common.fileUpload.FileUploadService;
 import com.invitation.biz.invitation.InvitationService;
 import com.invitation.biz.invitation.MemberInfoVO;
 import com.invitation.biz.invitation.SyntheticInvitationVO;
@@ -30,6 +31,8 @@ public class InvitationController {
 	
 	@Autowired
 	private InvitationService invitationService;
+	@Autowired
+	private FileUploadService fileUploadService;
 	
 	@RequestMapping(value="/invitationAdd.do", method=RequestMethod.GET)
 	public String temp1(Model model) {
@@ -90,22 +93,24 @@ public class InvitationController {
 	}
 	
 	@PostMapping(value="/registerInvitation.do", headers= {"Content-type=application/json"})
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	@ResponseBody
 	public Map<String, Object> registerInvitaiton(@RequestBody SyntheticInvitationVO vo) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Boolean resFlag = false;
 		String resMessage = "";
 		Integer lastInsertID_vo = null;
+		Integer lastInsertID_file = null;
+		Map<String, Object> mapAttach = new HashMap<String, Object>();
 		
 		LOGGER.info("registerInvitation.do");
 		try {
 			LOGGER.debug(vo.toString());
 			
 			/**
-			 * - invitationVO insert
-			 * - get lastInsertId_inv and set lastInsertId_inv
-			 * - set mainInfoVO >>> lastInserId 험 찍어봐 디비버에서!!
+			 * + invitationVO insert
+			 * + get lastInsertId_inv and set lastInsertId_inv
+			 * - set mainInfoVO
 			 * 	- mainInfoVO_fullName1 > addFile
 			 * 	- get lastInsertId_fullName and set seqImg1
 			 * 	- mainInfoVO_fullName2 > addFile
@@ -126,9 +131,25 @@ public class InvitationController {
 			 */
 			invitationService.registerInvitaiton(vo);
 			lastInsertID_vo = invitationService.getLastInsertID();
+			
 			LOGGER.debug("##### lastInsertID_vo : " + lastInsertID_vo);
 			if(lastInsertID_vo.equals(null)) {
 				throw new CommonException("lastInsertID_vo is null");
+			}
+			
+			vo.getMainInfoVO().setInvSeq(lastInsertID_vo);
+			if(vo.getMainInfoVO().getFullNameMain().equals(null)) {
+				throw new CommonException("mainImage is null");
+			}
+			mapAttach.put("invSeq", lastInsertID_vo);
+			mapAttach.put("fullName", vo.getMainInfoVO().getFullNameMain());
+			mapAttach.put("category", "MIasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf");
+			mapAttach.put("formCode", vo.getInvitationVO().getFormCode());
+			fileUploadService.insertFileInfo(mapAttach);
+			lastInsertID_file = invitationService.getLastInsertID();
+			LOGGER.debug("##### lastInsertID_file : " + lastInsertID_file);
+			if(lastInsertID_file.equals(null)) {
+				throw new CommonException("lastInsertID_file is null");
 			}
 			
 			resFlag = true;
@@ -138,6 +159,10 @@ public class InvitationController {
 			
 			if(e.getMessage().equals("lastInsertID_vo is null")) {
 				resMessage = "청첩장 추가 실패";
+			} else if(e.getMessage().equals("mainImage is null")) {
+				resMessage = "메인 이미지는 필수입니다.";
+			} else if(e.getMessage().equals("lastInsertID_file is null")) {
+				resMessage = "메인 이미지 저장 실패";
 			}
 			
 			resFlag = false;

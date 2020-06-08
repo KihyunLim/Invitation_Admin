@@ -42,7 +42,7 @@
 			VALUES (
 				null
 				, #{invitationVO.id}
-				, #{invitationVO.name}
+				, (SELECT NAME FROM USERES WHERE ID=#{invitationVO.id})
 				, #{invitationVO.visible}
 				, #{invitationVO.periodBegin}
 				, #{invitationVO.periodEnd}

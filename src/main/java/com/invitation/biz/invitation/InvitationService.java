@@ -6,5 +6,5 @@ public interface InvitationService {
 
 	int getLastInsertID();
 	
-	int registerInvitaiton(SyntheticInvitationVO syntheticInvitationVO);
+	void registerInvitaiton(SyntheticInvitationVO syntheticInvitationVO);
 }
