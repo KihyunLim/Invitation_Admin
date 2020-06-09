@@ -75,10 +75,11 @@ public class InvitationServiceImpl implements InvitationService {
 		 * 		- get lastInertId_fullName and set seqImg[i]
 		 * 		- galleryVO[i] insert
 		 */
+		LOGGER.debug("registerInviation >>> ");
 		invitationDAO.registerInvitaiton(vo);
 		lastInsertID_vo = getLastInsertID();
-		LOGGER.debug("##### lastInsertID_vo : " + lastInsertID_vo);
 		
+		LOGGER.debug("insertMainInfo >>> ");
 		vo.getMainInfoVO().setInvSeq(lastInsertID_vo);
 		//
 		mapAttach.put("invSeq", lastInsertID_vo);
@@ -107,12 +108,20 @@ public class InvitationServiceImpl implements InvitationService {
 		//
 		invitationDAO.insertMainInfo(vo);
 		
+		LOGGER.debug("insertLoveStory >>> ");
 //		for(LoveStoryVO item : vo.getLoveStoryVO()) { 
 //			LOGGER.debug(item.toString());
 //		}
 		while(iteratorLS.hasNext()) {
-			LOGGER.debug(iteratorLS.next().toString());
+			LoveStoryVO item = iteratorLS.next();
+			mapAttach.put("invSeq", lastInsertID_vo);
+			mapAttach.put("fullName", item.getFullNameImg());
+			mapAttach.put("category", "LS");
+			mapAttach.put("formCode", vo.getInvitationVO().getFormCode());
+			fileUploadService.insertFileInfo(mapAttach);
+			lastInsertID_file = getLastInsertID();
+			item.setSeqImage(lastInsertID_file);
 		}
-		
+		invitationDAO.insertLoveStory(vo);
 	}
 }

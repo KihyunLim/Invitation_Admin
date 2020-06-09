@@ -98,4 +98,34 @@
 			)
 		;
 	</insert>
+	
+	<insert id="insertLoveStory">
+		INSERT INTO
+			LOVE_STORY (
+				SEQ
+				, INV_SEQ
+				, ID
+				, IS_DELETE
+				, DATE_STORY
+				, TITLE
+				, CONTENT
+				, SEQ_IMAGE
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			)
+			VALUES 
+			<foreach collection="loveStoryVO" item="item" open="(" close=")" separator="), (">
+				null
+				, #{mainInfoVO.invSeq}
+				, #{invitationVO.id}
+				, false
+				, #{item.dateStory}
+				, #{item.title}
+				, #{item.content}
+				, #{item.seqImage}
+				, null
+				, null
+			</foreach>
+		;
+	</insert>
 </mapper>
