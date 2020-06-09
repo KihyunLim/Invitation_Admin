@@ -46,15 +46,8 @@ public class LoginController {
 		
 		LOGGER.info("doLogin");
 		try {
-			UserAdminVO resGetUserInfo = userAdminService.getUserInfo(user.getId());
-			
-			if(resGetUserInfo == null) {
-				throw new NullPointerException("User information not found");
-			}
-			
-			if(resGetUserInfo.getPassword().equals(user.getPassword())) {
-				session.setAttribute("id", resGetUserInfo.getId());
-				
+			if(userAdminService.getUserInfo2(user)) {
+				session.setAttribute("id", user.getId());
 				resFlag = true;
 			} else {
 				throw new CommonException("비밀번호 불일치!!");

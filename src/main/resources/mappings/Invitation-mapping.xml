@@ -23,7 +23,7 @@
 	
 	<insert id="registerInvitation">
 		INSERT INTO
-			INVITATION_LIST(
+			INVITATION_LIST (
 				SEQ
 				, ID
 				, NAME
@@ -52,6 +52,47 @@
 				, #{invitationVO.usePyebaek}
 				, #{invitationVO.useG}
 				, #{invitationVO.useSM}
+				, null
+				, null
+			)
+		;
+	</insert>
+	
+	<insert id="insertMainInfo">
+		INSERT INTO
+			MAIN_INFO (
+				SEQ
+				, INV_SEQ
+				, ID
+				, DATE_WEDDING
+				, TIME_WEDDING
+				, X_PLACE
+				, Y_PLACE
+				, ADDRESS
+				, CONTENT_GROOM
+				, CONTENT_BRIDE
+				, SEQ_IMG_MAIN
+				, YN_EACH_IMAGE
+				, SEQ_IMG_GROOM
+				, SEQ_IMG_BRIDE
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			)
+			VALUES (
+				null
+				, #{mainInfoVO.invSeq}
+				, #{invitationVO.id}
+				, #{mainInfoVO.dateWedding}
+				, #{mainInfoVO.timeWedding}
+				, #{mainInfoVO.placeX}
+				, #{mainInfoVO.placeY}
+				, #{mainInfoVO.address}
+				, #{mainInfoVO.contentGroom}
+				, #{mainInfoVO.contentBride}
+				, #{mainInfoVO.seqImgMain}
+				, #{mainInfoVO.useEachImage}
+				, #{mainInfoVO.seqImgGroom}
+				, #{mainInfoVO.seqImgBride}
 				, null
 				, null
 			)

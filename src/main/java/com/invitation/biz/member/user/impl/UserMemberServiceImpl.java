@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.invitation.biz.common.exception.CommonException;
 import com.invitation.biz.common.paging.Criteria;
 import com.invitation.biz.member.user.UserMemberInfoVO;
 import com.invitation.biz.member.user.UserMemberListVO;
@@ -38,17 +39,31 @@ public class UserMemberServiceImpl implements UserMemberService {
 	}
 	
 	@Override
-	public UserMemberInfoVO getMemberInfo(String id) {
-		return userMemberDAO.getMemberInfo(id);
+	public UserMemberInfoVO getMemberInfo(String id) throws Exception {
+		UserMemberInfoVO userMemberInfoVO = userMemberDAO.getMemberInfo(id);
+		
+		if(userMemberInfoVO.equals(null)) {
+			throw new CommonException("회원정보 불일치!!");
+		}
+		
+		return userMemberInfoVO;
 	}
 	
 	@Override
-	public void modifyMember(UserMemberVO vo) {
+	public void modifyMember(String id, UserMemberVO vo) throws Exception {
+		if(id.equals(vo.getId()) == false) {
+			throw new CommonException("부적절한 회원정보 수정 요청!!");
+		}
+		
 		userMemberDAO.modifyMember(vo);
 	}
 	
 	@Override
-	public void deleteMember(String id) {
+	public void deleteMember(String id) throws Exception {
+		if(id.equals(null)) {
+			throw new CommonException("삭제 할 아이디 확인 필요!!");
+		}
+		
 		userMemberDAO.deleteMember(id);
 	}
 }

@@ -158,10 +158,6 @@ public class MemberController {
 		try {
 			resMemberInfo = userMemberService.getMemberInfo(id);
 			
-			if(resMemberInfo == null) {
-				throw new CommonException("회원정보 불일치!!");
-			}
-			
 			resFlag = true;
 		} catch(CommonException e) {
 			LOGGER.error("error message : " + e.getMessage());
@@ -192,11 +188,7 @@ public class MemberController {
 		
 		LOGGER.info("modifyMember");
 		try {
-			if(id.equals(vo.getId()) == false) {
-				throw new CommonException("부적절한 회원정보 수정 요청!!");
-			}
-			
-			userMemberService.modifyMember(vo);
+			userMemberService.modifyMember(id, vo);
 			
 			resFlag = true;
 			resMessage = "회원정보 수정이 완료되었습니다.";
@@ -228,10 +220,6 @@ public class MemberController {
 		
 		LOGGER.info("deleteMember");
 		try {
-			if(id == null) {
-				throw new CommonException("삭제할 아이디 확인 필요!!");
-			}
-			
 			userMemberService.deleteMember(id);
 			
 			resFlag = true;

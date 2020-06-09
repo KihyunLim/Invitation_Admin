@@ -63,10 +63,6 @@ public class InvitationController {
 		try {
 			resMemberInfo = invitationService.getMemberInfo(id);
 			
-			if(resMemberInfo == null) {
-				throw new CommonException("조회 결과 없음!!");
-			}
-			
 			resFlag = true;
 		} catch(CommonException e) {
 			LOGGER.error("error message : " + e.getMessage());
@@ -98,6 +94,7 @@ public class InvitationController {
 		LOGGER.info("registerInvitation.do");
 		try {
 			invitationService.registerInvitation(vo);
+			
 			resFlag = true;
 		} catch(Exception e) {
 			LOGGER.error("error message : " + e.getMessage());

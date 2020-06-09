@@ -76,7 +76,8 @@ public class InvitationControllerTest {
 		InvitationVO invitationVO = new InvitationVO();
 		MainInfoVO mainInfoVO = new MainInfoVO();
 		ArrayList<LoveStoryVO> loveStoryVO = new ArrayList<>();
-		LoveStoryVO itemLoveStoryVO = new LoveStoryVO();
+		LoveStoryVO itemLoveStoryVO1 = new LoveStoryVO();
+		LoveStoryVO itemLoveStoryVO2 = new LoveStoryVO();
 		ArrayList<WhenWhereVO> whenWhereVO = new ArrayList<>();
 		WhenWhereVO itemWhenWhereVO = new WhenWhereVO();
 		ArrayList<GalleryVO> galleryVO = new ArrayList<>();
@@ -105,16 +106,16 @@ public class InvitationControllerTest {
 		mainInfoVO.setTimeWedding("1300");
 		mainInfoVO.setUseEachImage("Y");
 		
-		itemLoveStoryVO.setDateStory("20200608");
-		itemLoveStoryVO.setTitle("qq");
-		itemLoveStoryVO.setContent("ww");
-		itemLoveStoryVO.setFullNameImg("/2020/06/07/s_7a59626c-b8d5-4fc4-a6f4-1ccf7611504e_sample1.jpg");
-		loveStoryVO.add(itemLoveStoryVO);
-		itemLoveStoryVO.setDateStory("20200607");
-		itemLoveStoryVO.setTitle("ee");
-		itemLoveStoryVO.setContent("rr");
-		itemLoveStoryVO.setFullNameImg("/2020/06/07/s_eec24b48-7f20-454f-befd-c85b9ba6bb1f_sample2.jpg");
-		loveStoryVO.add(itemLoveStoryVO);
+		itemLoveStoryVO1.setDateStory("20200608");
+		itemLoveStoryVO1.setTitle("qq");
+		itemLoveStoryVO1.setContent("ww");
+		itemLoveStoryVO1.setFullNameImg("/2020/06/07/s_7a59626c-b8d5-4fc4-a6f4-1ccf7611504e_sample1.jpg");
+		loveStoryVO.add(itemLoveStoryVO1);
+		itemLoveStoryVO2.setDateStory("20200607");
+		itemLoveStoryVO2.setTitle("ee");
+		itemLoveStoryVO2.setContent("rr");
+		itemLoveStoryVO2.setFullNameImg("/2020/06/07/s_eec24b48-7f20-454f-befd-c85b9ba6bb1f_sample2.jpg");
+		loveStoryVO.add(itemLoveStoryVO2);
 		
 		itemWhenWhereVO.setAddress("경기도 성남시 분당구 벌말로39번길 13, qwer (야탑동)");
 		itemWhenWhereVO.setContent("aa");

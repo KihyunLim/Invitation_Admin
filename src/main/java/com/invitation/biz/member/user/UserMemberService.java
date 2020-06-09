@@ -14,9 +14,9 @@ public interface UserMemberService {
 	
 	void registerMember(UserMemberVO vo);
 	
-	UserMemberInfoVO getMemberInfo(String id);
+	UserMemberInfoVO getMemberInfo(String id) throws Exception;
 	
-	void modifyMember(UserMemberVO vo);
+	void modifyMember(String id, UserMemberVO vo) throws Exception;
 	
-	void deleteMember(String id);
+	void deleteMember(String id) throws Exception;
 }

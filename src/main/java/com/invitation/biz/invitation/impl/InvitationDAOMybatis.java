@@ -28,4 +28,8 @@ public class InvitationDAOMybatis {
 	public void registerInvitaiton(SyntheticInvitationVO syntheticInvitationVO) {
 		mybatis.insert("InvitationDAO.registerInvitation", syntheticInvitationVO);
 	}
+	
+	public void insertMainInfo(SyntheticInvitationVO syntheticInvitationVO) {
+		mybatis.insert("InvitationDAO.insertMainInfo", syntheticInvitationVO);
+	}
 }

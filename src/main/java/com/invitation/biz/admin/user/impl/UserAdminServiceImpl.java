@@ -16,4 +16,19 @@ public class UserAdminServiceImpl implements UserAdminService {
 	public UserAdminVO getUserInfo(String id) {
 		return userAdminDAO.getUserInfo(id);
 	}
+
+	@Override
+	public Boolean getUserInfo2(UserAdminVO user) {
+		UserAdminVO userInfo = userAdminDAO.getUserInfo(user.getId());
+		
+		if(userInfo == null) {
+			throw new NullPointerException("User information not fuond");
+		}
+		
+		if(userInfo.getPassword().equals(user.getPassword())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

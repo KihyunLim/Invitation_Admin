@@ -1,6 +1,7 @@
 package com.invitation.biz.invitation.impl;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -9,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.invitation.biz.common.exception.CommonException;
 import com.invitation.biz.common.fileUpload.FileUploadService;
 import com.invitation.biz.invitation.InvitationService;
+import com.invitation.biz.invitation.LoveStoryVO;
 import com.invitation.biz.invitation.MemberInfoVO;
 import com.invitation.biz.invitation.SyntheticInvitationVO;
 
@@ -27,8 +30,14 @@ public class InvitationServiceImpl implements InvitationService {
 	private FileUploadService fileUploadService;
 	
 	@Override
-	public MemberInfoVO getMemberInfo(String id) {
-		return invitationDAO.getMemberInfo(id);
+	public MemberInfoVO getMemberInfo(String id) throws Exception {
+		MemberInfoVO memberInfoVO = invitationDAO.getMemberInfo(id);
+		
+		if(memberInfoVO.equals(null)) {
+			throw new CommonException("조회 결과 없음!!");
+		}
+		
+		return memberInfoVO;
 	}
 
 	@Override
@@ -42,42 +51,68 @@ public class InvitationServiceImpl implements InvitationService {
 		Integer lastInsertID_vo = null;
 		Integer lastInsertID_file = null;
 		Map<String, Object> mapAttach = new HashMap<String, Object>();
+		Iterator<LoveStoryVO> iteratorLS = vo.getLoveStoryVO().iterator();
 		
 		/**
 		 * + invitationVO insert
 		 * + get lastInsertId_inv and set lastInsertId_inv
-		 * - set mainInfoVO
-		 * 	+ mainInfoVO_fullName1 > addFile
-		 * 	+ get lastInsertId_fullName and set seqImg1
-		 * 	- mainInfoVO_fullName2 > addFile
-		 * 	- get lastInsertId_fullName and set seqImg2
-		 * 	- mainInfoVO_fullName3 > addFile
-		 * 	- get lastInsertId_fullName and set seqImg3
-		 * 	- mainInfoVO insert
+		 * + set mainInfoVO
+		 * 		+ mainInfoVO_fullName1 > addFile
+		 * 		+ get lastInsertId_fullName and set seqImg1
+		 * 		+ mainInfoVO_fullName2 > addFile
+		 * 		+ get lastInsertId_fullName and set seqImg2
+		 * 		+ mainInfoVO_fullName3 > addFile
+		 * 		+ get lastInsertId_fullName and set seqImg3
+		 * 		+ mainInfoVO insert
 		 * - set loveStoryVO >>> for(loveStoryVO.length)
-		 * 	- loveStoryVO[i]_fullName > addFile
-		 * 	- get lastInsertId_fullName and set seqImg[i]
-		 * 	- loveStoryVO[i] insert
+		 * 		- loveStoryVO[i]_fullName > addFile
+		 * 		- get lastInsertId_fullName and set seqImg[i]
+		 * 		- loveStoryVO[i] insert
 		 * - set whenWhereVO >>> for(whereWhenVO.length)
-		 * 	- whenWhereVO[i] insert
+		 * 		- whenWhereVO[i] insert
 		 * - set galleryVO >>> for(galleryVO.length)
-		 * 	- galleryVO[i]_fullName and set seqImg[i]
-		 * 	- get lastInertId_fullName and set seqImg[i]
-		 * 	- galleryVO[i] insert
+		 * 		- galleryVO[i]_fullName and set seqImg[i]
+		 * 		- get lastInertId_fullName and set seqImg[i]
+		 * 		- galleryVO[i] insert
 		 */
 		invitationDAO.registerInvitaiton(vo);
 		lastInsertID_vo = getLastInsertID();
 		LOGGER.debug("##### lastInsertID_vo : " + lastInsertID_vo);
 		
 		vo.getMainInfoVO().setInvSeq(lastInsertID_vo);
+		//
 		mapAttach.put("invSeq", lastInsertID_vo);
 		mapAttach.put("fullName", vo.getMainInfoVO().getFullNameMain());
 		mapAttach.put("category", "MI");
 		mapAttach.put("formCode", vo.getInvitationVO().getFormCode());
 		fileUploadService.insertFileInfo(mapAttach);
 		lastInsertID_file = getLastInsertID();
-		LOGGER.debug("##### lastInsertID_file : " + lastInsertID_file);
 		vo.getMainInfoVO().setSeqImgMain(lastInsertID_file);
-		LOGGER.debug("##### SeqImgMain : " + vo.getMainInfoVO().getSeqImgMain());
+		//
+		mapAttach.put("invSeq",  lastInsertID_vo);
+		mapAttach.put("fullName",  vo.getMainInfoVO().getFullNameGroom());
+		mapAttach.put("category",  "MI");
+		mapAttach.put("formCode",  vo.getInvitationVO().getFormCode());
+		fileUploadService.insertFileInfo(mapAttach);
+		lastInsertID_file = getLastInsertID();
+		vo.getMainInfoVO().setSeqImgGroom(lastInsertID_file);
+		//
+		mapAttach.put("invSeq",  lastInsertID_vo);
+		mapAttach.put("fullName",  vo.getMainInfoVO().getFullNameBride());
+		mapAttach.put("category",  "MI");
+		mapAttach.put("formCode",  vo.getInvitationVO().getFormCode());
+		fileUploadService.insertFileInfo(mapAttach);
+		lastInsertID_file = getLastInsertID();
+		vo.getMainInfoVO().setSeqImgBride(lastInsertID_file);
+		//
+		invitationDAO.insertMainInfo(vo);
+		
+//		for(LoveStoryVO item : vo.getLoveStoryVO()) { 
+//			LOGGER.debug(item.toString());
+//		}
+		while(iteratorLS.hasNext()) {
+			LOGGER.debug(iteratorLS.next().toString());
+		}
+		
 	}
 }

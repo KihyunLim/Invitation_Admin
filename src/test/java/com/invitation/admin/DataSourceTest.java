@@ -34,7 +34,8 @@ import com.invitation.controller.login.LoginController;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("file:src/test/resources/applicationContext.xml")
+@ContextConfiguration(locations= {"file:src/main/resources/applicationContext.xml", 
+								"file:src/main/webapp/WEB-INF/config/servlet-config.xml"})
 public class DataSourceTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceTest.class);
@@ -51,8 +52,8 @@ public class DataSourceTest {
 	
 	@Before
 	public void setup() {
-//		mock = MockMvcBuilders.standaloneSetup(loginController).build();
-		mock = MockMvcBuilders.standaloneSetup(invitationController).build();
+		mock = MockMvcBuilders.standaloneSetup(loginController).build();
+//		mock = MockMvcBuilders.standaloneSetup(invitationController).build();
 	}
 	
 //	@Test
@@ -68,12 +69,12 @@ public class DataSourceTest {
 	
 	
 	
-//	@Test
-	@Ignore
+	@Test
+//	@Ignore
 	public void test_doLogin() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		UserAdminVO userAdminVO = new UserAdminVO();
-		userAdminVO.setId("admin");
+		userAdminVO.setId("admin5");
 		userAdminVO.setPassword("1234");
 		
 		mock.perform(
@@ -101,11 +102,5 @@ public class DataSourceTest {
 		.andExpect(status().isOk())
 		.andExpect(handler().handlerType(InvitationController.class))
 		.andExpect(handler().methodName("getMemberInfo"));
-	}
-	
-	@Test
-//	@Ignore
-	public void test_registerInvitaiton() throws Exception {
-		
 	}
 }
