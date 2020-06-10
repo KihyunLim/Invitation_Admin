@@ -81,7 +81,7 @@
 			VALUES (
 				null
 				, #{mainInfoVO.invSeq}
-				, #{invitationVO.id}
+				, #{mainInfoVO.id}
 				, #{mainInfoVO.dateWedding}
 				, #{mainInfoVO.timeWedding}
 				, #{mainInfoVO.placeX}
@@ -116,9 +116,9 @@
 			VALUES 
 			<foreach collection="loveStoryVO" item="item" open="(" close=")" separator="), (">
 				null
-				, #{mainInfoVO.invSeq}
-				, #{invitationVO.id}
-				, false
+				, #{item.invSeq}
+				, #{item.id}
+				, #{item.isDelete}
 				, #{item.dateStory}
 				, #{item.title}
 				, #{item.content}
@@ -127,5 +127,63 @@
 				, null
 			</foreach>
 		;
+	</insert>
+	
+	<insert id="insertWhenWhere">
+		INSERT INTO
+			WHEN_WHERE (
+				SEQ
+				, INV_SEQ
+				, ID
+				, FLAG_PYEBAEK
+				, DATE_WW
+				, TIME_WW
+				, X_PLACE
+				, Y_PLACE
+				, ADDRESS
+				, TITLE
+				, CONTENT
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			)
+			VALUES
+			<foreach collection="whenWhereVO" item="item" open="(" close=")" separator="), (">
+				null
+				, #{item.invSeq}
+				, #{item.id}
+				, #{item.flagPyebaek}
+				, #{item.dateWedding}
+				, #{item.timeWedding}
+				, #{item.placeX}
+				, #{item.placeY}
+				, #{item.address}
+				, #{item.title}
+				, #{item.content}
+				, null
+				, null
+			</foreach>
+	</insert>
+	
+	<insert id="insertGallery">
+		INSERT INTO
+			GALLERY (
+				SEQ
+				, INV_SEQ
+				, ID
+				, IS_DELETE
+				, SEQ_IMAGE
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			)
+			VALUES
+			<foreach collection="galleryVO" item="item" open="(" close=")" separator="), (">
+				null
+				, #{item.invSeq}
+				, #{item.id}
+				, #{item.isDelete}
+				, #{item.seqImage}
+				, null
+				, null
+			</foreach>
 	</insert>
 </mapper>

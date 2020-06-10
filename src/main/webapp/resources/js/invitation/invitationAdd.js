@@ -304,7 +304,7 @@ function validateData() {
 	
 	ww.listWW = [];
 	ww.listWW.push({
-		isPyebaek : false,
+		flagPyebaek : "N",
 		dateWedding : hgb.dateWedding,
 		timeWedding : hgb.timeWedding,
 		address : hgb.address,
@@ -331,7 +331,7 @@ function validateData() {
 		}
 		
 		ww.listWW.push({
-			isPyebaek : true,
+			flagPyebaek : "Y",
 			dateWedding : (dateTimePyebaek[0]).replace(/-/g, ""),
 			timeWedding : (dateTimePyebaek[1]).replace(/:/g, ""),
 			address : infoAddrPyebaek.addr || "",
@@ -383,12 +383,12 @@ function registerInvitation(data) {
 		success : function(result) {
 			console.log(result);
 			
-			/*if(result.resFlag) {
-				alert(result.resMessage);
+			if(result.resFlag) {
+				alert("청첩장 추가가 완료 되었습니다.");
 				location.reload();
 			} else {
 				alert(result.resMessage);
-			}*/
+			}
 		}
 	});
 }

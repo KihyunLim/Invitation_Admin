@@ -7,7 +7,7 @@ public class WhenWhereVO {
 	private int seq;
 	private int invSeq;
 	private String id;
-	private Boolean isPyebaek;
+	private String flagPyebaek;
 	private String dateWedding;
 	private String timeWedding;
 	private String placeX;
@@ -36,11 +36,11 @@ public class WhenWhereVO {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public Boolean getIsPyebaek() {
-		return isPyebaek;
+	public String getFlagPyebaek() {
+		return flagPyebaek;
 	}
-	public void setIsPyebaek(Boolean isPyebaek) {
-		this.isPyebaek = isPyebaek;
+	public void setFlagPyebaek(String flagPyebaek) {
+		this.flagPyebaek = flagPyebaek;
 	}
 	public String getDateWedding() {
 		return dateWedding;
@@ -99,9 +99,10 @@ public class WhenWhereVO {
 	
 	@Override
 	public String toString() {
-		return "WhenWhereVO [seq=" + seq + ", invSeq=" + invSeq + ", id=" + id + ", isPyebaek=" + isPyebaek
+		return "WhenWhereVO [seq=" + seq + ", invSeq=" + invSeq + ", id=" + id + ", flagPyebaek=" + flagPyebaek
 				+ ", dateWedding=" + dateWedding + ", timeWedding=" + timeWedding + ", placeX=" + placeX + ", placeY="
 				+ placeY + ", address=" + address + ", title=" + title + ", content=" + content + ", dateTimeRegister="
 				+ dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate + "]";
 	}
+	
 }

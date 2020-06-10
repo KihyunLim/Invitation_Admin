@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.invitation.biz.common.exception.CommonException;
 import com.invitation.biz.common.fileUpload.FileUploadService;
+import com.invitation.biz.invitation.GalleryVO;
 import com.invitation.biz.invitation.InvitationService;
 import com.invitation.biz.invitation.LoveStoryVO;
 import com.invitation.biz.invitation.MemberInfoVO;
 import com.invitation.biz.invitation.SyntheticInvitationVO;
+import com.invitation.biz.invitation.WhenWhereVO;
 
 @Service("invitation")
 public class InvitationServiceImpl implements InvitationService {
@@ -52,35 +54,16 @@ public class InvitationServiceImpl implements InvitationService {
 		Integer lastInsertID_file = null;
 		Map<String, Object> mapAttach = new HashMap<String, Object>();
 		Iterator<LoveStoryVO> iteratorLS = vo.getLoveStoryVO().iterator();
+		Iterator<WhenWhereVO> iteratorWW = vo.getWhenWhereVO().iterator();
+		Iterator<GalleryVO> iteratorG = vo.getGalleryVO().iterator();
 		
-		/**
-		 * + invitationVO insert
-		 * + get lastInsertId_inv and set lastInsertId_inv
-		 * + set mainInfoVO
-		 * 		+ mainInfoVO_fullName1 > addFile
-		 * 		+ get lastInsertId_fullName and set seqImg1
-		 * 		+ mainInfoVO_fullName2 > addFile
-		 * 		+ get lastInsertId_fullName and set seqImg2
-		 * 		+ mainInfoVO_fullName3 > addFile
-		 * 		+ get lastInsertId_fullName and set seqImg3
-		 * 		+ mainInfoVO insert
-		 * - set loveStoryVO >>> for(loveStoryVO.length)
-		 * 		- loveStoryVO[i]_fullName > addFile
-		 * 		- get lastInsertId_fullName and set seqImg[i]
-		 * 		- loveStoryVO[i] insert
-		 * - set whenWhereVO >>> for(whereWhenVO.length)
-		 * 		- whenWhereVO[i] insert
-		 * - set galleryVO >>> for(galleryVO.length)
-		 * 		- galleryVO[i]_fullName and set seqImg[i]
-		 * 		- get lastInertId_fullName and set seqImg[i]
-		 * 		- galleryVO[i] insert
-		 */
 		LOGGER.debug("registerInviation >>> ");
 		invitationDAO.registerInvitaiton(vo);
 		lastInsertID_vo = getLastInsertID();
 		
 		LOGGER.debug("insertMainInfo >>> ");
 		vo.getMainInfoVO().setInvSeq(lastInsertID_vo);
+		vo.getMainInfoVO().setId(vo.getInvitationVO().getId());
 		//
 		mapAttach.put("invSeq", lastInsertID_vo);
 		mapAttach.put("fullName", vo.getMainInfoVO().getFullNameMain());
@@ -120,8 +103,35 @@ public class InvitationServiceImpl implements InvitationService {
 			mapAttach.put("formCode", vo.getInvitationVO().getFormCode());
 			fileUploadService.insertFileInfo(mapAttach);
 			lastInsertID_file = getLastInsertID();
+			item.setInvSeq(lastInsertID_vo);
+			item.setId(vo.getInvitationVO().getId());
+			item.setIsDelete(false);
 			item.setSeqImage(lastInsertID_file);
 		}
 		invitationDAO.insertLoveStory(vo);
+		
+		LOGGER.debug("insertWhenWhere >>> ");
+		while(iteratorWW.hasNext()) {
+			WhenWhereVO item = iteratorWW.next();
+			item.setInvSeq(lastInsertID_vo);
+			item.setId(vo.getInvitationVO().getId());
+		}
+		invitationDAO.insertWhenWhere(vo);
+		
+		LOGGER.debug("insertGallery");
+		while(iteratorG.hasNext()) {
+			GalleryVO item = iteratorG.next();
+			mapAttach.put("invSeq", lastInsertID_vo);
+			mapAttach.put("fullName", item.getFullName());
+			mapAttach.put("category", "G");
+			mapAttach.put("formCode", vo.getInvitationVO().getFormCode());
+			fileUploadService.insertFileInfo(mapAttach);
+			lastInsertID_file = getLastInsertID();
+			item.setInvSeq(lastInsertID_vo);
+			item.setId(vo.getInvitationVO().getId());
+			item.setIsDelete(false);
+			item.setSeqImage(lastInsertID_file);
+		}
+		invitationDAO.insertGallery(vo);
 	}
 }
