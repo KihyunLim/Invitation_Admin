@@ -57,7 +57,6 @@ $(function(){
 		var result = validateData();
 		
 		if(result.resFlag) {
-			console.log(result.resData);
 			registerInvitation(result.resData);
 		} else {
 			alert(result.resMessage);
@@ -151,8 +150,6 @@ function getMemberInfo(id) {
 			alert("status : ", status, "\nHttp error msg : ", msg);
 		},
 		success : function(result) {
-			console.log(result);
-			
 			if(result.resFlag) {
 				$("#inputId").data("id", result.resMemberInfo.id);
 				$("#inputName").val(result.resMemberInfo.name);
@@ -165,8 +162,6 @@ function getMemberInfo(id) {
 
 function jusoCallBack(...res) {
 	// res = ["서울특별시 중구 청구로 지하 77, 걍 써봄 (신당동)", "서울특별시 중구 청구로 지하 77", "걍 써봄", "(신당동)", "B 77, Cheonggu-ro, Jung-gu, Seoul", "서울특별시 중구 신당동 295-2 청구역 5,6호선", "04608", "1114016200", "111403101008", "1114016200102950002000001", "5,6호선", "청구역 5,6호선", "0", "서울특별시", "중구", "신당동", "", "청구로", "1", "77", "0", "0", "295", "2", "01", "957058.9352199801", "1951330.378632207"]
-	console.log(res);
-	
 	if($btnGetAddress == 0) {
 		$(".inputAddrWeddingPlace").val(res[0]);
 		$("#infoWeddingPlace").data("infoWeddingPlace", {
@@ -381,8 +376,6 @@ function registerInvitation(data) {
 			alert("status : " + status + "\nHttp error msg : " + msg);
 		},
 		success : function(result) {
-			console.log(result);
-			
 			if(result.resFlag) {
 				alert("청첩장 추가가 완료 되었습니다.");
 				location.reload();
