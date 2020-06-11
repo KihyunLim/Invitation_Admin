@@ -545,6 +545,33 @@
 					<!-- /.col -->
 				</div>
 				<!-- /.row -->
+				
+				<div class="modal fade" id="modal-invitationList">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title">청첩장 선택</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<div class="form-check" id="recordInvitation">
+									<input class="form-check-input" type="radio" name="radio1">
+									<label class="form-check-label">
+										번호 : <span class="spanSeq">1</span>&nbsp;/&nbsp;게시일자 : <span class="spanDateWedding">2020-05-05</span>
+									</label>
+								</div>
+							</div>
+							<div class="modal-footer justify-content-between">
+								<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+								<button type="button" class="btn btn-primary" id="btnSelect">선택</button>
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal-dialog -->
+				</div>
 			</section>
 			<!-- /.content -->
 		</div>

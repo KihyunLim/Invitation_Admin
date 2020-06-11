@@ -17,7 +17,9 @@
 					WHERE
 						IL.ID = U.ID
 						AND NOW() <![CDATA[>=]]> IL.DATE_BEGIN
-						AND NOW() <![CDATA[<=]]> IL.DATE_END)
+						AND NOW() <![CDATA[<=]]> IL.DATE_END
+					ORDER BY
+						IL.DATETIME_UPDATE DESC LIMIT 1)
 				, 'X')
 			) AS STATUSSEE
 		FROM

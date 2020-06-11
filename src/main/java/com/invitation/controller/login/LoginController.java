@@ -46,7 +46,7 @@ public class LoginController {
 		
 		LOGGER.info("doLogin");
 		try {
-			if(userAdminService.getUserInfo2(user)) {
+			if(userAdminService.getUserInfo(user)) {
 				session.setAttribute("id", user.getId());
 				resFlag = true;
 			} else {

@@ -4,8 +4,6 @@
   - spring web mvc에서 해당 스프링 버전의 compile dependencies 참고하면 이거 쓰는게 맞는데..
     - 쓰면 home.jsp에서 Can not find the tag library descriptor for "http://java.sun.com/
  jsp/jstl/core" 에러 남
-- 4)에 로깅 설정하면서부터 junit test가 에러나는데 확인필요
-  - applicationContext.xml이랑 sql-map-config.xml 확인하라는데 머지이
 ---
 
 ## 1. 프로젝트 생성
@@ -374,6 +372,248 @@ bean configuration file > file name : servlet-config.xml
 	
 		<!-- Spring -->
 		<!-- ~~~ -->
+```
+
+- DB 테이블 정보 생성
+```sql
+
+-- 관리자
+CREATE TABLE ADMIN (
+	ID VARCHAR(20) PRIMARY KEY
+	, PASSWORD VARCHAR(20) NOT NULL
+);
+
+INSERT INTO 
+	ADMIN
+VALUES
+	("root", "1234")
+;
+
+SELECT * FROM ADMIN;
+
+-- 사용자
+CREATE TABLE USERES (
+	ID VARCHAR(20) PRIMARY KEY
+	, PASSWORD VARCHAR(20) NOT NULL
+	, NAME VARCHAR(20) NOT NULL
+	, PHONE VARCHAR(11) NOT NULL
+	, DATETIME_REGISTER TIMESTAMP DEFAULT NOW()
+	, DELETEFLAG VARCHAR(1) default 'N'
+);
+
+select * from useres;
+
+-- 청첩장 양식
+CREATE TABLE INVITATION_FORM (
+	FORMCODE VARCHAR(10) PRIMARY KEY
+	, FORMNAME VARCHAR(10) NOT NULL
+);
+
+INSERT INTO
+	INVITATION_FORM
+VALUES
+	("hookup", "hookup")
+;
+
+SELECT * FROM INVITATION_FORM;
+
+
+-- 청첩장 목록
+CREATE TABLE INVITATION_LIST (
+	SEQ INT PRIMARY KEY AUTO_INCREMENT
+	, ID VARCHAR(20) NOT NULL
+	, NAME VARCHAR(20) NOT NULL
+	, VISIBLE VARCHAR(1) DEFAULT 'N'
+	, DATE_BEGIN VARCHAR(8) NOT NULL
+	, DATE_END VARCHAR(8) NOT NULL
+	, FORMCODE VARCHAR(10) NOT null
+	, USE_EACH_IMAGE VARCHAR(1)
+	, USE_LS VARCHAR(1)
+	, USE_PYEBAEK VARCHAR(1)
+	, USE_G VARCHAR(1)
+	, USE_SM VARCHAR(1)
+	, DATETIME_REGISTER TIMESTAMP DEFAULT NOW()
+	, DATETIME_UPDATE TIMESTAMP DEFAULT NOW()
+	, FOREIGN KEY (ID) REFERENCES USERES (ID)
+	, FOREIGN KEY (FORMCODE) REFERENCES INVITATION_FORM (FORMCODE)
+);
+DROP TABLE invitation_list;
+
+SELECT * FROM INVITATION_LIST;
+TRUNCATE TABLE invitation_list;
+
+-- 청첩장 카테고리 분류 (첨부파일이 있는)
+CREATE TABLE CATEGORY (
+	CODE VARCHAR(5) PRIMARY KEY
+	, FORMCODE VARCHAR(10) NOT NULL
+	, NAME VARCHAR(15) NOT NULL
+);
+
+INSERT INTO
+	CATEGORY
+VALUES
+	("MI", "hookup", "메인 및 기본 정보")
+	, ("LS", "hookup", "LOVE STORY")
+	, ("G", "hookup", "GALLERY")
+;
+DROP TABLE category;
+
+SELECT * FROM CATEGORY;
+
+
+-- 첨부파일 모음
+-- 첨부파일(이미지, 썸네일) 싸그리 모으는 테이블로 하고 각 메뉴 테이블 컬럼에 첨부파일명 같이 넣어주기
+CREATE TABLE ATTACH (
+	SEQ INT PRIMARY KEY AUTO_INCREMENT
+	, INV_SEQ INT
+	, FULLNAME VARCHAR(150)
+	, CATEGORY VARCHAR(5)
+	, FORMCODE VARCHAR(10)
+	, DATETIME_REGISTER TIMESTAMP DEFAULT NOW()
+	, FOREIGN KEY (CATEGORY) REFERENCES CATEGORY(CODE)
+	, FOREIGN KEY (FORMCODE) REFERENCES INVITATION_FORM(FORMCODE)
+);
+DROP TABLE ATTACH;
+
+SELECT * FROM ATTACH;
+TRUNCATE TABLE attach;
+
+-- 메인 및 기본 정보 
+CREATE TABLE MAIN_INFO (
+	SEQ INT PRIMARY KEY AUTO_INCREMENT
+	, INV_SEQ INT NOT NULL
+	, ID VARCHAR(20) NOT NULL
+	, DATE_WEDDING VARCHAR(8) NOT NULL
+	, TIME_WEDDING VARCHAR(4) NOT NULL
+	, X_PLACE VARCHAR(30) NOT NULL
+	, Y_PLACE VARCHAR(30) NOT NULL
+	, ADDRESS VARCHAR(100) NOT NULL
+	, CONTENT_GROOM VARCHAR(1000) NOT NULL
+	, CONTENT_BRIDE VARCHAR(1000) NOT NULL
+	, SEQ_IMG_MAIN INT
+	, YN_EACH_IMAGE VARCHAR(1) DEFAULT 'N'
+	, SEQ_IMG_GROOM INT
+	, SEQ_IMG_BRIDE INT
+	, DATETIME_REGISTER TIMESTAMP DEFAULT NOW()
+	, DATETIME_UPDATE TIMESTAMP DEFAULT NOW()
+	, FOREIGN KEY (INV_SEQ) REFERENCES INVITATION_LIST (SEQ)
+	, FOREIGN KEY (ID) REFERENCES USERES (ID)
+);
+DROP TABLE main_info;
+
+SELECT * FROM MAIN_INFO;
+
+
+-- LOVE STORY
+CREATE TABLE LOVE_STORY (
+	SEQ INT PRIMARY KEY AUTO_INCREMENT
+	, INV_SEQ INT NOT NULL
+	, ID VARCHAR(20) NOT NULL
+	, IS_DELETE BOOLEAN
+	, DATE_STORY VARCHAR(8) NOT NULL
+	, TITLE VARCHAR(20) NOT NULL
+	, CONTENT VARCHAR(200) NOT NULL
+	, SEQ_IMAGE INT
+	, DATETIME_REGISTER TIMESTAMP DEFAULT NOW()
+	, DATETIME_UPDATE TIMESTAMP DEFAULT NOW()
+	, FOREIGN KEY (INV_SEQ) REFERENCES INVITATION_LIST (SEQ)
+	, FOREIGN KEY (ID) REFERENCES USERES (ID)
+);
+DROP TABLE love_story;
+
+SELECT * FROM LOVE_STORY;
+
+-- WHEN WHERE
+CREATE TABLE WHEN_WHERE (
+	SEQ INT PRIMARY KEY AUTO_INCREMENT
+	, INV_SEQ INT NOT NULL
+	, ID VARCHAR(20) NOT NULL
+	, FLAG_PYEBAEK VARCHAR(1) NOT NULL
+	, DATE_WW VARCHAR(8) NOT NULL
+	, TIME_WW VARCHAR(4) NOT NULL
+	, X_PLACE VARCHAR(30) NOT NULL
+	, Y_PLACE VARCHAR(30) NOT NULL
+	, ADDRESS VARCHAR(100) NOT NULL
+	, TITLE VARCHAR(20) NOT NULL
+	, CONTENT VARCHAR(100) NOT null
+	, DATETIME_REGISTER TIMESTAMP DEFAULT NOW()
+	, DATETIME_UPDATE TIMESTAMP DEFAULT NOW()
+	, FOREIGN KEY (INV_SEQ) REFERENCES INVITATION_LIST (SEQ)
+	, FOREIGN KEY (ID) REFERENCES USERES (ID)
+);
+DROP TABLE when_where;
+
+SELECT * FROM WHEN_WHERE;
+
+-- GALLERY
+CREATE TABLE GALLERY (
+	SEQ INT PRIMARY KEY AUTO_INCREMENT
+	, INV_SEQ INT NOT NULL
+	, ID VARCHAR(20) NOT NULL
+	, IS_DELETE BOOLEAN
+	, SEQ_IMAGE INT
+	, DATETIME_REGISTER TIMESTAMP DEFAULT NOW()
+	, DATETIME_UPDATE TIMESTAMP DEFAULT NOW()
+	, FOREIGN KEY (INV_SEQ) REFERENCES INVITATION_LIST (SEQ)
+	, FOREIGN KEY (ID) REFERENCES USERES (ID)
+);
+DROP TABLE gallery;
+
+SELECT * FROM GALLERY;
+
+-- SWEET MESSAGE
+CREATE TABLE SWEET_MESSAGE (
+	SEQ INT PRIMARY KEY AUTO_INCREMENT
+	, INV_SEQ INT NOT NULL
+	, ID VARCHAR(20) NOT NULL
+	, IS_DELETE BOOLEAN
+	, REGISTER_NAME VARCHAR(20) NOT NULL
+	, REGISTER_CONTENT VARCHAR(100) NOT NULL
+	, REGISTER_PASSWORD VARCHAR(20) NOT null
+	, DATETIME_REGISTER TIMESTAMP DEFAULT NOW()
+	, DATETIME_UPDATE TIMESTAMP DEFAULT NOW()
+	, FOREIGN KEY (INV_SEQ) REFERENCES INVITATION_LIST (SEQ)
+	, FOREIGN KEY (ID) REFERENCES USERES (ID)
+);
+DROP TABLE sweet_message;
+
+SELECT * FROM SWEET_MESSAGE;
+
+select host, user, password from mysql.user;
+show grants for 'root'@'%';
+create user 'invitation'@'localhost' identified by '1111';
+grant all privileges on INVITATION.* to 'invitation'@'localhost';
+
+SET foreign_key_checks = 0;
+SET foreign_key_checks = 1;
+
+DROP TABLE invitation_list;
+SELECT * FROM INVITATION_LIST;
+TRUNCATE TABLE invitation_list;
+
+DROP TABLE ATTACH;
+SELECT * FROM ATTACH;
+TRUNCATE TABLE attach;
+
+DROP TABLE main_info;
+SELECT * FROM MAIN_INFO;
+TRUNCATE TABLE MAIN_INFO;
+
+DROP TABLE love_story;
+SELECT * FROM LOVE_STORY;
+TRUNCATE TABLE LOVE_STORY;
+
+DROP TABLE when_where;
+SELECT * FROM WHEN_WHERE;
+TRUNCATE TABLE WHEN_WHERE;
+
+DROP TABLE gallery;
+SELECT * FROM GALLERY;
+TRUNCATE TABLE GALLERY;
+
+DROP TABLE sweet_message;
+SELECT * FROM SWEET_MESSAGE;
+TRUNCATE TABLE SWEET_MESSAGE;
 ```
 
 - DB 정보 파일 생성
@@ -2007,7 +2247,7 @@ package com.invitation.biz.admin.user;
 
 public interface UserAdminService {
 
-	UserAdminVO getUserInfo(String id);
+	Boolean getUserInfo(String id);
 
 }
 ```
@@ -2031,8 +2271,18 @@ public class UserAdminServiceImpl implements UserAdminService {
 	private UserAdminDAOMybatis userAdminDAO;
 	
 	@Override
-	public UserAdminVO getUserInfo(String id) {
-		return userAdminDAO.getUserInfo(id);
+	public Boolean getUserInfo(UserAdminVO user) {
+		UserAdminVO userInfo = userAdminDAO.getUserInfo(user.getId());
+		
+		if(userInfo == null) {
+			throw new NullPointerException("User information not fuond");
+		}
+		
+		if(userInfo.getPassword().equals(user.getPassword())) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
 ```
@@ -2089,15 +2339,8 @@ public class LoginController {
 		
 		LOGGER.info("doLogin");
 		try {
-			UserAdminVO resGetUserInfo = userAdminService.getUserInfo(user.getId());
-			
-			if(resGetUserInfo == null) {
-				throw new NullPointerException("User information not found");
-			}
-			
-			if(resGetUserInfo.getPassword().equals(user.getPassword())) {
-				session.setAttribute("id", resGetUserInfo.getId());
-				
+			if(userAdminService.getUserInfo(user)) {
+				session.setAttribute("id", user.getId());
 				resFlag = true;
 			} else {
 				throw new CommonException("비밀번호 불일치!!");
@@ -4365,7 +4608,13 @@ public class UserMemberInfoVO {
 	
 	@Override
 	public UserMemberInfoVO getMemberInfo(String id) {
-		return userMemberDAO.getMemberInfo(id);
+		UserMemberInfoVO userMemberInfoVO = userMemberDAO.getMemberInfo(id);
+		
+		if(userMemberInfoVO.equals(null)) {
+			throw new CommonException("회원정보 불일치!!");
+		}
+		
+		return userMemberInfoVO;
 	}
 }
 ```
@@ -4393,9 +4642,7 @@ public class UserMemberInfoVO {
 		try {
 			resMemberInfo = userMemberService.getMemberInfo(id);
 			
-			if(resMemberInfo == null) {
-				throw new CommonException("회원정보 불일치!!");
-			}
+			resFlag = true;
 		} catch(CommonException e) {
 			LOGGER.error("error message : " + e.getMessage());
 			
@@ -4464,7 +4711,7 @@ public class UserMemberInfoVO {
 								<!-- <h3 class="card-title">추가/삭제/검색 영역</h3> -->
 								<div class="row">
 									<div class="col-md-6">
-										<button type="button" class="btn btn-danger">삭제</button>
+										<button type="button" class="btn btn-danger" id="btnMemberDelete">삭제</button>
 										<button type="button" class="btn btn-primary" id="btnMemberRegister" data-toggle="modal" data-target="#modal-memberRegister">추가</button>
 									</div>
 									<div class="col-md-6">
@@ -4909,6 +5156,747 @@ function getMemberInfo() {
 	});
 };
 ```
+---
+
+## 10 - 4. 회원 관리 화면 구현 - 회원 정보 수정/삭제 및 restful 방식으로 변경
+
+- 쿼리 추가
+```xml
+<!-- MemberUseres-mapping.xml -->
+
+	<!-- ~~~ -->
+	</select>
+	
+	<update id="modifyMember">
+		UPDATE
+			USERES
+		SET
+			PASSWORD = #{password}
+			, NAME = #{name}
+			, PHONE = #{phone}
+		WHERE
+			ID = #{id}
+		;
+	</update>
+	
+	<update id="deleteMember">
+		UPDATE
+			USERES
+		SET
+			DELETEFLAG = "Y"
+		WHERE
+			ID = #{id}
+		;
+	</update>
+</mapper>
+```
+
+- dao 추가
+```java
+// UserMemberDAOMybatis.java
+
+		// ~~~
+		return mybatis.selectOne("MemberUserDAO.getMemberInfo", id);
+	}
+	
+	public void modifyMember(UserMemberVO vo) {
+		mybatis.update("MemberUserDAO.modifyMember", vo);
+	}
+	
+	public void deleteMember(String id) {
+		mybatis.update("MemberUserDAO.deleteMember", id);
+	}
+}
+```
+
+- service 추가
+```java
+// UserMemberService.java
+
+	// ~~~
+	UserMemberInfoVO getMemberInfo(String id) throws Exception;
+	
+	void modifyMember(String id, UserMemberVO vo) throws Exception;
+	
+	void deleteMember(String id) throws Exception;
+}
+```
+
+```java
+// UserMemberServiceImpl.java
+
+		// ~~~
+		return userMemberInfoVO;
+	}
+	
+	@Override
+	public void modifyMember(String id, UserMemberVO vo) throws Exception {
+		if(id.equals(vo.getId()) == false) {
+			throw new CommonException("부적절한 회원정보 수정 요청!!");
+		}
+		
+		userMemberDAO.modifyMember(vo);
+	}
+	
+	@Override
+	public void deleteMember(String id) throws Exception {
+		if(id.equals(null)) {
+			throw new CommonException("삭제 할 아이디 확인 필요!!");
+		}
+		
+		userMemberDAO.deleteMember(id);
+	}
+}
+```
+
+- controller 추가
+  - restful 방식 변경도 같이 반영 됨
+```java
+// MemberController.java
+
+package com.invitation.controller.member;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.invitation.biz.common.exception.CommonException;
+import com.invitation.biz.common.paging.Criteria;
+import com.invitation.biz.common.paging.PageMaker;
+import com.invitation.biz.member.user.UserMemberInfoVO;
+import com.invitation.biz.member.user.UserMemberListVO;
+import com.invitation.biz.member.user.UserMemberService;
+import com.invitation.biz.member.user.UserMemberVO;
+
+@Controller
+@RequestMapping(value="/member")
+public class MemberController {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemberController.class);
+	
+	@Autowired
+	private UserMemberService userMemberService;
+	
+	@RequestMapping(value="/memberList.do", method=RequestMethod.GET)
+	public String viewMemberList(Model model) {
+		LOGGER.info("memberList.do");
+		
+		return "member/memberList";
+	}
+	
+	@RequestMapping(value="/getMemberList", method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getMemberList(Criteria cri,
+			@RequestParam(value="searchCondition", defaultValue="", required=false) String condition,
+			@RequestParam(value="searchKeyword", defaultValue="", required=false) String keyword
+			) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		List<UserMemberListVO> resUserMemberList = null;
+		PageMaker resPageMaker = null;
+		
+		LOGGER.info("getMemberList");
+		try {
+			List<UserMemberListVO> userMemberList = userMemberService.getMemberList(cri, condition, keyword);
+			
+			PageMaker pageMaker = new PageMaker();
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(userMemberService.getMemberListCount(condition, keyword));
+			
+			resFlag = true;
+			resUserMemberList = userMemberList;
+			resPageMaker = pageMaker;
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "회원 목록 조회에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("list", resUserMemberList);
+			result.put("pageMaker", resPageMaker);
+		}
+		
+		return result;
+	}
+	
+//	@RequestMapping(value="/getOverlapCheck", method=RequestMethod.GET)
+	@GetMapping(value="/getOverlapCheck")
+	@ResponseBody
+	public Map<String, Object> getOverlapCheck(@RequestParam(value="id", required=true) String id) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resOverlapCheckedId = "";
+		String resMessage = "";
+		int resOverlapCheck = 0;
+		
+		LOGGER.info("getOverlapCheck");
+		try {
+			resOverlapCheck = userMemberService.getOverlapCheck(id);
+			
+			if(resOverlapCheck == 0) {
+				resFlag = true;
+				resOverlapCheckedId = id;
+				resMessage = "사용 가능한 아이디입니다.";
+			} else {
+				resMessage = "사용중인 아이디입니다.";
+			}
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "아이디 중복확인에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resOverlapCheckedId", resOverlapCheckedId);
+			result.put("resMessage",  resMessage);
+		}
+		
+		return result;
+	}
+	
+	@PostMapping(value="/", headers= {"Content-type=application/json"})
+	@ResponseBody
+	public Map<String, Object> registerMember(@RequestBody UserMemberVO vo) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		
+		LOGGER.info("registerMember");
+		try {
+			userMemberService.registerMember(vo);
+			
+			resFlag = true;
+			resMessage = "회원 등록이 완료되었습니다.";
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "회원 등록에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage",  resMessage);
+		}
+		
+		return result;
+	}
+	
+	@GetMapping(value="/{id}")
+	@ResponseBody
+	public Map<String, Object> getMemberInfo(@PathVariable String id) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		UserMemberInfoVO resMemberInfo = null;
+		
+		LOGGER.info("getMemberInfo");
+		try {
+			resMemberInfo = userMemberService.getMemberInfo(id);
+			
+			resFlag = true;
+		} catch(CommonException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "일치하는 회원이 없습니다.";
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "회원 상세조회에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("resMemberInfo", resMemberInfo);
+		}
+		
+		return result;
+	}
+	
+	@PutMapping(value="/{id}", headers= {"Content-type=application/json"})
+	@ResponseBody
+	public Map<String, Object> modifyMember(@PathVariable String id, @RequestBody UserMemberVO vo) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		
+		LOGGER.info("modifyMember");
+		try {
+			userMemberService.modifyMember(id, vo);
+			
+			resFlag = true;
+			resMessage = "회원정보 수정이 완료되었습니다.";
+		} catch(CommonException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "부적절한 회원정보 수정 요청입니다.";
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "회원 정보 수정에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+		}
+		
+		return result;
+	}
+	
+	@DeleteMapping(value="/{id}")
+	@ResponseBody
+	public Map<String, Object> deleteMember(@PathVariable String id) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		
+		LOGGER.info("deleteMember");
+		try {
+			userMemberService.deleteMember(id);
+			
+			resFlag = true;
+			resMessage = "회원 삭제가 완료되었습니다.";
+		} catch(CommonException e) {
+			LOGGER.error("error Message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "삭제할 아이디를 확인해주세요.";
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "회원 삭제에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+		}
+		
+		return result;
+	}
+}
+```
+
+- js 수정
+```js
+// memberList.js
+
+/**
+ * 
+ */
+
+console.log("########## memberList.js ##########");
+
+var modifyTargetId = "",
+	isOverlapCheck = false,
+	overlapCheckedId = ""
+	isSuccess = false;
+
+$(function(){
+	setActiveSidebar();
+	
+	getMemberList(1);
+	
+	$("#btnSearch").on("click", function(){
+		utilDataTableDestroy("tableMemberList");
+		getMemberList(1);
+	});
+	
+	$("#btnMemberDelete").on("click", function(){
+		var $selected = $(".selected");
+		
+		if($selected.length == 1) {
+			var selectedId = $selected.attr("id");
+			
+			deleteMember(selectedId);
+		} else {
+			alert("삭제할 회원을 1명 선택해주세요.");
+		}
+	});
+	
+	$("#btnOverlapCheck").on("click", function(){
+		var id = $("#inputRegisterId").val();
+		
+		if(id == "") {
+			alert("ID를 입력해주세요.");
+		} else if(id.length > 20) {
+			alert("ID는 20자 이내로 입력해주세요.");
+		} else {
+			overlapCheck(id);
+		}
+	});
+	
+	$("#modal-memberRegister").on("hide.bs.modal", function(e){
+		$(".resetInput").val("");
+		
+		if(isSuccess) {
+			isSuccess = false;
+			
+			utilDataTableDestroy("tableMemberList");
+			getMemberList(1);
+		}
+	})
+	$("#btnMemberRegister").on("click", function(){
+		$("#modal-memberRegister").modal("show");
+	});
+	
+	$("#btnRegist").on("click", function() {
+		if(validateRegistInfo()) {
+			registerMember();
+		}
+	});
+	
+	$("#modal-memberModify").on("show.bs.modal", function (e) {
+		console.log("target ID : ", modifyTargetId);
+		
+		getMemberInfo();
+	});
+	$("#modal-memberModify").on("hide.bs.modal", function (e) {
+		modifyTargetId = "";
+		
+		console.log(modifyTargetId);
+		
+		$("#btnModify").removeData("resMemberInfo");
+		$(".resetInput").val("");
+	});
+	$("#tableMemberList").on("dblclick", "tr", function(){
+		modifyTargetId = $(this).attr("id");
+		
+		$("#modal-memberModify").modal("show");
+	});
+	
+	$("#btnModify").on("click", function() {
+		if(validateModifyInfo()) {
+			modifyMember();
+		}
+	});
+	
+	$("#divPagingWrap").on("click", ".aPaging", function(e){
+		e.preventDefault();
+		var $this = $(this),
+			tabindex = $this.attr("tabindex");
+		
+		if($this.data("dt-idx") == "next") {
+			tabindex = Number($(".active .aPaging").attr("tabindex")) + 1;
+		} else if($this.data("dt-idx") == "previous") {
+			tabindex = Number($(".active .aPaging").attr("tabindex")) - 1;
+		}
+		
+		utilDataTableDestroy("tableMemberList");
+		getMemberList(Number(tabindex));
+	});
+});
+
+function getMemberList(pageItem) {
+	var requestParam = {
+			page : pageItem,
+			searchCondition : "",
+			searchKeyword : $("#inputKeyword").val().trim()
+	};
+	
+	if(requestParam.searchKeyword != "") {
+		requestParam.searchCondition = $("#selectCondition").val();
+	}
+	
+	$.ajax({
+		url : "/admin/member/getMemberList?" + $.param(requestParam),
+		type : "GET",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			var option = {
+				data : result.list,
+				columnDefs : [{
+					targets : 0,
+					defaultContent : '',
+					data : null,
+					className : 'select-checkbox'
+				}, {
+					targets : 1,
+					data : 'id'
+				}, {
+					targets : 2,
+					data : 'name'
+				}, {
+					targets : 3,
+					data : 'phone'
+				}, {
+					targets : 4,
+					data : function(row, type, val, meta) {
+						var statusSee = '';
+						
+						if(row.statusSee == 'Y') {
+							statusSee = '게시';
+						} else if(row.statusSee == 'N') {
+							statusSee = '비게시'; 
+						} else {
+							statusSee = '-';
+						}
+						
+						return statusSee;
+					}
+				}],
+				select : {
+					style : 'os',
+					selector : 'td:first-child'
+				},
+				rowId : function(row) {
+					return row.id;
+				}
+			};
+			
+			utilDataTable("tableMemberList", option, result.pageMaker.totalCount);
+			utilDataTablePaging("divPagingWrap", "tableMemberList", result.pageMaker);
+		}
+	});
+};
+
+function overlapCheck(id) {
+	$.ajax({
+		url : "/admin/member/getOverlapCheck?" + $.param({id : id}),
+		type : "GET",
+		error : function(xhr, status, msg) {
+			isOverlapCheck = false;
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			if(result.resFlag || (result.resOverlapCheckedId != "")) {
+				isOverlapCheck = true;
+				overlapCheckedId = result.resOverlapCheckedId;
+			} else {
+				isOverlapCheck = false;
+			}
+			
+			alert(result.resMessage);
+		}
+	});
+};
+
+function validateRegistInfo() {
+	if($("#inputRegisterId").val() == "") {
+		alert("아이디를 입력해주세요");
+		isOverlapCheck = false;
+		return false;
+	} else if(isOverlapCheck == false) {
+		alert("아이디 중복확인을 해주세요");
+		return false;
+	} else if($("#inputRegisterPassword").val() == "") {
+		alert("비밀번호를 입력해주세요.");
+		return false;
+	} else if($("#inputRegisterName").val() == "") {
+		alert("이름을 입력해주세요");
+		return false;
+	} else if($("#inputRegisterPhone").val() == "") {
+		alert("전화번호를 입력해주세요.");
+		return false;
+	} else {
+		return true;
+	}
+};
+
+function registerMember() {
+	if(overlapCheckedId != $("#inputRegisterId").val()) {
+		overlapCheckedId = "";
+		isOverlapCheck = false;
+		
+		alert("아이디가 변경되었습니다. 아이디 중복확인을 해주세요.");
+		return false;
+	}
+	
+	var data = {
+		id : overlapCheckedId,
+		password : $("#inputRegisterPassword").val(),
+		name : $("#inputRegisterName").val(),
+		phone : $("#inputRegisterPhone").val()
+	};
+	
+	$.ajax({
+		url : "/admin/member/",
+		type : "POST",
+		dataType : "json",
+		data : JSON.stringify(data),
+		contentType : "application/json;charset=utf-8;",
+		error : function(xhr, status, msg) {
+			isOverlapCheck = true;
+			isSuccess = false;
+			
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			if(result.resFlag) {
+				isOverlapCheck = false;
+				overlapCheckedId = "";
+				isSuccess = true;
+				
+				alert(result.resMessage);
+				$("#modal-memberRegister").modal("hide");
+			} else {
+				isOverlapCheck = true;
+				isSuccess = false;
+				
+				alert(result.resMessage);
+			}
+		}
+	})
+};
+
+function getMemberInfo() {
+	$.ajax({
+		url : "/admin/member/" + modifyTargetId,
+		type : "GET",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			if(result.resFlag){
+				$("#btnModify").data("resMemberInfo", result.resMemberInfo);
+				$("#inputModifyId").val(result.resMemberInfo.id);
+				$("#inputModifyPassword").val(result.resMemberInfo.password);
+				$("#inputModifyName").val(result.resMemberInfo.name);
+				$("#inputModifyPhone").val(result.resMemberInfo.phone);
+				$("#inputModifyRegDate").val(result.resMemberInfo.registerDate);
+				if(result.resMemberInfo.latestInvitationBegin != null && result.resMemberInfo.latestInvitationEnd != null) {
+					$("#inputModifyLatestInvitation").val(result.resMemberInfo.latestInvitationBegin.substr(0,4) + "-"
+							+ result.resMemberInfo.latestInvitationBegin.substr(4,2) + "-"
+							+ result.resMemberInfo.latestInvitationBegin.substr(6,2)
+							+ " ~ " 
+							+ result.resMemberInfo.latestInvitationEnd.substr(0,4) + "-"
+							+ result.resMemberInfo.latestInvitationEnd.substr(4,2) + "-"
+							+ result.resMemberInfo.latestInvitationEnd.substr(6,2));
+				}
+			} else {
+				alert(result.resMessage);
+			}
+		}
+	});
+};
+
+function validateModifyInfo() {
+	if($("#inputModifyPassword").val() == "") {
+		alert("비밀번호를 입력해주세요.");
+		return false;
+	} else if($("#inputModifyName").val() == "") {
+		alert("이름을 입력해주세요");
+		return false;
+	} else if($("#inputModifyPhone").val() == "") {
+		alert("전화번호를 입력해주세요.");
+		return false;
+	} else {
+		return true;
+	}
+};
+
+function modifyMember() {
+	var recordData = $("#btnModify").data("resMemberInfo"),
+		data = {
+			id : recordData.id,
+			password : recordData.password,
+			name : recordData.name,
+			phone : recordData.phone
+		},
+		inputModifyPassword = $("#inputModifyPassword").val(),
+		inputModifyName = $("#inputModifyName").val(),
+		inputModifyPhone = $("#inputModifyPhone").val();
+	
+	if(recordData.password != inputModifyPassword) {
+		data["password"] = inputModifyPassword;
+	}
+	if(recordData.name != inputModifyName) {
+		data["name"] = inputModifyName;
+	}
+	if(recordData.phone != inputModifyPhone) {
+		data["phone"] = inputModifyPhone;
+	}
+	
+	$.ajax({
+		url : "/admin/member/" + data.id,
+		type : "PUT",
+		dataType : "json",
+		data : JSON.stringify(data),
+		contentType : "application/json;charset=utf-8;",
+		error : function(xhr, status, msg) {
+			isSuccess = false;
+			
+			alert("status : ", status, "\nHttp error msg : ", msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			if(result.resFlag) {
+				isSuccess = true;
+				
+				alert(result.resMessage);
+				
+				$("#btnModify").removeData("resMemberInfo");
+				$(".resetInput").val("");
+				
+				getMemberInfo();
+				
+				utilDataTableDestroy("tableMemberList");
+				getMemberList(Number($(".active .aPaging").attr("tabindex")));
+			} else {
+				isSuccess = false;
+				
+				alert(result.resMessage);
+			}
+		}
+	});
+};
+
+function deleteMember(id) {
+	$.ajax({
+		url : "/admin/member/" + id,
+		type : "DELETE",
+		error : function(xhr, status, msg) {
+			alert("status : ", status, "\nHttp error msg : ", msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			if(result.resFlag) {
+				utilDataTableDestroy("tableMemberList");
+				getMemberList(1);
+			}
+			
+			alert(result.resMessage);
+		}
+	});
+};
+```
+
 
 ---
 
@@ -6378,7 +7366,13 @@ public class InvitationServiceImpl implements InvitationService {
 	
 	@Override
 	public MemberInfoVO getMemberInfo(String id) {
-		return invitationDAO.getMemberInfo(id);
+		MemberInfoVO memberInfoVO = invitationDAO.getMemberInfo(id);
+		
+		if(memberInfoVO.equals(null)) {
+			throw new CommonException("조회 결과 없음!!");
+		}
+		
+		return memberInfoVO;
 	}
 }
 ```
@@ -6402,10 +7396,6 @@ public class InvitationServiceImpl implements InvitationService {
 		LOGGER.info("getMemberInfo");
 		try {
 			resMemberInfo = invitationService.getMemberInfo(id);
-			
-			if(resMemberInfo == null) {
-				throw new CommonException("조회 결과 없음!!");
-			}
 			
 			resFlag = true;
 		} catch(CommonException e) {
@@ -6606,7 +7596,7 @@ function validateData() {
 
 ---
 
-## 11-3 청첩장 추가 - 파일업로드/이미지보기/썸네일 구현
+## 11-3 청첩장 추가 - 청첩장 등록, 파일업로드/이미지보기/썸네일 구현
 - 파일업로드 구현
 	- `com.invitation.biz.common.fileUpload` 패키지 생성
 	- MediaUtils.java, UploadFileUtils.java 클래스 작성
@@ -7154,7 +8144,7 @@ public class FileUploadController {
 										<table id="tableRecordLoveStory" class="table table-valign-middle table-bordered dataTable itemLoveStory">
 											<tbody class="uploadbox wrapUploadFile">
 												<tr>
-													<td rowspan="3" style="width:10%;" class="text-center tdSortable">●</td>
+													<td rowspan="3" style="width:10%;" class="text-center">●</td>
 													<td rowspan="3" style="width:20%;" class="text-center">
 														<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
 															<img src="../css/img/uploadImage.png" class="img-thumnail-h100px">
@@ -7232,13 +8222,13 @@ public class FileUploadController {
 											<tr>
 												<td class="text-center">제목</td>
 												<td>
-													<input type="text" class="w-100" id="inputTitleWedingWW" />
+													<input type="text" class="w-100" id="inputTitleWeddingWW" />
 												</td>
 											</tr>
 											<tr>
 												<td class="text-center">내용</td>
 												<td>
-													<textarea rows="5" class="form-control" id="inputContentWedingWW" style="resize:none;"></textarea>
+													<textarea rows="5" class="form-control" id="inputContentWeddingWW" style="resize:none;"></textarea>
 												</td>
 											</tr>
 										</table>
@@ -7302,7 +8292,7 @@ public class FileUploadController {
 								</div>
 								<div class="row">
 									<div class="col-md-12">
-										<table class="table table-valign-middle table-bordered dataTable">
+										<table class="table table-valign-middle table-bordered dataTable" id="tableGallery">
 											<tr>
 												<td style="width:20%;" class="text-center uploadbox wrapUploadFile">
 													<div>
@@ -7493,6 +8483,7 @@ public class FileUploadController {
 	<script type="text/javascript" src="../js/invitation/invitationAdd.js"></script>
 </body>
 </html>
+
 ```
 
 	- 이미지 보기 요청용 url 상수 추가
@@ -7578,19 +8569,108 @@ function checkImageType(fullName) {
 	return fullName.match(/jpg$|gif$|jpeg$|png$/i);
 };
 
+function getFormattedDate(newDate) {
+	var year = newDate.getFullYear(),
+		month = newDate.getMonth() + 1,
+		date = newDate.getDate();
+	
+	month = month < 10 ? "0" + String(month) : month;
+	date = date < 10 ? "0" + String(date) : date;
+	
+	return String(year) + String(month) + String(date);
+};
+
 $(function(){
-	// ~~~
+	/**
+	 * 업로드 이벤트 공통으로 할랫는데 렌더할 경우를 위해
+	 * 태그 자체 이벤트는 각 페이지에서 하고
+	 * 업로드하는 로직만 공통으로 뺌
+	 */
+	/*$(".btnUploadFile").change(function(e){
+//		var file = $(this)[0].files[0],
+//			formData = new FormData();
+//		
+//		formData.append("file", file);
+//		
+//		if(formData.get("file") != undefined) {
+//			console.log(formData.get("file"));
+//			uploadFile(formData, $(this));
+//		}
+		
+		var file = $(this)[0].files[0],
+//			$fileUploadForm = $("<form>").prop({"method" : "POST", "enctype" : "multipart/form-data"}),
+			$fileUploadForm = $("<form>"),
+			formData = new FormData($fileUploadForm[0]);
+		
+		formData.append("file", file);
+		uploadFile(formData, $(this));
+	});*/
+})
 ```
 
 ```js
 // invitationAdd.js
 
-	// ~~~
+/**
+ * 
+ */
+
+console.log("########## invitationAdd.js ##########");
+
+var $btnGetAddress = "",
+	$tableRecordLoveStory = undefined;
+
+$(function(){
+	setActiveSidebar();
+	setClone();
+	
+	$("#btnMemberSearch").on("click", function(){
+		var inputId = $("#inputId").val();
+		
+		if(inputId == "") {
+			alert("아이디를 입력해주세요.");
+		} else {
+			getMemberInfo(inputId);
+		}
+	});
+	
+	$("#inputDatePeriod").daterangepicker({
+		locale : {
+			format : "YYYY-MM-DD"
+		}
+		/*autoUpdateInput: false
+		
+		$('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+		      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+		  });*/
+	});
+	
+	$(".inputDateTime").daterangepicker({
+		singleDatePicker : true,
+		timePicker : true,
+		timePicker24Hour : true,
+		locale : {
+			format : "YYYY-MM-DD HH:mm"
+		}
+	});
+	$(".inputDateTime").on("apply.daterangepicker", function(){
+		var $this = $(this);
+		
+		if($this.parents("#divHomeGroomBride").length == 1) {
+			$("#inputDateTimeWedding_copy").val($this.val());
+		}
+	});
+	
+	$(".btnGetAddress").on("click", function(){
+		$btnGetAddress = $(".btnGetAddress").index($(this));
+		var pop = window.open("/admin/popup/jusoPopup.jsp", "pop", "scrollbars=yes, resizeable=yes");
+	});
+	
 	$("#btnRegisterInvitation").on("click", function(){
 		var result = validateData();
 		
 		if(result.resFlag) {
-			console.log(result.resData);
+			registerInvitation(result.resData);
 		} else {
 			alert(result.resMessage);
 		}
@@ -7639,23 +8719,11 @@ $(function(){
 		
 		resetTagId();
 	});
-	
-	//------------------------------------------------------------------------------------------------------
-	
-	// 유동적으로 추가한것도 먹힐려나??
-	/*$(".inputDateLoveStory").daterangepicker({
-		singleDatePicker : true,
-		locale : {
-			format : "YYYY-MM-DD"
-		}
-	});*/
 });
 
 function setClone() {
 	$tableRecordLoveStory = $("#tableRecordLoveStory").clone();
 	$("#tableRecordLoveStory").remove();
-	
-	cloneLoveStory();
 	$("#wrapListLS").sortable();
 }
 
@@ -7695,8 +8763,6 @@ function getMemberInfo(id) {
 			alert("status : ", status, "\nHttp error msg : ", msg);
 		},
 		success : function(result) {
-			console.log(result);
-			
 			if(result.resFlag) {
 				$("#inputId").data("id", result.resMemberInfo.id);
 				$("#inputName").val(result.resMemberInfo.name);
@@ -7709,8 +8775,6 @@ function getMemberInfo(id) {
 
 function jusoCallBack(...res) {
 	// res = ["서울특별시 중구 청구로 지하 77, 걍 써봄 (신당동)", "서울특별시 중구 청구로 지하 77", "걍 써봄", "(신당동)", "B 77, Cheonggu-ro, Jung-gu, Seoul", "서울특별시 중구 신당동 295-2 청구역 5,6호선", "04608", "1114016200", "111403101008", "1114016200102950002000001", "5,6호선", "청구역 5,6호선", "0", "서울특별시", "중구", "신당동", "", "청구로", "1", "77", "0", "0", "295", "2", "01", "957058.9352199801", "1951330.378632207"]
-	console.log(res);
-	
 	if($btnGetAddress == 0) {
 		$(".inputAddrWeddingPlace").val(res[0]);
 		$("#infoWeddingPlace").data("infoWeddingPlace", {
@@ -7728,58 +8792,1461 @@ function jusoCallBack(...res) {
 }
 
 function validateData() {
-	var id = $("#inputId").data("id") || "",
-		invitation = {
-			datePeriod : $("#inputDatePeriod").val().split(" - "),
-			visible : $("input[name=checkboxVisibleYN]").prop("checked") == true ? "N" : "Y"
-		},
-		HGB = {
-			weddingDateTime : $("#inputDateTimeWedding").val(),
-			weddingPlaceInfo : $("#infoWeddingPlace").data("infoWeddingPlace") || "",
-			contentGroom : $("#contentGroom").val(),
-			contentBride : $("#contentBride").val(),
-			imgMain : $("#imgHGB1").parents(".wrapUploadFile").find(".img").data("fullName"),
-			ynUseImage : $("input[name=checkboxEachImgYN]").prop("checked") == true ? "Y" : "N",
-			imgGroom : $("#imgHGB2").parents(".wrapUploadFile").find(".img").data("fullName"),
-			imgBride : $("#imgHGB3").parents(".wrapUploadFile").find(".img").data("fullName"),
-		}
-	
-	
-	var result = {
+	var invitation = {}, hgb = {}, ls = {}, ww = {}, gallery = {}, sm = {},
+		result = {
 			resFlag : true,
-			resData : {
-				id : $("#inputId").data("id") || "",
-				invitationBegin : ($("#inputDatePeriod").val().split(" - "))[0] || "",
-				invitationEnd : ($("#inputDatePeriod").val().split(" - "))[1] || "",
-				openYN : $("input[name=checkboxVisibleYN]").prop("checked") == true ? "N" : "Y",
-				dateTimeWedding : $("#inputDateTimeWedding").val() || "",
-				weddingPlace : $("#infoWeddingPlace").data("infoWeddingPlace") || "",
-				contentGroom : $("#contentGroom").val() || "",
-				contentBride : $("#contentBride").val() || ""
-			},
+			resData : {},
 			resMessage : ""
-	};
+		};
 	
-	if(result.resData.id == "") {
+	invitation.id = $("#inputId").data("id") || "";
+	if(invitation.id == "") {
 		result.resFlag = false;
-		result.resMessage = "아이디를 입력해주세요."
-	} else if(result.resData.invitationBegin == "" || result.resData.invitationEnd == "") {
+		result.resMessage = "아이디를 확인해주세요.";
+		return result;
+	}
+	
+	var datePeriod = $("#inputDatePeriod").val().split(" - "),
+		today = getFormattedDate(new Date());
+	invitation.periodBegin = (datePeriod[0]).replace(/-/g, "");
+	invitation.periodEnd = (datePeriod[1]).replace(/-/g, "");
+	if(Number(today) > Number(invitation.periodEnd)) {
 		result.resFlag = false;
-		result.resMessage = "게시기간을 선택해주세요.";
-	} else if(result.resData.dateTimeWedding == "") {
+		result.resMessage = "게시 기간을 확인해주세요.";
+		return result;
+	}
+	
+	invitation.visible = $("input[name=checkboxVisibleYN]").prop("checked") == true ? "N" : "Y";
+	invitation.formCode = "hookup";
+	invitation.useEachImage = $("input[name=checkboxEachImgYN]").prop("checked") == true ? "Y" : "N";
+	invitation.useLS = $("input[name=checkboxUseLSYN]").prop("checked") == true ? "Y" : "N";
+	invitation.usePyebaek = $("input[name=checkboxDoPyebaek]").prop("checked") == true ? "Y" : "N";
+	invitation.useG = $("input[name=checkboxUseG]").prop("checked") == true ? "Y" : "N";
+	invitation.useSM = $("input[name=checkboxUseSM]").prop("checked") == true ? "Y" : "N";
+	
+	var dateTimeWedding = $("#inputDateTimeWedding").val() || "";
+	dateTimeWedding = dateTimeWedding.split(" ");
+	hgb.dateWedding = (dateTimeWedding[0]).replace(/-/g, "");
+	hgb.timeWedding = (dateTimeWedding[1]).replace(/:/g, "");
+	if(Number(hgb.dateWedding) < Number(invitation.periodBegin) || Number(hgb.dateWedding) > Number(invitation.periodEnd)) {
 		result.resFlag = false;
-		result.resMessage = "결혼식 일자를 선택해주세요.";
-	} else if(result.resData.weddingPlace == "") {
+		result.resMessage = "결혼 일자를 확인해주세요.";
+		return result;
+	}
+	
+	var infoAddr = $("#infoWeddingPlace").data("infoWeddingPlace") || "";
+	hgb.address = infoAddr.addr || "";
+	hgb.placeX = infoAddr.placeX || "";
+	hgb.placeY = infoAddr.placeY || "";
+	if(infoAddr == undefined || infoAddr == "") {
 		result.resFlag = false;
-		result.resMessage = "결혼식 장소를 입력해주세요.";
-	} else if(result.resData.contentGroom.length >= 500) {
+		result.resMessage = "결혼식 장소를 확인해주세요.";
+		return result;
+	}
+	if(hgb.address == "" || hgb.placeX == "" || hgb.placeY == "") {
 		result.resFlag = false;
-		result.resMessage = "신랑 간단소개는 500자 이내로 입력해주세요.";
-	} else if(result.resData.contentBride.length >= 500) {
+		result.resMessage = "결혼식 장소를 확인해주세요.";
+		return result;
+	}
+	
+	hgb.contentGroom = $("#contentGroom").val();
+	hgb.contentBride = $("#contentBride").val();
+	
+	hgb.fullNameMain = $("#imgHGB1").parents(".wrapUploadFile").find("img").data("fullName");
+	if(hgb.fullNameMain == undefined) {
 		result.resFlag = false;
-		result.resMessage = "신부 간단소개는 500자 이내로 입력해주세요.";
+		result.resMessage = "메인 사진을 확인해주세요.";
+		return result;
+	}
+	
+	hgb.fullNameGroom = $("#imgHGB2").parents(".wrapUploadFile").find("img").data("fullName");
+	hgb.fullNameBride = $("#imgHGB3").parents(".wrapUploadFile").find("img").data("fullName");
+	hgb.useEachImage = invitation.useEachImage;
+	if(hgb.useEachImage == "Y") {
+		if(hgb.fullNameGroom == undefined) {
+			result.resFlag = false;
+			result.resMessage = "신랑 사진을 확인해주세요.";
+			return result;
+		}
+		
+		if(hgb.fullNameBride == undefined) {
+			result.resFlag = false;
+			result.resMessage = "신부 사진을 확인해주세요.";
+			return result;
+		}
+	} else {
+		hgb.fullNameGroom = "";
+		hgb.fullNameBride = "";
+	}
+	
+	ls.listLS = [];
+	var noImageCount = 0;
+	$(".itemLoveStory").each(function(){
+		var $this = $(this),
+			fullNameImg = $this.find("img").data("fullName") || "";
+		
+		if(fullNameImg == "") {
+			noImageCount++;
+		}
+		
+		ls.listLS.push({
+			dateStory : ($this.find(".inputDateLoveStory").val()).replace(/-/g, ""),
+			title : $this.find(".inputTitleLS").val(),
+			content : $this.find(".inputContentLS").val(),
+			fullNameImg : fullNameImg 
+		});
+	});
+	if(noImageCount > 0){
+		result.resFlag = false;
+		result.resMessage = "Love Story에 사진을 확인해주세요.";
+		return result;
+	} else if(invitation.useLS == "Y" && ls.listLS.length < 1) {
+		result.resFlag = false;
+		result.resMessage = "Love Story에 사진을 확인해주세요.";
+		return result;
+	} else if(invitation.useLS == "N" && ls.listLS.length > 0) {
+		result.resFlag = false;
+		result.resMessage = "Love Story의 사용 여부를 확인해주세요.";
+		return result;
+	}
+	
+	ww.listWW = [];
+	ww.listWW.push({
+		flagPyebaek : "N",
+		dateWedding : hgb.dateWedding,
+		timeWedding : hgb.timeWedding,
+		address : hgb.address,
+		placeX : hgb.placeX,
+		placeY : hgb.placeY,
+		title : $("#inputTitleWeddingWW").val(),
+		content : $("#inputContentWeddingWW").val()
+	});
+	if(invitation.usePyebaek == "Y") {
+		var dateTimePyebaek = $("#inputDatePyebaek").val() || "";
+		dateTimePyebaek = dateTimePyebaek.split(" ");
+		
+		var infoAddrPyebaek = $("#inputAddrPyebaek").data("infoPyebaek") || "";
+		
+		if(infoAddrPyebaek == undefined || infoAddrPyebaek == "") {
+			result.resFlag = false;
+			result.resMessage = "폐백 장소를 확인해주세요.";
+			return result;
+		}
+		if(infoAddrPyebaek.address == "" || infoAddrPyebaek.placeX == "" || infoAddrPyebaek.placeY == "") {
+			result.resFlag = false;
+			result.resMessage = "폐백 장소를 확인해주세요.";
+			return result;
+		}
+		
+		ww.listWW.push({
+			flagPyebaek : "Y",
+			dateWedding : (dateTimePyebaek[0]).replace(/-/g, ""),
+			timeWedding : (dateTimePyebaek[1]).replace(/:/g, ""),
+			address : infoAddrPyebaek.addr || "",
+			placeX : infoAddrPyebaek.placeX || "",
+			placeY : infoAddrPyebaek.placeY || "",
+			title : $("#inputTitlePyebaekWW").val(),
+			content : $("#inputContentPyebaekWW").val()
+		});
+	}
+	
+	gallery.listG = [];
+	if(invitation.useG == "Y") {
+		$("#tableGallery").find(".wrapUploadFile").each(function(){
+			var fullName = $(this).find("img").data("fullName") || "";
+			
+			if(fullName != "") {
+				gallery.listG.push({fullName : fullName});
+			}
+		});
+		
+		if(gallery.listG.length < 1) {
+			result.resFlag = false;
+			result.resMessage = "Gallery에 사진을 확인해주세요.";
+			return result;
+		}
+	}
+	
+	result.resData = {
+		invitationVO : invitation,
+		mainInfoVO : hgb,
+		loveStoryVO : ls.listLS,
+		whenWhereVO : ww.listWW,
+		galleryVO : gallery.listG
 	}
 	
 	return result;
+}
+
+function registerInvitation(data) {
+	$.ajax({
+		url : "/admin/invitation/registerInvitation.do",
+		type : "POST",
+		dataType : "json",
+		data : JSON.stringify(data),
+		contentType : "application/json;charset=utf-8;",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			if(result.resFlag) {
+				alert("청첩장 추가가 완료 되었습니다.");
+				location.reload();
+			} else {
+				alert(result.resMessage);
+			}
+		}
+	});
+}
+```
+
+- VO 추가
+	- 카테고리별 수정을 위해 6가지 하위 분류를 가진 vo 작성
+```java
+// SyntheticInvitaitonVO.java
+
+package com.invitation.biz.invitation;
+
+import java.util.ArrayList;
+
+public class SyntheticInvitationVO {
+
+	private InvitationVO invitationVO;
+	private MainInfoVO mainInfoVO;
+	private ArrayList<LoveStoryVO> loveStoryVO;
+	private ArrayList<WhenWhereVO> whenWhereVO;
+	private ArrayList<GalleryVO> galleryVO;
+	private ArrayList<SweetMessageVO> sweetMessageVO;
+	
+	public InvitationVO getInvitationVO() {
+		return invitationVO;
+	}
+	public void setInvitationVO(InvitationVO invitationVO) {
+		this.invitationVO = invitationVO;
+	}
+	public MainInfoVO getMainInfoVO() {
+		return mainInfoVO;
+	}
+	public void setMainInfoVO(MainInfoVO mainInfoVO) {
+		this.mainInfoVO = mainInfoVO;
+	}
+	public ArrayList<LoveStoryVO> getLoveStoryVO() {
+		return loveStoryVO;
+	}
+	public void setLoveStoryVO(ArrayList<LoveStoryVO> loveStoryVO) {
+		this.loveStoryVO = loveStoryVO;
+	}
+	public ArrayList<WhenWhereVO> getWhenWhereVO() {
+		return whenWhereVO;
+	}
+	public void setWhenWhereVO(ArrayList<WhenWhereVO> whenWhereVO) {
+		this.whenWhereVO = whenWhereVO;
+	}
+	public ArrayList<GalleryVO> getGalleryVO() {
+		return galleryVO;
+	}
+	public void setGalleryVO(ArrayList<GalleryVO> galleryVO) {
+		this.galleryVO = galleryVO;
+	}
+	public ArrayList<SweetMessageVO> getSweetMessageVO() {
+		return sweetMessageVO;
+	}
+	public void setSweetMessageVO(ArrayList<SweetMessageVO> sweetMessageVO) {
+		this.sweetMessageVO = sweetMessageVO;
+	}
+	
+	@Override
+	public String toString() {
+		return "SyntheticInvitationVO [invitationVO=" + invitationVO + ", mainInfoVO=" + mainInfoVO + ", loveStoryVO="
+				+ loveStoryVO + ", whenWhereVO=" + whenWhereVO + ", galleryVO=" + galleryVO + ", sweetMessageVO="
+				+ sweetMessageVO + "]";
+	}
+	
+}
+```
+
+```java
+// InvitationVO.java
+
+package com.invitation.biz.invitation;
+
+import java.util.Date;
+
+public class InvitationVO {
+
+	private String id;
+	private String name;
+	private String visible;
+	private String periodBegin;
+	private String periodEnd;
+	private String formCode;
+	private String useEachImage;
+	private String useLS;
+	private String usePyebaek;
+	private String useG;
+	private String useSM;
+	private Date dateTimeRegister;
+	private Date dateTimeUpdate;
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getVisible() {
+		return visible;
+	}
+	public void setVisible(String visible) {
+		this.visible = visible;
+	}
+	public String getPeriodBegin() {
+		return periodBegin;
+	}
+	public void setPeriodBegin(String periodBegin) {
+		this.periodBegin = periodBegin;
+	}
+	public String getPeriodEnd() {
+		return periodEnd;
+	}
+	public void setPeriodEnd(String periodEnd) {
+		this.periodEnd = periodEnd;
+	}
+	public String getFormCode() {
+		return formCode;
+	}
+	public void setFormCode(String formCode) {
+		this.formCode = formCode;
+	}
+	public String getUseEachImage() {
+		return useEachImage;
+	}
+	public void setUseEachImage(String useEachImage) {
+		this.useEachImage = useEachImage;
+	}
+	public String getUseLS() {
+		return useLS;
+	}
+	public void setUseLS(String useLS) {
+		this.useLS = useLS;
+	}
+	public String getUsePyebaek() {
+		return usePyebaek;
+	}
+	public void setUsePyebaek(String usePyebaek) {
+		this.usePyebaek = usePyebaek;
+	}
+	public String getUseG() {
+		return useG;
+	}
+	public void setUseG(String useG) {
+		this.useG = useG;
+	}
+	public String getUseSM() {
+		return useSM;
+	}
+	public void setUseSM(String useSM) {
+		this.useSM = useSM;
+	}
+	public Date getDateTimeRegister() {
+		return dateTimeRegister;
+	}
+	public void setDateTimeRegister(Date dateTimeRegister) {
+		this.dateTimeRegister = dateTimeRegister;
+	}
+	public Date getDateTimeUpdate() {
+		return dateTimeUpdate;
+	}
+	public void setDateTimeUpdate(Date dateTimeUpdate) {
+		this.dateTimeUpdate = dateTimeUpdate;
+	}
+	
+	@Override
+	public String toString() {
+		return "InvitationVO [id=" + id + ", name=" + name + ", visible=" + visible + ", periodBegin=" + periodBegin
+				+ ", periodEnd=" + periodEnd + ", formCode=" + formCode + ", useEachImage=" + useEachImage + ", useLS="
+				+ useLS + ", usePyebaek=" + usePyebaek + ", useG=" + useG + ", useSM=" + useSM + ", dateTimeRegister="
+				+ dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate + "]";
+	}
+}
+```
+
+```java
+// MainInfoVO.java
+
+package com.invitation.biz.invitation;
+
+import java.util.Date;
+
+public class MainInfoVO {
+
+	private int seq;
+	private int invSeq;
+	private String id;
+	private String dateWedding;
+	private String timeWedding;
+	private String placeX;
+	private String placeY;
+	private String address;
+	private String contentGroom;
+	private String contentBride;
+	private int seqImgMain;
+	private String fullNameMain;
+	private String useEachImage;
+	private int seqImgGroom;
+	private String fullNameGroom;
+	private int seqImgBride;
+	private String fullNameBride;
+	private Date dateTimeRegister;
+	private Date dateTimeUpdate;
+	
+	public int getSeq() {
+		return seq;
+	}
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
+	public int getInvSeq() {
+		return invSeq;
+	}
+	public void setInvSeq(int invSeq) {
+		this.invSeq = invSeq;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getDateWedding() {
+		return dateWedding;
+	}
+	public void setDateWedding(String dateWedding) {
+		this.dateWedding = dateWedding;
+	}
+	public String getTimeWedding() {
+		return timeWedding;
+	}
+	public void setTimeWedding(String timeWedding) {
+		this.timeWedding = timeWedding;
+	}
+	public String getPlaceX() {
+		return placeX;
+	}
+	public void setPlaceX(String placeX) {
+		this.placeX = placeX;
+	}
+	public String getPlaceY() {
+		return placeY;
+	}
+	public void setPlaceY(String placeY) {
+		this.placeY = placeY;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getContentGroom() {
+		return contentGroom;
+	}
+	public void setContentGroom(String contentGroom) {
+		this.contentGroom = contentGroom;
+	}
+	public String getContentBride() {
+		return contentBride;
+	}
+	public void setContentBride(String contentBride) {
+		this.contentBride = contentBride;
+	}
+	public int getSeqImgMain() {
+		return seqImgMain;
+	}
+	public void setSeqImgMain(int seqImgMain) {
+		this.seqImgMain = seqImgMain;
+	}
+	public String getFullNameMain() {
+		return fullNameMain;
+	}
+	public void setFullNameMain(String fullNameMain) {
+		this.fullNameMain = fullNameMain;
+	}
+	public String getUseEachImage() {
+		return useEachImage;
+	}
+	public void setUseEachImage(String useEachImage) {
+		this.useEachImage = useEachImage;
+	}
+	public int getSeqImgGroom() {
+		return seqImgGroom;
+	}
+	public void setSeqImgGroom(int seqImgGroom) {
+		this.seqImgGroom = seqImgGroom;
+	}
+	public String getFullNameGroom() {
+		return fullNameGroom;
+	}
+	public void setFullNameGroom(String fullNameGroom) {
+		this.fullNameGroom = fullNameGroom;
+	}
+	public int getSeqImgBride() {
+		return seqImgBride;
+	}
+	public void setSeqImgBride(int seqImgBride) {
+		this.seqImgBride = seqImgBride;
+	}
+	public String getFullNameBride() {
+		return fullNameBride;
+	}
+	public void setFullNameBride(String fullNameBride) {
+		this.fullNameBride = fullNameBride;
+	}
+	public Date getDateTimeRegister() {
+		return dateTimeRegister;
+	}
+	public void setDateTimeRegister(Date dateTimeRegister) {
+		this.dateTimeRegister = dateTimeRegister;
+	}
+	public Date getDateTimeUpdate() {
+		return dateTimeUpdate;
+	}
+	public void setDateTimeUpdate(Date dateTimeUpdate) {
+		this.dateTimeUpdate = dateTimeUpdate;
+	}
+	
+	@Override
+	public String toString() {
+		return "MainInfoVO [seq=" + seq + ", invSeq=" + invSeq + ", id=" + id + ", dateWedding=" + dateWedding
+				+ ", timeWedding=" + timeWedding + ", placeX=" + placeX + ", placeY=" + placeY + ", address=" + address
+				+ ", contentGroom=" + contentGroom + ", contentBride=" + contentBride + ", seqImgMain=" + seqImgMain
+				+ ", fullNameMain=" + fullNameMain + ", useEachImage=" + useEachImage + ", seqImgGroom=" + seqImgGroom
+				+ ", fullNameGroom=" + fullNameGroom + ", seqImgBride=" + seqImgBride + ", fullNameBride="
+				+ fullNameBride + ", dateTimeRegister=" + dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate + "]";
+	}
+}
+```
+
+```java
+// LoveStoryVO.java
+
+package com.invitation.biz.invitation;
+
+import java.util.Date;
+
+public class LoveStoryVO {
+
+	private int seq;
+	private int invSeq;
+	private String id;
+	private Boolean isDelete;
+	private String dateStory;
+	private String title;
+	private String content;
+	private int seqImage;
+	private String fullNameImg;
+	private Date dateTimeRegister;
+	private Date dateTimeUpdate;
+	
+	public int getSeq() {
+		return seq;
+	}
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
+	public int getInvSeq() {
+		return invSeq;
+	}
+	public void setInvSeq(int invSeq) {
+		this.invSeq = invSeq;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public Boolean getIsDelete() {
+		return isDelete;
+	}
+	public void setIsDelete(Boolean isDelete) {
+		this.isDelete = isDelete;
+	}
+	public String getDateStory() {
+		return dateStory;
+	}
+	public void setDateStory(String dateStory) {
+		this.dateStory = dateStory;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public int getSeqImage() {
+		return seqImage;
+	}
+	public void setSeqImage(int seqImage) {
+		this.seqImage = seqImage;
+	}
+	public String getFullNameImg() {
+		return fullNameImg;
+	}
+	public void setFullNameImg(String fullNameImg) {
+		this.fullNameImg = fullNameImg;
+	}
+	public Date getDateTimeRegister() {
+		return dateTimeRegister;
+	}
+	public void setDateTimeRegister(Date dateTimeRegister) {
+		this.dateTimeRegister = dateTimeRegister;
+	}
+	public Date getDateTimeUpdate() {
+		return dateTimeUpdate;
+	}
+	public void setDateTimeUpdate(Date dateTimeUpdate) {
+		this.dateTimeUpdate = dateTimeUpdate;
+	}
+	
+	@Override
+	public String toString() {
+		return "LoveStoryVO [seq=" + seq + ", invSeq=" + invSeq + ", id=" + id + ", isDelete=" + isDelete
+				+ ", dateStory=" + dateStory + ", title=" + title + ", content=" + content + ", seqImage=" + seqImage
+				+ ", fullNameImg=" + fullNameImg + ", dateTimeRegister=" + dateTimeRegister + ", dateTimeUpdate="
+				+ dateTimeUpdate + "]";
+	}
+}
+```
+
+```java
+// WhenWhereVO.java
+
+package com.invitation.biz.invitation;
+
+import java.util.Date;
+
+public class WhenWhereVO {
+
+	private int seq;
+	private int invSeq;
+	private String id;
+	private String flagPyebaek;
+	private String dateWedding;
+	private String timeWedding;
+	private String placeX;
+	private String placeY;
+	private String address;
+	private String title;
+	private String content;
+	private Date dateTimeRegister;
+	private Date dateTimeUpdate;
+	
+	public int getSeq() {
+		return seq;
+	}
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
+	public int getInvSeq() {
+		return invSeq;
+	}
+	public void setInvSeq(int invSeq) {
+		this.invSeq = invSeq;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getFlagPyebaek() {
+		return flagPyebaek;
+	}
+	public void setFlagPyebaek(String flagPyebaek) {
+		this.flagPyebaek = flagPyebaek;
+	}
+	public String getDateWedding() {
+		return dateWedding;
+	}
+	public void setDateWedding(String dateWedding) {
+		this.dateWedding = dateWedding;
+	}
+	public String getTimeWedding() {
+		return timeWedding;
+	}
+	public void setTimeWedding(String timeWedding) {
+		this.timeWedding = timeWedding;
+	}
+	public String getPlaceX() {
+		return placeX;
+	}
+	public void setPlaceX(String placeX) {
+		this.placeX = placeX;
+	}
+	public String getPlaceY() {
+		return placeY;
+	}
+	public void setPlaceY(String placeY) {
+		this.placeY = placeY;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public Date getDateTimeRegister() {
+		return dateTimeRegister;
+	}
+	public void setDateTimeRegister(Date dateTimeRegister) {
+		this.dateTimeRegister = dateTimeRegister;
+	}
+	public Date getDateTimeUpdate() {
+		return dateTimeUpdate;
+	}
+	public void setDateTimeUpdate(Date dateTimeUpdate) {
+		this.dateTimeUpdate = dateTimeUpdate;
+	}
+	
+	@Override
+	public String toString() {
+		return "WhenWhereVO [seq=" + seq + ", invSeq=" + invSeq + ", id=" + id + ", flagPyebaek=" + flagPyebaek
+				+ ", dateWedding=" + dateWedding + ", timeWedding=" + timeWedding + ", placeX=" + placeX + ", placeY="
+				+ placeY + ", address=" + address + ", title=" + title + ", content=" + content + ", dateTimeRegister="
+				+ dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate + "]";
+	}
+	
+}
+```
+
+```java
+// GalleryVO.java
+
+package com.invitation.biz.invitation;
+
+import java.util.Date;
+
+public class GalleryVO {
+
+	private int seq;
+	private int invSeq;
+	private String id;
+	private Boolean isDelete;
+	private int seqImage;
+	private String fullName;
+	private Date dateTimeRegister;
+	private Date dateTimeUpdate;
+	
+	public int getSeq() {
+		return seq;
+	}
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
+	public int getInvSeq() {
+		return invSeq;
+	}
+	public void setInvSeq(int invSeq) {
+		this.invSeq = invSeq;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public Boolean getIsDelete() {
+		return isDelete;
+	}
+	public void setIsDelete(Boolean isDelete) {
+		this.isDelete = isDelete;
+	}
+	public int getSeqImage() {
+		return seqImage;
+	}
+	public void setSeqImage(int seqImage) {
+		this.seqImage = seqImage;
+	}
+	public String getFullName() {
+		return fullName;
+	}
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+	public Date getDateTimeRegister() {
+		return dateTimeRegister;
+	}
+	public void setDateTimeRegister(Date dateTimeRegister) {
+		this.dateTimeRegister = dateTimeRegister;
+	}
+	public Date getDateTimeUpdate() {
+		return dateTimeUpdate;
+	}
+	public void setDateTimeUpdate(Date dateTimeUpdate) {
+		this.dateTimeUpdate = dateTimeUpdate;
+	}
+	
+	@Override
+	public String toString() {
+		return "GalleryVO [seq=" + seq + ", invSeq=" + invSeq + ", id=" + id + ", isDelete=" + isDelete + ", seqImage="
+				+ seqImage + ", fullName=" + fullName + ", dateTimeRegister=" + dateTimeRegister + ", dateTimeUpdate="
+				+ dateTimeUpdate + "]";
+	}
+}
+```
+
+```java
+// SweetMessageVO.java
+
+package com.invitation.biz.invitation;
+
+import java.util.Date;
+
+public class SweetMessageVO {
+
+	private int seq;
+	private int invSeq;
+	private String id;
+	private Boolean isDelete;
+	private String registerName;
+	private String registerContent;
+	private String registerPassword;
+	private Date dateTimeRegister;
+	private Date dateTimeUpdate;
+	
+	public int getSeq() {
+		return seq;
+	}
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
+	public int getInvSeq() {
+		return invSeq;
+	}
+	public void setInvSeq(int invSeq) {
+		this.invSeq = invSeq;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public Boolean getIsDelete() {
+		return isDelete;
+	}
+	public void setIsDelete(Boolean isDelete) {
+		this.isDelete = isDelete;
+	}
+	public String getRegisterName() {
+		return registerName;
+	}
+	public void setRegisterName(String registerName) {
+		this.registerName = registerName;
+	}
+	public String getRegisterContent() {
+		return registerContent;
+	}
+	public void setRegisterContent(String registerContent) {
+		this.registerContent = registerContent;
+	}
+	public String getRegisterPassword() {
+		return registerPassword;
+	}
+	public void setRegisterPassword(String registerPassword) {
+		this.registerPassword = registerPassword;
+	}
+	public Date getDateTimeRegister() {
+		return dateTimeRegister;
+	}
+	public void setDateTimeRegister(Date dateTimeRegister) {
+		this.dateTimeRegister = dateTimeRegister;
+	}
+	public Date getDateTimeUpdate() {
+		return dateTimeUpdate;
+	}
+	public void setDateTimeUpdate(Date dateTimeUpdate) {
+		this.dateTimeUpdate = dateTimeUpdate;
+	}
+	
+	@Override
+	public String toString() {
+		return "SweetMessageVO [seq=" + seq + ", invSeq=" + invSeq + ", id=" + id + ", isDelete=" + isDelete
+				+ ", registerName=" + registerName + ", registerContent=" + registerContent + ", registerPassword="
+				+ registerPassword + ", dateTimeRegister=" + dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate
+				+ "]";
+	}
+}
+```
+
+- 쿼리 추가
+```xml
+<!-- Imvitation-mapping.xml -->
+
+			<!-- ~~~ -->
+			AND DELETEFLAG = 'N'
+		;
+	</select>
+	
+	<select id="getLastInsertID" resultType="int">
+		SELECT
+			LAST_INSERT_ID()
+		;
+	</select>
+	
+	<insert id="registerInvitation">
+		INSERT INTO
+			INVITATION_LIST (
+				SEQ
+				, ID
+				, NAME
+				, VISIBLE
+				, DATE_BEGIN
+				, DATE_END
+				, FORMCODE
+				, USE_EACH_IMAGE
+				, USE_LS
+				, USE_PYEBAEK
+				, USE_G
+				, USE_SM
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			) 
+			VALUES (
+				null
+				, #{invitationVO.id}
+				, (SELECT NAME FROM USERES WHERE ID=#{invitationVO.id})
+				, #{invitationVO.visible}
+				, #{invitationVO.periodBegin}
+				, #{invitationVO.periodEnd}
+				, #{invitationVO.formCode}
+				, #{invitationVO.useEachImage}
+				, #{invitationVO.useLS}
+				, #{invitationVO.usePyebaek}
+				, #{invitationVO.useG}
+				, #{invitationVO.useSM}
+				, null
+				, null
+			)
+		;
+	</insert>
+	
+	<insert id="insertMainInfo">
+		INSERT INTO
+			MAIN_INFO (
+				SEQ
+				, INV_SEQ
+				, ID
+				, DATE_WEDDING
+				, TIME_WEDDING
+				, X_PLACE
+				, Y_PLACE
+				, ADDRESS
+				, CONTENT_GROOM
+				, CONTENT_BRIDE
+				, SEQ_IMG_MAIN
+				, YN_EACH_IMAGE
+				, SEQ_IMG_GROOM
+				, SEQ_IMG_BRIDE
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			)
+			VALUES (
+				null
+				, #{mainInfoVO.invSeq}
+				, #{mainInfoVO.id}
+				, #{mainInfoVO.dateWedding}
+				, #{mainInfoVO.timeWedding}
+				, #{mainInfoVO.placeX}
+				, #{mainInfoVO.placeY}
+				, #{mainInfoVO.address}
+				, #{mainInfoVO.contentGroom}
+				, #{mainInfoVO.contentBride}
+				, #{mainInfoVO.seqImgMain}
+				, #{mainInfoVO.useEachImage}
+				, #{mainInfoVO.seqImgGroom}
+				, #{mainInfoVO.seqImgBride}
+				, null
+				, null
+			)
+		;
+	</insert>
+	
+	<insert id="insertLoveStory">
+		INSERT INTO
+			LOVE_STORY (
+				SEQ
+				, INV_SEQ
+				, ID
+				, IS_DELETE
+				, DATE_STORY
+				, TITLE
+				, CONTENT
+				, SEQ_IMAGE
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			)
+			VALUES 
+			<foreach collection="loveStoryVO" item="item" open="(" close=")" separator="), (">
+				null
+				, #{item.invSeq}
+				, #{item.id}
+				, #{item.isDelete}
+				, #{item.dateStory}
+				, #{item.title}
+				, #{item.content}
+				, #{item.seqImage}
+				, null
+				, null
+			</foreach>
+		;
+	</insert>
+	
+	<insert id="insertWhenWhere">
+		INSERT INTO
+			WHEN_WHERE (
+				SEQ
+				, INV_SEQ
+				, ID
+				, FLAG_PYEBAEK
+				, DATE_WW
+				, TIME_WW
+				, X_PLACE
+				, Y_PLACE
+				, ADDRESS
+				, TITLE
+				, CONTENT
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			)
+			VALUES
+			<foreach collection="whenWhereVO" item="item" open="(" close=")" separator="), (">
+				null
+				, #{item.invSeq}
+				, #{item.id}
+				, #{item.flagPyebaek}
+				, #{item.dateWedding}
+				, #{item.timeWedding}
+				, #{item.placeX}
+				, #{item.placeY}
+				, #{item.address}
+				, #{item.title}
+				, #{item.content}
+				, null
+				, null
+			</foreach>
+	</insert>
+	
+	<insert id="insertGallery">
+		INSERT INTO
+			GALLERY (
+				SEQ
+				, INV_SEQ
+				, ID
+				, IS_DELETE
+				, SEQ_IMAGE
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			)
+			VALUES
+			<foreach collection="galleryVO" item="item" open="(" close=")" separator="), (">
+				null
+				, #{item.invSeq}
+				, #{item.id}
+				, #{item.isDelete}
+				, #{item.seqImage}
+				, null
+				, null
+			</foreach>
+	</insert>
+</mapper>
+```
+
+- dao 작성
+```java
+// InvitationDAOMybatis.java
+
+		// ~~~
+		return mybatis.selectOne("InvitationDAO.getMemberInfo", id);
+	}
+	
+	public int getLastInsertID() {
+		return mybatis.selectOne("InvitationDAO.getLastInsertID");
+	}
+	
+	public void registerInvitaiton(SyntheticInvitationVO syntheticInvitationVO) {
+		mybatis.insert("InvitationDAO.registerInvitation", syntheticInvitationVO);
+	}
+	
+	public void insertMainInfo(SyntheticInvitationVO syntheticInvitationVO) {
+		mybatis.insert("InvitationDAO.insertMainInfo", syntheticInvitationVO);
+	}
+	
+	public void insertLoveStory(SyntheticInvitationVO syntheticInvitationVO) {
+		mybatis.insert("InvitationDAO.insertLoveStory", syntheticInvitationVO);
+	}
+	
+	public void insertWhenWhere(SyntheticInvitationVO syntheticInvitationVO) {
+		mybatis.insert("InvitationDAO.insertWhenWhere", syntheticInvitationVO);
+	}
+	
+	public void insertGallery(SyntheticInvitationVO syntheticInvitationVO) {
+		mybatis.insert("InvitationDAO.insertGallery", syntheticInvitationVO);
+	}
+}
+```
+
+- service 작성
+```java
+// InvitationService
+
+	// ~~~
+	MemberInfoVO getMemberInfo(String id) throws Exception;
+
+	int getLastInsertID();
+	
+	void registerInvitation(SyntheticInvitationVO syntheticInvitationVO);
+}
+```
+
+```java
+// InvitationServiceImpl.java
+
+		// ~~~
+		return memberInfoVO;
+	}
+
+	@Override
+	public int getLastInsertID() {
+		return invitationDAO.getLastInsertID();
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void registerInvitation(SyntheticInvitationVO vo) {
+		Integer lastInsertID_vo = null;
+		Integer lastInsertID_file = null;
+		Map<String, Object> mapAttach = new HashMap<String, Object>();
+		Iterator<LoveStoryVO> iteratorLS = vo.getLoveStoryVO().iterator();
+		Iterator<WhenWhereVO> iteratorWW = vo.getWhenWhereVO().iterator();
+		Iterator<GalleryVO> iteratorG = vo.getGalleryVO().iterator();
+		
+		LOGGER.debug("registerInviation >>> ");
+		invitationDAO.registerInvitaiton(vo);
+		lastInsertID_vo = getLastInsertID();
+		
+		LOGGER.debug("insertMainInfo >>> ");
+		vo.getMainInfoVO().setInvSeq(lastInsertID_vo);
+		vo.getMainInfoVO().setId(vo.getInvitationVO().getId());
+		//
+		mapAttach.put("invSeq", lastInsertID_vo);
+		mapAttach.put("fullName", vo.getMainInfoVO().getFullNameMain());
+		mapAttach.put("category", "MI");
+		mapAttach.put("formCode", vo.getInvitationVO().getFormCode());
+		fileUploadService.insertFileInfo(mapAttach);
+		lastInsertID_file = getLastInsertID();
+		vo.getMainInfoVO().setSeqImgMain(lastInsertID_file);
+		//
+		mapAttach.put("invSeq",  lastInsertID_vo);
+		mapAttach.put("fullName",  vo.getMainInfoVO().getFullNameGroom());
+		mapAttach.put("category",  "MI");
+		mapAttach.put("formCode",  vo.getInvitationVO().getFormCode());
+		fileUploadService.insertFileInfo(mapAttach);
+		lastInsertID_file = getLastInsertID();
+		vo.getMainInfoVO().setSeqImgGroom(lastInsertID_file);
+		//
+		mapAttach.put("invSeq",  lastInsertID_vo);
+		mapAttach.put("fullName",  vo.getMainInfoVO().getFullNameBride());
+		mapAttach.put("category",  "MI");
+		mapAttach.put("formCode",  vo.getInvitationVO().getFormCode());
+		fileUploadService.insertFileInfo(mapAttach);
+		lastInsertID_file = getLastInsertID();
+		vo.getMainInfoVO().setSeqImgBride(lastInsertID_file);
+		//
+		invitationDAO.insertMainInfo(vo);
+		
+		LOGGER.debug("insertLoveStory >>> ");
+//		for(LoveStoryVO item : vo.getLoveStoryVO()) { 
+//			LOGGER.debug(item.toString());
+//		}
+		while(iteratorLS.hasNext()) {
+			LoveStoryVO item = iteratorLS.next();
+			mapAttach.put("invSeq", lastInsertID_vo);
+			mapAttach.put("fullName", item.getFullNameImg());
+			mapAttach.put("category", "LS");
+			mapAttach.put("formCode", vo.getInvitationVO().getFormCode());
+			fileUploadService.insertFileInfo(mapAttach);
+			lastInsertID_file = getLastInsertID();
+			item.setInvSeq(lastInsertID_vo);
+			item.setId(vo.getInvitationVO().getId());
+			item.setIsDelete(false);
+			item.setSeqImage(lastInsertID_file);
+		}
+		invitationDAO.insertLoveStory(vo);
+		
+		LOGGER.debug("insertWhenWhere >>> ");
+		while(iteratorWW.hasNext()) {
+			WhenWhereVO item = iteratorWW.next();
+			item.setInvSeq(lastInsertID_vo);
+			item.setId(vo.getInvitationVO().getId());
+		}
+		invitationDAO.insertWhenWhere(vo);
+		
+		LOGGER.debug("insertGallery");
+		while(iteratorG.hasNext()) {
+			GalleryVO item = iteratorG.next();
+			mapAttach.put("invSeq", lastInsertID_vo);
+			mapAttach.put("fullName", item.getFullName());
+			mapAttach.put("category", "G");
+			mapAttach.put("formCode", vo.getInvitationVO().getFormCode());
+			fileUploadService.insertFileInfo(mapAttach);
+			lastInsertID_file = getLastInsertID();
+			item.setInvSeq(lastInsertID_vo);
+			item.setId(vo.getInvitationVO().getId());
+			item.setIsDelete(false);
+			item.setSeqImage(lastInsertID_file);
+		}
+		invitationDAO.insertGallery(vo);
+	}
+}
+```
+
+- controller 작성
+```java
+// InvitationController.java
+
+			// ~~~
+			result.put("resMemberInfo", resMemberInfo);
+		}
+		
+		return result;
+	}
+	
+	@PostMapping(value="/registerInvitation.do", headers= {"Content-type=application/json"})
+	@ResponseBody
+	public Map<String, Object> registerInvitaiton(@RequestBody SyntheticInvitationVO vo) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		
+		LOGGER.info("registerInvitation.do");
+		try {
+			invitationService.registerInvitation(vo);
+			
+			resFlag = true;
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "청첩장 추가에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+		}
+		
+		return result;
+	}
+}
+```
+
+## 11-3+ junit 테스트 추가
+- junit 파일 작성
+	- `src/test/java/com.invitation.admin`에 `InvitationControllerTest.java` 추가
+	- `setup()`에서 테스트 하고자 하는 컨트롤러명 입력
+	- `@Test`로 실행 시 해당 테스트 함수 작동
+	- `@Ignore`로 실행 시 해당 테스트 함수 작동하지 않음
+	- 진작 이걸로 서버 테스트 할껄...ㅡㅡ^
+```java
+// InvitationControllerTest.java
+
+package com.invitation.admin;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+
+import javax.inject.Inject;
+
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.invitation.biz.invitation.GalleryVO;
+import com.invitation.biz.invitation.InvitationVO;
+import com.invitation.biz.invitation.LoveStoryVO;
+import com.invitation.biz.invitation.MainInfoVO;
+import com.invitation.biz.invitation.SyntheticInvitationVO;
+import com.invitation.biz.invitation.WhenWhereVO;
+import com.invitation.controller.invitation.InvitationController;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@ContextConfiguration(locations= {"file:src/main/resources/applicationContext.xml", 
+								"file:src/main/webapp/WEB-INF/config/servlet-config.xml"})
+public class InvitationControllerTest {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceTest.class);
+	
+	private MockMvc mock;
+	
+	@Autowired
+	InvitationController invitationController;
+	
+	@Before
+	public void setup() {
+		mock = MockMvcBuilders.standaloneSetup(invitationController).build();
+	}
+	
+//	@Test
+	@Ignore
+	public void test_getMemberInfo() throws Exception {
+//		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+//		params.add("id", "admin");
+//		params.add("password", "1234");
+		
+		mock.perform(
+				get("/invitation/getMemberInfo")
+//				.params(params)
+				.param("id", "test2"))
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(handler().handlerType(InvitationController.class))
+		.andExpect(handler().methodName("getMemberInfo"));
+	}
+	
+	@Test
+//	@Ignore
+	public void test_registerInvitaiton() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		SyntheticInvitationVO syntheticInvitationVO = new SyntheticInvitationVO();
+		InvitationVO invitationVO = new InvitationVO();
+		MainInfoVO mainInfoVO = new MainInfoVO();
+		ArrayList<LoveStoryVO> loveStoryVO = new ArrayList<>();
+		LoveStoryVO itemLoveStoryVO1 = new LoveStoryVO();
+		LoveStoryVO itemLoveStoryVO2 = new LoveStoryVO();
+		ArrayList<WhenWhereVO> whenWhereVO = new ArrayList<>();
+		WhenWhereVO itemWhenWhereVO1 = new WhenWhereVO();
+		WhenWhereVO itemWhenWhereVO2 = new WhenWhereVO();
+		ArrayList<GalleryVO> galleryVO = new ArrayList<>();
+		GalleryVO itemGalleryVO1 = new GalleryVO();
+		GalleryVO itemGalleryVO2 = new GalleryVO();
+		GalleryVO itemGalleryVO3 = new GalleryVO();
+		
+		invitationVO.setFormCode("hookup");
+		invitationVO.setId("test2");
+		invitationVO.setPeriodBegin("20200601");
+		invitationVO.setPeriodEnd("20200630");
+		invitationVO.setUseEachImage("Y");
+		invitationVO.setUseG("Y");
+		invitationVO.setUseLS("Y");
+		invitationVO.setUsePyebaek("Y");
+		invitationVO.setUseSM("Y");
+		invitationVO.setVisible("Y");
+		
+		mainInfoVO.setAddress("경기도 성남시 분당구 벌말로42번길 32, qwer (야탑동)");
+		mainInfoVO.setContentBride("신부 간단 소개");
+		mainInfoVO.setContentGroom("신랑 간단 소개");
+		mainInfoVO.setDateWedding("20200630");
+		mainInfoVO.setFullNameBride("/2020/06/07/s_23f9687c-3457-443f-ab46-a910c048fea4_sample1.jpg");
+		mainInfoVO.setFullNameGroom("/2020/06/07/s_9c352569-bc25-44ca-a96a-bd33ac23b692_sample2.jpg");
+		mainInfoVO.setFullNameMain("/2020/06/07/s_8f8601f5-e5a6-4e56-9688-baf875298d18_sample1.jpg");
+		mainInfoVO.setPlaceX("967868.67319358");
+		mainInfoVO.setPlaceY("1934771.4323645737");
+		mainInfoVO.setTimeWedding("1300");
+		mainInfoVO.setUseEachImage("Y");
+		
+		itemLoveStoryVO1.setDateStory("20200608");
+		itemLoveStoryVO1.setTitle("qq");
+		itemLoveStoryVO1.setContent("ww");
+		itemLoveStoryVO1.setFullNameImg("/2020/06/07/s_7a59626c-b8d5-4fc4-a6f4-1ccf7611504e_sample1.jpg");
+		loveStoryVO.add(itemLoveStoryVO1);
+		itemLoveStoryVO2.setDateStory("20200607");
+		itemLoveStoryVO2.setTitle("ee");
+		itemLoveStoryVO2.setContent("rr");
+		itemLoveStoryVO2.setFullNameImg("/2020/06/07/s_eec24b48-7f20-454f-befd-c85b9ba6bb1f_sample2.jpg");
+		loveStoryVO.add(itemLoveStoryVO2);
+		
+		itemWhenWhereVO1.setAddress("경기도 성남시 분당구 벌말로31번길 12, qwer (야탑동)");
+		itemWhenWhereVO1.setContent("aa");
+		itemWhenWhereVO1.setDateWedding("20200630");
+		itemWhenWhereVO1.setFlagPyebaek("N");
+		itemWhenWhereVO1.setPlaceX("967868.67319358");
+		itemWhenWhereVO1.setPlaceY("1934771.4323645737");
+		itemWhenWhereVO1.setTimeWedding("1300");
+		itemWhenWhereVO1.setTitle("tt");
+		whenWhereVO.add(itemWhenWhereVO1);
+		itemWhenWhereVO2.setAddress("경기도 성남시 분당구 벌말로31번길 12, asdf");
+		itemWhenWhereVO2.setContent("dd");
+		itemWhenWhereVO2.setDateWedding("20200618");
+		itemWhenWhereVO2.setFlagPyebaek("Y");
+		itemWhenWhereVO2.setPlaceX("917327.0029600007");
+		itemWhenWhereVO2.setPlaceY("1620377.7687504846");
+		itemWhenWhereVO2.setTimeWedding("1715");
+		itemWhenWhereVO2.setTitle("ss");
+		whenWhereVO.add(itemWhenWhereVO2);
+		
+		itemGalleryVO1.setFullName("/2020/06/07/s_41d6a37f-84d1-4587-af73-c060b421528b_sample1.jpg");
+		galleryVO.add(itemGalleryVO1);
+		itemGalleryVO2.setFullName("/2020/06/07/s_245a86b0-dd5f-40b2-a34c-d154baa1c520_sample2.jpg");
+		galleryVO.add(itemGalleryVO2);
+		itemGalleryVO3.setFullName("/2020/06/07/s_27c97681-51ef-4c01-af12-95af6bc421bc_sample1.jpg");
+		galleryVO.add(itemGalleryVO3);
+		
+		syntheticInvitationVO.setInvitationVO(invitationVO);
+		syntheticInvitationVO.setMainInfoVO(mainInfoVO);
+		syntheticInvitationVO.setLoveStoryVO(loveStoryVO);
+		syntheticInvitationVO.setWhenWhereVO(whenWhereVO);
+		syntheticInvitationVO.setGalleryVO(galleryVO);
+		
+		mock.perform(
+					post("/invitation/registerInvitation.do")
+					.content(mapper.writeValueAsString(syntheticInvitationVO))
+					.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(handler().handlerType(InvitationController.class))
+				.andExpect(handler().methodName("registerInvitaiton"));
+	}
 }
 ```

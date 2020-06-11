@@ -13,12 +13,7 @@ public class UserAdminServiceImpl implements UserAdminService {
 	private UserAdminDAOMybatis userAdminDAO;
 	
 	@Override
-	public UserAdminVO getUserInfo(String id) {
-		return userAdminDAO.getUserInfo(id);
-	}
-
-	@Override
-	public Boolean getUserInfo2(UserAdminVO user) {
+	public Boolean getUserInfo(UserAdminVO user) {
 		UserAdminVO userInfo = userAdminDAO.getUserInfo(user.getId());
 		
 		if(userInfo == null) {
