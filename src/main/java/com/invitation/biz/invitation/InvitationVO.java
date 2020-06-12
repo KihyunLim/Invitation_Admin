@@ -1,9 +1,11 @@
 package com.invitation.biz.invitation;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class InvitationVO {
 
+	private int seq;
 	private String id;
 	private String name;
 	private String visible;
@@ -18,6 +20,12 @@ public class InvitationVO {
 	private Date dateTimeRegister;
 	private Date dateTimeUpdate;
 	
+	public int getSeq() {
+		return seq;
+	}
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
 	public String getId() {
 		return id;
 	}
@@ -84,14 +92,16 @@ public class InvitationVO {
 	public void setUseSM(String useSM) {
 		this.useSM = useSM;
 	}
-	public Date getDateTimeRegister() {
-		return dateTimeRegister;
+	public String getDateTimeRegister() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return simpleDateFormat.format(dateTimeRegister);
 	}
 	public void setDateTimeRegister(Date dateTimeRegister) {
 		this.dateTimeRegister = dateTimeRegister;
 	}
-	public Date getDateTimeUpdate() {
-		return dateTimeUpdate;
+	public String getDateTimeUpdate() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return simpleDateFormat.format(dateTimeUpdate);
 	}
 	public void setDateTimeUpdate(Date dateTimeUpdate) {
 		this.dateTimeUpdate = dateTimeUpdate;
@@ -99,9 +109,9 @@ public class InvitationVO {
 	
 	@Override
 	public String toString() {
-		return "InvitationVO [id=" + id + ", name=" + name + ", visible=" + visible + ", periodBegin=" + periodBegin
-				+ ", periodEnd=" + periodEnd + ", formCode=" + formCode + ", useEachImage=" + useEachImage + ", useLS="
-				+ useLS + ", usePyebaek=" + usePyebaek + ", useG=" + useG + ", useSM=" + useSM + ", dateTimeRegister="
-				+ dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate + "]";
+		return "InvitationVO [seq=" + seq + ", id=" + id + ", name=" + name + ", visible=" + visible + ", periodBegin="
+				+ periodBegin + ", periodEnd=" + periodEnd + ", formCode=" + formCode + ", useEachImage=" + useEachImage
+				+ ", useLS=" + useLS + ", usePyebaek=" + usePyebaek + ", useG=" + useG + ", useSM=" + useSM
+				+ ", dateTimeRegister=" + dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate + "]";
 	}
 }

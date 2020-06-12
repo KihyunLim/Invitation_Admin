@@ -3,6 +3,42 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="InvitationDAO">
+	<resultMap id="resultMainInfoVO" type="mainInfoVO">
+		<result column="SEQ" property="seq" />
+		<result column="INV_SEQ" property="invSeq" />
+		<result column="ID" property="id" />
+		<result column="DATE_WEDDING" property="dateWedding" />
+		<result column="TIME_WEDDING" property="timeWedding" />
+		<result column="X_PLACE" property="placeX" />
+		<result column="Y_PLACE" property="placeY" />
+		<result column="ADDRESS" property="address" />
+		<result column="CONTENT_GROOM" property="contentGroom" />
+		<result column="CONTENT_BRIDE" property="contentBride" />
+		<result column="SEQ_IMG_MAIN" property="seqImgMain" />
+		<result column="YN_EACH_IMAGE" property="useEachImage" />
+		<result column="SEQ_IMG_GROOM" property="seqImgGroom" />
+		<result column="SEQ_IMG_BRIDE" property="seqImgBride" />
+		<result column="DATETIME_REGISTER" property="dateTimeRegister" />
+		<result column="DATETIME_UPDATE" property="dateTimeUpdate" />
+	</resultMap>
+	
+	<resultMap id="resultInvitationVO" type="invitationVO">
+		<result column="SEQ" property="seq" />
+		<result column="ID" property="id" />
+		<result column="NAME" property="name" />
+		<result column="VISIBLE" property="visible" />
+		<result column="DATE_BEGIN" property="periodBegin" />
+		<result column="DATE_END" property="periodEnd" />
+		<result column="FORMCODE" property="formCode" />
+		<result column="USE_EACH_IMAGE" property="useEachImage" />
+		<result column="USE_LS" property="useLS" />
+		<result column="USE_PYEBAEK" property="usePyebaek" />
+		<result column="USE_G" property="useG" />
+		<result column="USE_SM" property="useSM" />
+		<result column="DATETIME_REGISTER" property="dateTimeRegister" />
+		<result column="DATETIME_UPDATE" property="dateTimeUpdate" />
+	</resultMap>
+
 	<select id="getMemberInfo" resultType="memberInfo">
 		SELECT
 			ID,
@@ -186,4 +222,14 @@
 				, null
 			</foreach>
 	</insert>
+	
+	<select id="getMemberInvitation" resultMap="resultMainInfoVO">
+		SELECT 
+			*
+		FROM
+			MAIN_INFO
+		WHERE
+			ID = #{id}
+		;
+	</select>
 </mapper>

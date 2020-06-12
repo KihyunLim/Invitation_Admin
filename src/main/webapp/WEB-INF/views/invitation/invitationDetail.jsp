@@ -555,17 +555,19 @@
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
-							<div class="modal-body">
-								<div class="form-check" id="recordInvitation">
-									<input class="form-check-input" type="radio" name="radio1">
+							<div class="modal-body" id="divMemberInvitationWrap">
+								<div class="form-check" id="divRecordMemberInvitation">
 									<label class="form-check-label">
-										번호 : <span class="spanSeq">1</span>&nbsp;/&nbsp;게시일자 : <span class="spanDateWedding">2020-05-05</span>
+										<input class="form-check-input" type="radio" name="radioInvitation">
+										번호 : <span class="spanInvitationSeq"></span>
+										&nbsp;&nbsp;/&nbsp;&nbsp;
+										결혼 일자 및 일시 : <span class="spanInvitationDateWedding"></span>
 									</label>
 								</div>
 							</div>
 							<div class="modal-footer justify-content-between">
 								<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-								<button type="button" class="btn btn-primary" id="btnSelect">선택</button>
+								<button type="button" class="btn btn-primary" id="btnChoose">선택</button>
 							</div>
 						</div>
 						<!-- /.modal-content -->
@@ -595,6 +597,6 @@
 	
 	<script type="text/javascript" src="../js/util.js"></script>
 	<script type="text/javascript" src="../js/def.js"></script>
-	<script type="text/javascript" src="../js/invitation/invitationAdd.js"></script>
+	<script type="text/javascript" src="../js/invitation/invitationDetail.js"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.invitation.biz.invitation;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class GalleryVO {
@@ -49,14 +50,16 @@ public class GalleryVO {
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-	public Date getDateTimeRegister() {
-		return dateTimeRegister;
+	public String getDateTimeRegister() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return simpleDateFormat.format(dateTimeRegister);
 	}
 	public void setDateTimeRegister(Date dateTimeRegister) {
 		this.dateTimeRegister = dateTimeRegister;
 	}
-	public Date getDateTimeUpdate() {
-		return dateTimeUpdate;
+	public String getDateTimeUpdate() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return simpleDateFormat.format(dateTimeUpdate);
 	}
 	public void setDateTimeUpdate(Date dateTimeUpdate) {
 		this.dateTimeUpdate = dateTimeUpdate;

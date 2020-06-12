@@ -68,8 +68,8 @@ public class InvitationControllerTest {
 		.andExpect(handler().methodName("getMemberInfo"));
 	}
 	
-	@Test
-//	@Ignore
+//	@Test
+	@Ignore
 	public void test_registerInvitaiton() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		SyntheticInvitationVO syntheticInvitationVO = new SyntheticInvitationVO();
@@ -160,5 +160,17 @@ public class InvitationControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(handler().handlerType(InvitationController.class))
 				.andExpect(handler().methodName("registerInvitaiton"));
+	}
+	
+	@Test
+//	@Ignore
+	public void test_getMemberInvitationInfo() throws Exception {
+		mock.perform(
+				get("/invitation/getMemberInvitation.do")
+				.param("id", "test2"))
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(handler().handlerType(InvitationController.class))
+		.andExpect(handler().methodName("getMemberInvitation"));
 	}
 }

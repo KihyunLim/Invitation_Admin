@@ -1,6 +1,7 @@
 package com.invitation.controller.invitation;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.invitation.biz.common.exception.CommonException;
 import com.invitation.biz.invitation.InvitationService;
+import com.invitation.biz.invitation.MainInfoVO;
 import com.invitation.biz.invitation.MemberInfoVO;
 import com.invitation.biz.invitation.SyntheticInvitationVO;
 
@@ -105,6 +107,40 @@ public class InvitationController {
 		} finally {
 			result.put("resFlag", resFlag);
 			result.put("resMessage", resMessage);
+		}
+		
+		return result;
+	}
+	
+	@GetMapping(value="/getMemberInvitation.do")
+	@ResponseBody
+	public Map<String, Object> getMemberInvitation(@RequestParam(value="id", required=true) String id) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		Map<String, Object> resMemberInvitation = new HashMap<String, Object>();
+		
+		LOGGER.info("getMemberInvitation.do");
+		try {
+			resMemberInvitation = invitationService.getMemberInvitation(id);
+			
+			resFlag = true;
+		} catch(CommonException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "청첩장 목록 조회에 실패했습니다.";
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "청첩장 목록 조회에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("resMemberInvitation", resMemberInvitation);
 		}
 		
 		return result;

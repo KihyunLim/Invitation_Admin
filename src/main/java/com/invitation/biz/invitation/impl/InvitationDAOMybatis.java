@@ -1,11 +1,14 @@
 package com.invitation.biz.invitation.impl;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.invitation.biz.invitation.MainInfoVO;
 import com.invitation.biz.invitation.MemberInfoVO;
 import com.invitation.biz.invitation.SyntheticInvitationVO;
 
@@ -43,5 +46,9 @@ public class InvitationDAOMybatis {
 	
 	public void insertGallery(SyntheticInvitationVO syntheticInvitationVO) {
 		mybatis.insert("InvitationDAO.insertGallery", syntheticInvitationVO);
+	}
+	
+	public List<MainInfoVO> getMemberInvitation(String id) {
+		return mybatis.selectList("InvitationDAO.getMemberInvitation", id);
 	}
 }

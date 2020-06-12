@@ -5,7 +5,8 @@
 console.log("########## invitationDetail.js ##########");
 
 var $btnGetAddress = "",
-	$tableRecordLoveStory = undefined;
+	$tableRecordLoveStory = undefined,
+	$divRecordMemberInvitation = undefined;
 
 $(function(){
 	setActiveSidebar();
@@ -17,8 +18,22 @@ $(function(){
 		if(inputId == "") {
 			alert("아이디를 입력해주세요.");
 		} else {
-			getMemberInfo(inputId);
+			$("#modal-invitationList").modal("show");
 		}
+	});
+	
+	$("#modal-invitationList").on("show.bs.modal", function (e) {
+		var inputId = $("#inputId").val();
+		
+		getMemberInvitationInfo(inputId);
+	});
+	$("#modal-invitationList").on("hide.bs.modal", function (e) {
+//		modifyTargetId = "";
+//		
+//		console.log(modifyTargetId);
+//		
+//		$("#btnModify").removeData("resMemberInfo");
+//		$(".resetInput").val("");
 	});
 	
 	$("#inputDatePeriod").daterangepicker({
@@ -97,6 +112,9 @@ function setClone() {
 	$tableRecordLoveStory = $("#tableRecordLoveStory").clone();
 	$("#tableRecordLoveStory").remove();
 	$("#wrapListLS").sortable();
+	
+	$divRecordMemberInvitation = $("#divRecordMemberInvitation").clone();
+	$("divRecordMemberInvitation").remove();
 }
 
 function cloneLoveStory() {
@@ -113,6 +131,21 @@ function cloneLoveStory() {
 	resetTagId();
 }
 
+function cloneMemberInvitation(data) {
+	var $itemMemberInvitation = $divRecordMemberInvitation.clone();
+	
+	$itemMemberInvitation.find("input[name=radioInvitation]").data("invitationInfo", data);
+	$itemMemberInvitation.find(".spanInvitationSeq").text(data.invSeq);
+	$itemMemberInvitation.find(".spanInvitationDateWedding").text(
+			data.dateWedding.substr(0,4) + " - " +
+			data.dateWedding.substr(4,2) + " - " +
+			data.dateWedding.substr(6,2) + " " +
+			data.timeWedding.substr(0,2) + " : " +
+			data.timeWedding.substr(2,2));
+	
+	$("#divMemberInvitationWrap").append($itemMemberInvitation);
+}
+
 function resetTagId() {
 	var index = 1;
 	
@@ -124,20 +157,25 @@ function resetTagId() {
 	});
 }
 
-function getMemberInfo(id) {
+function getMemberInvitationInfo(id) {
 	$("#inputId").removeData("id");
 	$("#inputName").val("");
 	
 	$.ajax({
-		url : "/admin/invitation/getMemberInfo?" + $.param({id : id}),
+		url : "/admin/invitation/getMemberInvitation.do?" + $.param({id : id}),
 		type : "GET",
 		error : function(xhr, status, msg) {
 			alert("status : ", status, "\nHttp error msg : ", msg);
 		},
 		success : function(result) {
 			if(result.resFlag) {
-				$("#inputId").data("id", result.resMemberInfo.id);
-				$("#inputName").val(result.resMemberInfo.name);
+				$("#inputId").data("id", result.resMemberInvitation.memberInfo.id);
+				$("#inputName").val(result.resMemberInvitation.memberInfo.name);
+				$("#divMemberInvitationWrap").empty();
+				
+				for(var i = 0 ; i < result.resMemberInvitation.memberInvitationList.length ; i++) {
+					cloneMemberInvitation(result.resMemberInvitation.memberInvitationList[i]);
+				}
 			} else {
 				alert(result.resMessage);
 			}

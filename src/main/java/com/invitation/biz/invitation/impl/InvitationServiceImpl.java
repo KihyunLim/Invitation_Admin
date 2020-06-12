@@ -2,6 +2,7 @@ package com.invitation.biz.invitation.impl;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import com.invitation.biz.common.fileUpload.FileUploadService;
 import com.invitation.biz.invitation.GalleryVO;
 import com.invitation.biz.invitation.InvitationService;
 import com.invitation.biz.invitation.LoveStoryVO;
+import com.invitation.biz.invitation.MainInfoVO;
 import com.invitation.biz.invitation.MemberInfoVO;
 import com.invitation.biz.invitation.SyntheticInvitationVO;
 import com.invitation.biz.invitation.WhenWhereVO;
@@ -133,5 +135,18 @@ public class InvitationServiceImpl implements InvitationService {
 			item.setSeqImage(lastInsertID_file);
 		}
 		invitationDAO.insertGallery(vo);
+	}
+
+	@Override
+//	public List<MainInfoVO> getMemberInvitation(String id) throws Exception {
+	public Map<String, Object> getMemberInvitation(String id) throws Exception {
+		Map<String, Object> memberInvitationInfo = new HashMap<>();
+		MemberInfoVO memberInfo = getMemberInfo(id);
+		List<MainInfoVO> invitationList = invitationDAO.getMemberInvitation(memberInfo.getId());
+		
+		memberInvitationInfo.put("memberInfo", memberInfo);
+		memberInvitationInfo.put("memberInvitationList", invitationList);
+		
+		return memberInvitationInfo;
 	}
 }

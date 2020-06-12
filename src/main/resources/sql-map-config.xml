@@ -9,6 +9,12 @@
 		<typeAlias alias="userMemberList" type="com.invitation.biz.member.user.UserMemberListVO"></typeAlias> 
 		<typeAlias alias="userMemberInfo" type="com.invitation.biz.member.user.UserMemberInfoVO"></typeAlias> 
 		<typeAlias alias="memberInfo" type="com.invitation.biz.invitation.MemberInfoVO"></typeAlias> 
+		<typeAlias alias="invitationVO" type="com.invitation.biz.invitation.InvitationVO"></typeAlias> 
+		<typeAlias alias="mainInfoVO" type="com.invitation.biz.invitation.MainInfoVO"></typeAlias> 
+		<typeAlias alias="loveStoryVO" type="com.invitation.biz.invitation.LoveStoryVO"></typeAlias> 
+		<typeAlias alias="whenWhereVO" type="com.invitation.biz.invitation.WhenWhereVO"></typeAlias> 
+		<typeAlias alias="galleryVO" type="com.invitation.biz.invitation.GalleryVO"></typeAlias> 
+		<typeAlias alias="sweetMessageVO" type="com.invitation.biz.invitation.SweetMessageVO"></typeAlias> 
 	</typeAliases>
 	
 	<mappers>
