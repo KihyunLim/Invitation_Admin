@@ -28,12 +28,12 @@ $(function(){
 		getMemberInvitationInfo(inputId);
 	});
 	$("#modal-invitationList").on("hide.bs.modal", function (e) {
-//		modifyTargetId = "";
-//		
-//		console.log(modifyTargetId);
-//		
-//		$("#btnModify").removeData("resMemberInfo");
-//		$(".resetInput").val("");
+	});
+	
+	$("#btnChoose").on("click", function(){
+		var invSeq = $("input[name=radioInvitation]:checked").data("invSeq");
+		
+		getSyntheticInvitation(invSeq);
 	});
 	
 	$("#inputDatePeriod").daterangepicker({
@@ -134,7 +134,7 @@ function cloneLoveStory() {
 function cloneMemberInvitation(data) {
 	var $itemMemberInvitation = $divRecordMemberInvitation.clone();
 	
-	$itemMemberInvitation.find("input[name=radioInvitation]").data("invitationInfo", data);
+	$itemMemberInvitation.find("input[name=radioInvitation]").data("invSeq", data.invSeq);
 	$itemMemberInvitation.find(".spanInvitationSeq").text(data.invSeq);
 	$itemMemberInvitation.find(".spanInvitationDateWedding").text(
 			data.dateWedding.substr(0,4) + " - " +
@@ -165,7 +165,7 @@ function getMemberInvitationInfo(id) {
 		url : "/admin/invitation/getMemberInvitation.do?" + $.param({id : id}),
 		type : "GET",
 		error : function(xhr, status, msg) {
-			alert("status : ", status, "\nHttp error msg : ", msg);
+			alert("status : " + status + "\nHttp error msg : " + msg);
 		},
 		success : function(result) {
 			if(result.resFlag) {
@@ -199,4 +199,21 @@ function jusoCallBack(...res) {
 			placeY : res[26]
 		});
 	}
+}
+
+function getSyntheticInvitation(invSeq) {
+	$.ajax({
+		url : "/admin/invitation/getSyntheticInvitation.do?" + $.param({invSeq : invSeq}),
+		type : "GET",
+		error :function(xhr, status, msg) {
+			alert("status : " + satus + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			if(result.resFlag) {
+				console.log(result);
+			} else {
+				alert(result.resMessage);
+			}
+		}
+	});
 }

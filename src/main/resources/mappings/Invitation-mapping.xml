@@ -3,6 +3,23 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="InvitationDAO">
+	<resultMap id="resultInvitationVO" type="invitationVO">
+		<result column="SEQ" property="seq" />
+		<result column="ID" property="id" />
+		<result column="NAME" property="name" />
+		<result column="VISIBLE" property="visible" />
+		<result column="DATE_BEGIN" property="periodBegin" />
+		<result column="DATE_END" property="periodEnd" />
+		<result column="FORMCODE" property="formCode" />
+		<result column="USE_EACH_IMAGE" property="useEachImage" />
+		<result column="USE_LS" property="useLS" />
+		<result column="USE_PYEBAEK" property="usePyebaek" />
+		<result column="USE_G" property="useG" />
+		<result column="USE_SM" property="useSM" />
+		<result column="DATETIME_REGISTER" property="dateTimeRegister" />
+		<result column="DATETIME_UPDATE" property="dateTimeUpdate" />
+	</resultMap>
+	
 	<resultMap id="resultMainInfoVO" type="mainInfoVO">
 		<result column="SEQ" property="seq" />
 		<result column="INV_SEQ" property="invSeq" />
@@ -22,23 +39,57 @@
 		<result column="DATETIME_UPDATE" property="dateTimeUpdate" />
 	</resultMap>
 	
-	<resultMap id="resultInvitationVO" type="invitationVO">
+	<resultMap id="resultLoveStoryVO" type="loveStoryVO">
 		<result column="SEQ" property="seq" />
+		<result column="INV_SEQ" property="invSeq" />
 		<result column="ID" property="id" />
-		<result column="NAME" property="name" />
-		<result column="VISIBLE" property="visible" />
-		<result column="DATE_BEGIN" property="periodBegin" />
-		<result column="DATE_END" property="periodEnd" />
-		<result column="FORMCODE" property="formCode" />
-		<result column="USE_EACH_IMAGE" property="useEachImage" />
-		<result column="USE_LS" property="useLS" />
-		<result column="USE_PYEBAEK" property="usePyebaek" />
-		<result column="USE_G" property="useG" />
-		<result column="USE_SM" property="useSM" />
+		<result column="IS_DELETE" property="isDelete" />
+		<result column="DATE_STORY" property="dateStory" />
+		<result column="TITLE" property="title" />
+		<result column="CONTENT" property="content" />
+		<result column="SEQ_IMAGE" property="seqImage" />
 		<result column="DATETIME_REGISTER" property="dateTimeRegister" />
 		<result column="DATETIME_UPDATE" property="dateTimeUpdate" />
 	</resultMap>
-
+	
+	<resultMap id="resultWhenWhereVO" type="whenWhereVO">
+		<result column="SEQ" property="seq" />
+		<result column="INV_SEQ" property="invSeq" />
+		<result column="ID" property="id" />
+		<result column="FLAG_PYEBAEK" property="flagPyebaek" />
+		<result column="DATE_WW" property="dateWedding" />
+		<result column="TIME_WW" property="timeWedding" />
+		<result column="X_PLACE" property="placeX" />
+		<result column="Y_PLACE" property="placeY" />
+		<result column="ADDRESS" property="address" />
+		<result column="TITLE" property="title" />
+		<result column="CONTENT" property="content" />
+		<result column="DATETIME_REGISTER" property="dateTimeRegister" />
+		<result column="DATETIME_UPDATE" property="dateTimeUpdate" />
+	</resultMap>
+	
+	<resultMap id="resultGalleryVO" type="galleryVO">
+		<result column="SEQ" property="seq" />
+		<result column="INV_SEQ" property="invSeq" />
+		<result column="ID" property="id" />
+		<result column="IS_DELETE" property="isDelete" />
+		<result column="SEQ_IMAGE" property="seqImage" />
+		<result column="DATETIME_REGISTER" property="dateTimeRegister" />
+		<result column="DATETIME_UPDATE" property="dateTimeUpdate" />
+	</resultMap>
+	
+	<resultMap id="resultSweetMessageVO" type="sweetMessageVO">
+		<result column="SEQ" property="seq" />
+		<result column="INV_SEQ" property="invSeq" />
+		<result column="ID" property="id" />
+		<result column="IS_DELETE" property="isDelete" />
+		<result column="REGISTER_NAME" property="registerName" />
+		<result column="REGISTER_CONTENT" property="registerContent" />
+		<result column="REGISTER_PASSWORD" property="registerPassword" />
+		<result column="DATETIME_REGISER" property="dateTimeRegister" />
+		<result column="DATETIME_UPDATE" property="dateTimeUpdate" />
+	</resultMap>
+	
 	<select id="getMemberInfo" resultType="memberInfo">
 		SELECT
 			ID,
@@ -230,6 +281,68 @@
 			MAIN_INFO
 		WHERE
 			ID = #{id}
+		;
+	</select>
+	
+	<select id="selectInvitation" resultMap="resultInvitationVO">
+		SELECT
+			*
+		FROM
+			INVITATION_LIST
+		WHERE
+			SEQ = #{invSeq}
+		;
+	</select>
+	
+	<select id="selectMainInfo" resultMap="resultMainInfoVO">
+		SELECT
+			*
+		FROM
+			MAIN_INFO
+		WHERE
+			INV_SEQ = #{invSeq}
+		;
+	</select>
+	
+	<select id="selectLoveStory" resultMap="resultLoveStoryVO">
+		SELECT
+			*
+		FROM
+			LOVE_STORY
+		WHERE
+			IS_DELETE = FALSE
+			AND INV_SEQ = #{invSeq}
+		;
+	</select>
+	
+	<select id="selectWhenWhere" resultMap="resultWhenWhereVO">
+		SELECT
+			*
+		FROM
+			wHEN_WHERE
+		WHERE
+			INV_SEQ = #{invSeq}
+		;
+	</select>
+	
+	<select id="selectGallery" resultMap="resultGalleryVO">
+		SELECT
+			*
+		FROM
+			GALLERY
+		WHERE
+			IS_DELETE = FALSE
+			AND INV_SEQ = #{invSeq}
+		;
+	</select>
+	
+	<select id="selectSweetMessage" resultMap="resultSweetMessageVO">
+		SELECT
+			*
+		FROM
+			SWEET_MESSAGE
+		WHERE
+			INV_SEQ = #{invSeq}
 		;
 	</select>
 </mapper>

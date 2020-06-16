@@ -145,4 +145,28 @@ public class InvitationController {
 		
 		return result;
 	}
+	
+	@GetMapping(value="/getSyntheticInvitation.do")
+	@ResponseBody
+	public Map<String, Object> getSyntheticInvitation(@RequestParam(value="invSeq", required=true) String invSeq) {
+		Map<String, Object>	result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		
+		LOGGER.info("getSyntheTicInvitation.do");
+		try {
+			
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "청첩장 상세 조회에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+		}
+		
+		return result;
+	}
 }
