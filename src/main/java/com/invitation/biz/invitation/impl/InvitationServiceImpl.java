@@ -138,7 +138,6 @@ public class InvitationServiceImpl implements InvitationService {
 	}
 
 	@Override
-//	public List<MainInfoVO> getMemberInvitation(String id) throws Exception {
 	public Map<String, Object> getMemberInvitation(String id) throws Exception {
 		Map<String, Object> memberInvitationInfo = new HashMap<>();
 		MemberInfoVO memberInfo = getMemberInfo(id);
@@ -148,5 +147,10 @@ public class InvitationServiceImpl implements InvitationService {
 		memberInvitationInfo.put("memberInvitationList", invitationList);
 		
 		return memberInvitationInfo;
+	}
+
+	@Override
+	public SyntheticInvitationVO getSyntheticInvitation(String invSeq) {
+		return invitationDAO.getSyntheticInvitation(invSeq);
 	}
 }

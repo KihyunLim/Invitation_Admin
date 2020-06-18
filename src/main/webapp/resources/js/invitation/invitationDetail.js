@@ -50,6 +50,12 @@ $(function(){
 			format : "YYYY-MM-DD HH:mm"
 		}
 	});
+	$(".inputDateTime").on("show.daterangepicker", function(){
+		var timeWedding = $(this).val().split(" ");
+		
+		$(".daterangepicker[style*='display: block'").find(".hourselect").val((timeWedding.split(":"))[0]);
+		$(".daterangepicker[style*='display: block'").find(".minuteselect").val((timeWedding.split(":"))[1]);
+	});
 	$(".inputDateTime").on("apply.daterangepicker", function(){
 		var $this = $(this);
 		
@@ -98,7 +104,7 @@ $(function(){
 	});
 	
 	$("#btnAddLS").on("click", function(){
-		cloneLoveStory();
+		cloneLoveStory(false);
 	});
 	
 	$("#wrapListLS").on("click", ".btnRemoveLS", function(){
@@ -117,7 +123,7 @@ function setClone() {
 	$("divRecordMemberInvitation").remove();
 }
 
-function cloneLoveStory() {
+function cloneLoveStory(isSet, data) {
 	var $itemLoveStory = $tableRecordLoveStory.clone();
 	
 	$itemLoveStory.find(".inputDateLoveStory").daterangepicker({
@@ -126,6 +132,22 @@ function cloneLoveStory() {
 			format : "YYYY-MM-DD"
 		}
 	});
+	
+	if(isSet) {
+		var fileInfo = setFileInfo(data.fullNameImg),
+			$btnUploadFile = $$itemLoveStory.find(".btnUploadFile");
+		$btnUploadFile.prev().hide();
+		$btnUploadFile.hide()
+				.parents(".wrapUploadFile")
+					.find("a").attr("href", fileInfo.originalFileUrl).data("title", fileInfo.originalFileName)
+					.find("img").attr("src", fileInfo.imgSrc).data("fullName", fileInfo.fullName).data("seqImage", data.seqImage);
+		$img.next().show();
+		
+		$itemLoveStory.find(".inputDateLoveStory").data("daterangepicker").setStartDate(data.dateStory);
+		$itemLoveStory.find(".inputTitleLS").data("daterangepicker").setStartDate(data.title);
+		$itemLoveStory.find(".inputContentLS").data("daterangepicker").setStartDate(data.content);
+	}
+	
 	$("#wrapListLS").append($itemLoveStory);
 	
 	resetTagId();
@@ -209,11 +231,103 @@ function getSyntheticInvitation(invSeq) {
 			alert("status : " + satus + "\nHttp error msg : " + msg);
 		},
 		success : function(result) {
+			console.log(result);
+			
 			if(result.resFlag) {
-				console.log(result);
+				renderSyntheticInvitation(result.resSyntheticInvitation);
 			} else {
 				alert(result.resMessage);
 			}
 		}
 	});
+}
+
+function renderSyntheticInvitation(data) {
+	$("#inputId").data("id", data.invitationVO.id);
+	$("#inputName").val(data.invitationVO.name);
+	$("#inputDatePeriod").data("daterangepicker").setStartDate(data.invitationVO.periodBegin);
+	$("#inputDatePeriod").data("daterangepicker").setEndDate(data.invitationVO.periodEnd);
+	$("input[name=checkboxVisibleYN]").prop("checked", data.invitationVO.visible == "Y" ? true : false);
+	
+	var dateTimeWedding1 = data.mainInfoVO.dateWedding.substr(0,4)
+									+ "-" + data.mainInfoVO.dateWedding.substr(4,2)
+									+ "-" + data.mainInfoVO.dateWedding.substr(6,2)
+									+ " " + data.mainInfoVO.timeWedding.substr(0,2)
+									+ ":" + data.mainInfoVO.timeWedding.substr(2,2);
+	$("#inputDateTimeWedding").data("daterangepicker").setStartDate(data.mainInfoVO.dateWedding);
+	$("#inputDateTimeWedding").val(dateTimeWedding1);
+	$(".inputAddrWeddingPlace").val(data.mainInfoVO.address);
+	$("#infoWeddingPlace").data("infoWeddingPlace", {
+		addr : data.mainInfoVO.address,
+		placeX : data.mainInfoVO.placeX,
+		placeY : data.mainInfoVO.placeY
+	});
+	$("#contentGroom").val(data.mainInfoVO.contentGroom);
+	$("#contentBride").val(data.mainInfoVO.contentBride);
+	var fileInfo1 = setFileInfo(data.mainInfoVO.fullNameMain),
+		$imgHGB1 = $("#imgHGB1");
+	$imgHGB1.prev().hide();
+	$imgHGB1.hide()
+			.parents(".wrapUploadFile")
+				.find("a").attr("href", fileInfo1.originalFileUrl).data("title", fileInfo1.originalFileName)
+				.find("img").attr("src", fileInfo1.imgSrc).data("fullName", fileInfo1.fullName).data("seqImage", data.mainInfoVO.seqImgMain);
+	$imgHGB1.next().show();
+	$("input[name=checkboxEachImgYN]").prop("checked", data.mainInfoVO.useEachImage == "Y" ? true : false);
+	var fileInfo2 = setFileInfo(data.mainInfoVO.fullNameGroom),
+		$imgHGB2 = $("#imgHGB2");
+	$imgHGB2.prev().hide();
+	$imgHGB2.hide()
+			.parents(".wrapUploadFile")
+				.find("a").attr("href", fileInfo2.originalFileUrl).data("title", fileInfo2.originalFileName)
+				.find("img").attr("src", fileInfo2.imgSrc).data("fullName", fileInfo2.fullName).data("seqImage", data.mainInfoVO.seqImgGroom);
+	$imgHGB2.next().show();
+	var fileInfo3 = setFileInfo(data.mainInfoVO.fullNameBride),
+		$imgHGB3 = $("#imgHGB3");
+	$imgHGB3.prev().hide();
+	$imgHGB3.hide()
+			.parents(".wrapUploadFile")
+				.find("a").attr("href", fileInfo3.originalFileUrl).data("title", fileInfo3.originalFileName)
+				.find("img").attr("src", fileInfo3.imgSrc).data("fullName", fileInfo3.fullName).data("seqImage", data.mainInfoVO.seqImgBride);
+	$imgHGB3.next().show();
+	
+	$("input[name=checkboxUseLSYN]").prop("checked", data.invitationVO.useLS == "Y" ? true : false);
+	data.loveStoryVO.forEach(function(item){
+		cloneLoveStory(true, item);
+	});
+	
+	$("#inputDateTimeWedding_copy").val(dateTimeWedding1);
+	$("#inputTitleWeddingWW").val(data.whenWhereVO[0].title);
+	$("#inputContentWeddingWW").val(data.whenWhereVO[0].content);
+	if(data.invitationVO.usePyebaek == "Y") {
+		$("input[name=checkboxUseLSYN]").prop("checked", true);
+		var dateTimeWedding2 = data.whenWhereVO[1].dateWedding.substr(0,4)
+											+ "-" + data.whenWhereVO[1].dateWedding.substr(4,2)
+											+ "-" + data.whenWhereVO[1].dateWedding.substr(6,2)
+											+ " " + data.whenWhereVO[1].timeWedding.substr(0,2)
+											+ ":" + data.whenWhereVO[1].timeWedding.substr(2,2);
+		$("#inputDatePyebaek").data("daterangepicker").setStartDate(data.whenWhereVO[1].dateWedding);
+		$("#inputDatePyebaek").val(dateTimeWedding2);
+		$("#inputAddrPyebaek").val(data.whenWhereVO[1].address);
+		$("#inputAddrPyebaek").data("infoPyebaek", {
+			addr : data.whenWhereVO[1].address,
+			placeX : data.whenWhereVO[1].placeX,
+			placeY : data.whenWhereVO[1].placeY
+		});
+		$("#inputTitlePyebaekWW").val(data.whenWhereVO[1].title);
+		$("#inputContentPyebaekWW").val(data.whenWhereVO[1].content);
+	}
+	
+	$("input[name=checkboxUseG]").prop("checked", data.invitationVO.useG == "Y" ? true : false);
+	data.galleryVO.forEach(function(item, index){
+		var fileInfo4 = setFileInfo(item.fullName),
+			$btnUploadFile = $("#wrapUploadFile").find(".btnUploadFile:eq(" + index + ")");
+		$btnUploadFile.prev().hide();
+		$btnUploadFile.hide()
+				.parents(".wrapUploadFile")
+					.find("a").attr("href", fileInfo4.originalFileUrl).data("title", fileInfo4.originalFileName)
+					.find("img").attr("src", fileInfo4.imgSrc).data("fullName", fileInfo4.fullName).data("seqImage", item.seq);
+		$btnUploadFile.next().show();
+	});
+	
+	
 }

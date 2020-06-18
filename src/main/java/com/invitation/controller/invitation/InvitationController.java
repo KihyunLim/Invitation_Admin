@@ -152,10 +152,13 @@ public class InvitationController {
 		Map<String, Object>	result = new HashMap<String, Object>();
 		Boolean resFlag = false;
 		String resMessage = "";
+		SyntheticInvitationVO resSyntheticInvitation = null;
 		
 		LOGGER.info("getSyntheTicInvitation.do");
 		try {
+			resSyntheticInvitation = invitationService.getSyntheticInvitation(invSeq);
 			
+			resFlag = true;
 		} catch(Exception e) {
 			LOGGER.error("error message : " + e.getMessage());
 			LOGGER.error("error trace : ", e);
@@ -165,6 +168,7 @@ public class InvitationController {
 		} finally {
 			result.put("resFlag", resFlag);
 			result.put("resMessage", resMessage);
+			result.put("resSyntheticInvitation", resSyntheticInvitation);
 		}
 		
 		return result;

@@ -32,9 +32,12 @@
 		<result column="CONTENT_GROOM" property="contentGroom" />
 		<result column="CONTENT_BRIDE" property="contentBride" />
 		<result column="SEQ_IMG_MAIN" property="seqImgMain" />
+		<result column="FULLNAME_IMG_MAIN" property="fullNameMain" />
 		<result column="YN_EACH_IMAGE" property="useEachImage" />
 		<result column="SEQ_IMG_GROOM" property="seqImgGroom" />
+		<result column="FULLNAME_IMG_GROOM" property="fullNameGroom" />
 		<result column="SEQ_IMG_BRIDE" property="seqImgBride" />
+		<result column="FULLNAME_IMG_BRIDE" property="fullNameBride" />
 		<result column="DATETIME_REGISTER" property="dateTimeRegister" />
 		<result column="DATETIME_UPDATE" property="dateTimeUpdate" />
 	</resultMap>
@@ -48,6 +51,7 @@
 		<result column="TITLE" property="title" />
 		<result column="CONTENT" property="content" />
 		<result column="SEQ_IMAGE" property="seqImage" />
+		<result column="FULLNAME_IMAGE" property="fullNameImg" />
 		<result column="DATETIME_REGISTER" property="dateTimeRegister" />
 		<result column="DATETIME_UPDATE" property="dateTimeUpdate" />
 	</resultMap>
@@ -74,6 +78,7 @@
 		<result column="ID" property="id" />
 		<result column="IS_DELETE" property="isDelete" />
 		<result column="SEQ_IMAGE" property="seqImage" />
+		<result column="FULLNAME_IMAGE" property="fullName" />
 		<result column="DATETIME_REGISTER" property="dateTimeRegister" />
 		<result column="DATETIME_UPDATE" property="dateTimeUpdate" />
 	</resultMap>
@@ -296,9 +301,27 @@
 	
 	<select id="selectMainInfo" resultMap="resultMainInfoVO">
 		SELECT
-			*
+			SEQ
+			, INV_SEQ
+			, ID
+			, DATE_WEDDING
+			, TIME_WEDDING
+			, X_PLACE
+			, Y_PLACE
+			, ADDRESS
+			, CONTENT_GROOM
+			, CONTENT_BRIDE
+			, SEQ_IMG_MAIN
+			, (SELECT FULLNAME FROM ATTACH WHERE SEQ = MI.SEQ_IMG_MAIN) FULLNAME_IMG_MAIN
+			, YN_EACH_IMAGE
+			, SEQ_IMG_GROOM
+			, (SELECT FULLNAME FROM ATTACH WHERE SEQ = MI.SEQ_IMG_GROOM) FULLNAME_IMG_GROOM
+			, SEQ_IMG_BRIDE
+			, (SELECT FULLNAME FROM ATTACH WHERE SEQ = MI.SEQ_IMG_BRIDE) FULLNAME_IMG_BRIDE
+			, DATETIME_REGISTER
+			, DATETIME_UPDATE
 		FROM
-			MAIN_INFO
+			MAIN_INFO MI
 		WHERE
 			INV_SEQ = #{invSeq}
 		;
@@ -306,9 +329,19 @@
 	
 	<select id="selectLoveStory" resultMap="resultLoveStoryVO">
 		SELECT
-			*
+			SEQ
+			, INV_SEQ
+			, ID
+			, IS_DELETE
+			, DATE_STORY
+			, TITLE
+			, CONTENT
+			, SEQ_IMAGE
+			, (SELECT FULLNAME FROM ATTACH WHERE SEQ = LS.SEQ_IMAGE) FULLNAME_IMAGE
+			, DATETIME_REGISTER
+			, DATETIME_UPDATE
 		FROM
-			LOVE_STORY
+			LOVE_STORY LS
 		WHERE
 			IS_DELETE = FALSE
 			AND INV_SEQ = #{invSeq}
@@ -327,9 +360,16 @@
 	
 	<select id="selectGallery" resultMap="resultGalleryVO">
 		SELECT
-			*
+			SEQ
+			, INV_SEQ
+			, ID
+			, IS_DELETE
+			, SEQ_IMAGE
+			, (SELECT FULLNAME FROM ATTACH WHERE SEQ = G.SEQ_IMAGE) FULLNAME_IMAGE
+			, DATETIME_REGISTER
+			, DATETIME_UPDATE
 		FROM
-			GALLERY
+			GALLERY G
 		WHERE
 			IS_DELETE = FALSE
 			AND INV_SEQ = #{invSeq}

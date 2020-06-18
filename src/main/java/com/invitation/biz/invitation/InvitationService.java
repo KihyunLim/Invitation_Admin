@@ -1,6 +1,5 @@
 package com.invitation.biz.invitation;
 
-import java.util.List;
 import java.util.Map;
 
 public interface InvitationService {
@@ -11,6 +10,7 @@ public interface InvitationService {
 	
 	void registerInvitation(SyntheticInvitationVO syntheticInvitationVO);
 	
-//	List<MainInfoVO> getMemberInvitation(String id) throws Exception;
 	Map<String, Object> getMemberInvitation(String id) throws Exception;
+	
+	SyntheticInvitationVO getSyntheticInvitation(String invSeq);
 }

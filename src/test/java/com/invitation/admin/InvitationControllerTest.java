@@ -162,8 +162,8 @@ public class InvitationControllerTest {
 				.andExpect(handler().methodName("registerInvitaiton"));
 	}
 	
-	@Test
-//	@Ignore
+//	@Test
+	@Ignore
 	public void test_getMemberInvitationInfo() throws Exception {
 		mock.perform(
 				get("/invitation/getMemberInvitation.do")
@@ -172,5 +172,17 @@ public class InvitationControllerTest {
 		.andExpect(status().isOk())
 		.andExpect(handler().handlerType(InvitationController.class))
 		.andExpect(handler().methodName("getMemberInvitation"));
+	}
+	
+	@Test
+//	@Ignore
+	public void test_getSyntheticInvitation() throws Exception {
+		mock.perform(
+				get("/invitation/getSyntheticInvitation.do")
+				.param("invSeq", "2"))
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(handler().handlerType(InvitationController.class))
+		.andExpect(handler().methodName("getSyntheticInvitation"));
 	}
 }
