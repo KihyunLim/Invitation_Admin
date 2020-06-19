@@ -33,7 +33,9 @@ $(function(){
 	$("#btnChoose").on("click", function(){
 		var invSeq = $("input[name=radioInvitation]:checked").data("invSeq");
 		
-		getSyntheticInvitation(invSeq);
+		if(invSeq != undefined && invSeq != "") {
+			getSyntheticInvitation(invSeq);
+		}
 	});
 	
 	$("#inputDatePeriod").daterangepicker({
@@ -51,10 +53,13 @@ $(function(){
 		}
 	});
 	$(".inputDateTime").on("show.daterangepicker", function(){
-		var timeWedding = $(this).val().split(" ");
+		var timeWedding = ($(this).val().split(" "))[1],
+			timeHour = String(Number((timeWedding.split(":"))[0])),
+			timeMinute = String(Number((timeWedding.split(":"))[1])),
+			$daterangepicker = $(".daterangepicker[style*='display: block'");
 		
-		$(".daterangepicker[style*='display: block'").find(".hourselect").val((timeWedding.split(":"))[0]);
-		$(".daterangepicker[style*='display: block'").find(".minuteselect").val((timeWedding.split(":"))[1]);
+		$daterangepicker.find(".hourselect").val(timeHour);
+		$daterangepicker.find(".minuteselect").val(timeMinute);
 	});
 	$(".inputDateTime").on("apply.daterangepicker", function(){
 		var $this = $(this);
@@ -93,7 +98,7 @@ $(function(){
 		}
 	});
 	
-	$(".btnDeleteImage").on("click", function(){
+	$("#sectionContent").on("click", ".btnDeleteImage", function(){
 		var $wrapUploadFile = $(this).parents(".wrapUploadFile");
 		
 		$wrapUploadFile.find("a").attr("href", "").removeData("title", "")
@@ -135,17 +140,18 @@ function cloneLoveStory(isSet, data) {
 	
 	if(isSet) {
 		var fileInfo = setFileInfo(data.fullNameImg),
-			$btnUploadFile = $$itemLoveStory.find(".btnUploadFile");
+			$btnUploadFile = $itemLoveStory.find(".btnUploadFile");
 		$btnUploadFile.prev().hide();
 		$btnUploadFile.hide()
 				.parents(".wrapUploadFile")
 					.find("a").attr("href", fileInfo.originalFileUrl).data("title", fileInfo.originalFileName)
 					.find("img").attr("src", fileInfo.imgSrc).data("fullName", fileInfo.fullName).data("seqImage", data.seqImage);
-		$img.next().show();
+		$btnUploadFile.next().show();
 		
 		$itemLoveStory.find(".inputDateLoveStory").data("daterangepicker").setStartDate(data.dateStory);
-		$itemLoveStory.find(".inputTitleLS").data("daterangepicker").setStartDate(data.title);
-		$itemLoveStory.find(".inputContentLS").data("daterangepicker").setStartDate(data.content);
+		$itemLoveStory.find(".inputDateLoveStory").data("daterangepicker").setEndDate(data.dateStory);
+		$itemLoveStory.find(".inputTitleLS").val(data.title);
+		$itemLoveStory.find(".inputContentLS").val(data.content);
 	}
 	
 	$("#wrapListLS").append($itemLoveStory);
@@ -235,8 +241,10 @@ function getSyntheticInvitation(invSeq) {
 			
 			if(result.resFlag) {
 				renderSyntheticInvitation(result.resSyntheticInvitation);
+				$("#modal-invitationList").modal("hide");
 			} else {
 				alert(result.resMessage);
+				$("#modal-invitationList").modal("hide");
 			}
 		}
 	});
@@ -247,7 +255,7 @@ function renderSyntheticInvitation(data) {
 	$("#inputName").val(data.invitationVO.name);
 	$("#inputDatePeriod").data("daterangepicker").setStartDate(data.invitationVO.periodBegin);
 	$("#inputDatePeriod").data("daterangepicker").setEndDate(data.invitationVO.periodEnd);
-	$("input[name=checkboxVisibleYN]").prop("checked", data.invitationVO.visible == "Y" ? true : false);
+	$("input[name=checkboxVisibleYN]").prop("checked", data.invitationVO.visible == "Y" ? false : true);
 	
 	var dateTimeWedding1 = data.mainInfoVO.dateWedding.substr(0,4)
 									+ "-" + data.mainInfoVO.dateWedding.substr(4,2)
@@ -255,6 +263,7 @@ function renderSyntheticInvitation(data) {
 									+ " " + data.mainInfoVO.timeWedding.substr(0,2)
 									+ ":" + data.mainInfoVO.timeWedding.substr(2,2);
 	$("#inputDateTimeWedding").data("daterangepicker").setStartDate(data.mainInfoVO.dateWedding);
+	$("#inputDateTimeWedding").data("daterangepicker").setEndDate(data.mainInfoVO.dateWedding);
 	$("#inputDateTimeWedding").val(dateTimeWedding1);
 	$(".inputAddrWeddingPlace").val(data.mainInfoVO.address);
 	$("#infoWeddingPlace").data("infoWeddingPlace", {
@@ -299,13 +308,14 @@ function renderSyntheticInvitation(data) {
 	$("#inputTitleWeddingWW").val(data.whenWhereVO[0].title);
 	$("#inputContentWeddingWW").val(data.whenWhereVO[0].content);
 	if(data.invitationVO.usePyebaek == "Y") {
-		$("input[name=checkboxUseLSYN]").prop("checked", true);
+		$("input[name=checkboxDoPyebaek]").prop("checked", true);
 		var dateTimeWedding2 = data.whenWhereVO[1].dateWedding.substr(0,4)
 											+ "-" + data.whenWhereVO[1].dateWedding.substr(4,2)
 											+ "-" + data.whenWhereVO[1].dateWedding.substr(6,2)
 											+ " " + data.whenWhereVO[1].timeWedding.substr(0,2)
 											+ ":" + data.whenWhereVO[1].timeWedding.substr(2,2);
 		$("#inputDatePyebaek").data("daterangepicker").setStartDate(data.whenWhereVO[1].dateWedding);
+		$("#inputDatePyebaek").data("daterangepicker").setEndDate(data.whenWhereVO[1].dateWedding);
 		$("#inputDatePyebaek").val(dateTimeWedding2);
 		$("#inputAddrPyebaek").val(data.whenWhereVO[1].address);
 		$("#inputAddrPyebaek").data("infoPyebaek", {
@@ -320,7 +330,7 @@ function renderSyntheticInvitation(data) {
 	$("input[name=checkboxUseG]").prop("checked", data.invitationVO.useG == "Y" ? true : false);
 	data.galleryVO.forEach(function(item, index){
 		var fileInfo4 = setFileInfo(item.fullName),
-			$btnUploadFile = $("#wrapUploadFile").find(".btnUploadFile:eq(" + index + ")");
+			$btnUploadFile = $("#tableGallery").find(".btnUploadFile:eq(" + index + ")");
 		$btnUploadFile.prev().hide();
 		$btnUploadFile.hide()
 				.parents(".wrapUploadFile")
@@ -329,5 +339,57 @@ function renderSyntheticInvitation(data) {
 		$btnUploadFile.next().show();
 	});
 	
+//	getSweetMessageList(1);
+}
+
+function getSweetMessageList(pageItem) {
+	var requestParam = {
+			page : pageItem
+	};
 	
+	$.ajax({
+		url : "/admin/invitation/getSweetMessageList?" + $.param(requestParam),
+		type : "GET",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+			
+			var option = {
+				data : result.list,
+				columnDefs : [{
+					targets : 0,
+					data : 'seq'
+				}, {
+					targets : 1,
+					data : 'dateTimeUpdate'
+				}, {
+					targets : 2,
+					data : 'registerName'
+				}, {
+					targets : 3,
+					data : 'registerContent'
+				}, {
+					targets : 4,
+					data : 'registerPassword'
+				}, {
+					targets : 5,
+					data : function(row, type, val, meta) {
+						if(row.isDelete) {
+							return "삭제됨";
+						} else {
+							return "삭제";
+						}
+					}
+				}],
+				rowId : function(row) {
+					return row.seq;
+				}
+			};
+			
+			utilDataTable("tableSweetMessageList", option, result.pageMaker.totalCount);
+			utilDataTablePaging("divPagingWrap", "tableSweetMessageList", result.pageMaker);
+		}
+	});
 }

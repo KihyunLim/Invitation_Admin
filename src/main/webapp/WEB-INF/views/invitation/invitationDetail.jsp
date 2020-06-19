@@ -512,8 +512,8 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-md-12">
-										<table id="tableMemberList" class="table table-bordered table-hover dataTable">
+									<div class="col-md-12 dataTables_wrapper">
+										<table id="tableSweetMessageList" class="table table-bordered table-hover dataTable">
 											<thead>
 												<tr>
 													<th style="width:5%;" class="text-center">순번</th>
