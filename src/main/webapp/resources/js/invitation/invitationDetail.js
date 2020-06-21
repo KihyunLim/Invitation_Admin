@@ -6,7 +6,8 @@ console.log("########## invitationDetail.js ##########");
 
 var $btnGetAddress = "",
 	$tableRecordLoveStory = undefined,
-	$divRecordMemberInvitation = undefined;
+	$divRecordMemberInvitation = undefined,
+	syntheticInvitation = undefined;
 
 $(function(){
 	setActiveSidebar();
@@ -104,8 +105,8 @@ $(function(){
 		$wrapUploadFile.find("a").attr("href", "").removeData("title", "")
 								.find("img").attr("src", DEFAULT_IMG_SRC).removeData("fullName");
 		$wrapUploadFile.find(".btnUploadFile").val("").show()
-														.prev().show()
-														.next().next().hide();
+								.prev().show()
+								.next().next().hide();
 	});
 	
 	$("#btnAddLS").on("click", function(){
@@ -116,6 +117,16 @@ $(function(){
 		$(this).parents(".itemLoveStory").remove();
 		
 		resetTagId();
+	});
+	
+	$(".btnModifyInvitation").on("click", function(){
+		var result = validModifyInvitation($(this).parents(".card").find(".card-body"));
+		
+		if(result.resFlag) {
+			modifyInvitation(result);
+		} else {
+			alert(result.resMessage);
+		}
 	});
 });
 
@@ -141,12 +152,15 @@ function cloneLoveStory(isSet, data) {
 	if(isSet) {
 		var fileInfo = setFileInfo(data.fullNameImg),
 			$btnUploadFile = $itemLoveStory.find(".btnUploadFile");
-		$btnUploadFile.prev().hide();
-		$btnUploadFile.hide()
+		
+		if(fileInfo.isEmptyImgInfo == false) {
+			$btnUploadFile.prev().hide();
+			$btnUploadFile.hide()
 				.parents(".wrapUploadFile")
-					.find("a").attr("href", fileInfo.originalFileUrl).data("title", fileInfo.originalFileName)
-					.find("img").attr("src", fileInfo.imgSrc).data("fullName", fileInfo.fullName).data("seqImage", data.seqImage);
-		$btnUploadFile.next().show();
+				.find("a").attr("href", fileInfo.originalFileUrl).data("title", fileInfo.originalFileName)
+				.find("img").attr("src", fileInfo.imgSrc).data("fullName", fileInfo.fullName).data("seqImage", data.seqImage);
+			$btnUploadFile.next().show();
+		}
 		
 		$itemLoveStory.find(".inputDateLoveStory").data("daterangepicker").setStartDate(data.dateStory);
 		$itemLoveStory.find(".inputDateLoveStory").data("daterangepicker").setEndDate(data.dateStory);
@@ -240,7 +254,8 @@ function getSyntheticInvitation(invSeq) {
 			console.log(result);
 			
 			if(result.resFlag) {
-				renderSyntheticInvitation(result.resSyntheticInvitation);
+				syntheticInvitation = result.resSyntheticInvitation;
+				renderSyntheticInvitation(syntheticInvitation, result.pageMaker);
 				$("#modal-invitationList").modal("hide");
 			} else {
 				alert(result.resMessage);
@@ -250,7 +265,9 @@ function getSyntheticInvitation(invSeq) {
 	});
 }
 
-function renderSyntheticInvitation(data) {
+function renderSyntheticInvitation(data, pageMaker) {
+	resetRender();
+	
 	$("#inputId").data("id", data.invitationVO.id);
 	$("#inputName").val(data.invitationVO.name);
 	$("#inputDatePeriod").data("daterangepicker").setStartDate(data.invitationVO.periodBegin);
@@ -274,30 +291,36 @@ function renderSyntheticInvitation(data) {
 	$("#contentGroom").val(data.mainInfoVO.contentGroom);
 	$("#contentBride").val(data.mainInfoVO.contentBride);
 	var fileInfo1 = setFileInfo(data.mainInfoVO.fullNameMain),
-		$imgHGB1 = $("#imgHGB1");
-	$imgHGB1.prev().hide();
-	$imgHGB1.hide()
+		$imgMI1 = $("#imgMI1");
+	if(fileInfo1.isEmptyImgInfo == false) {
+		$imgMI1.prev().hide();
+		$imgMI1.hide()
 			.parents(".wrapUploadFile")
-				.find("a").attr("href", fileInfo1.originalFileUrl).data("title", fileInfo1.originalFileName)
-				.find("img").attr("src", fileInfo1.imgSrc).data("fullName", fileInfo1.fullName).data("seqImage", data.mainInfoVO.seqImgMain);
-	$imgHGB1.next().show();
+			.find("a").attr("href", fileInfo1.originalFileUrl).data("title", fileInfo1.originalFileName)
+			.find("img").attr("src", fileInfo1.imgSrc).data("fullName", fileInfo1.fullName).data("seqImage", data.mainInfoVO.seqImgMain);
+		$imgMI1.next().show();
+	}
 	$("input[name=checkboxEachImgYN]").prop("checked", data.mainInfoVO.useEachImage == "Y" ? true : false);
 	var fileInfo2 = setFileInfo(data.mainInfoVO.fullNameGroom),
-		$imgHGB2 = $("#imgHGB2");
-	$imgHGB2.prev().hide();
-	$imgHGB2.hide()
+		$imgMI2 = $("#imgMI2");
+	if(fileInfo2.isEmptyImgInfo == false) {
+		$imgMI2.prev().hide();
+		$imgMI2.hide()
 			.parents(".wrapUploadFile")
-				.find("a").attr("href", fileInfo2.originalFileUrl).data("title", fileInfo2.originalFileName)
-				.find("img").attr("src", fileInfo2.imgSrc).data("fullName", fileInfo2.fullName).data("seqImage", data.mainInfoVO.seqImgGroom);
-	$imgHGB2.next().show();
+			.find("a").attr("href", fileInfo2.originalFileUrl).data("title", fileInfo2.originalFileName)
+			.find("img").attr("src", fileInfo2.imgSrc).data("fullName", fileInfo2.fullName).data("seqImage", data.mainInfoVO.seqImgGroom);
+		$imgMI2.next().show();
+	}
 	var fileInfo3 = setFileInfo(data.mainInfoVO.fullNameBride),
-		$imgHGB3 = $("#imgHGB3");
-	$imgHGB3.prev().hide();
-	$imgHGB3.hide()
+		$imgMI3 = $("#imgMI3");
+	if(fileInfo3.isEmptyImgInfo == false) {
+		$imgMI3.prev().hide();
+		$imgMI3.hide()
 			.parents(".wrapUploadFile")
-				.find("a").attr("href", fileInfo3.originalFileUrl).data("title", fileInfo3.originalFileName)
-				.find("img").attr("src", fileInfo3.imgSrc).data("fullName", fileInfo3.fullName).data("seqImage", data.mainInfoVO.seqImgBride);
-	$imgHGB3.next().show();
+			.find("a").attr("href", fileInfo3.originalFileUrl).data("title", fileInfo3.originalFileName)
+			.find("img").attr("src", fileInfo3.imgSrc).data("fullName", fileInfo3.fullName).data("seqImage", data.mainInfoVO.seqImgBride);
+		$imgMI3.next().show();
+	}
 	
 	$("input[name=checkboxUseLSYN]").prop("checked", data.invitationVO.useLS == "Y" ? true : false);
 	data.loveStoryVO.forEach(function(item){
@@ -331,24 +354,27 @@ function renderSyntheticInvitation(data) {
 	data.galleryVO.forEach(function(item, index){
 		var fileInfo4 = setFileInfo(item.fullName),
 			$btnUploadFile = $("#tableGallery").find(".btnUploadFile:eq(" + index + ")");
-		$btnUploadFile.prev().hide();
-		$btnUploadFile.hide()
+		if(fileInfo4.isEmptyImgInfo == false) {
+			$btnUploadFile.prev().hide();
+			$btnUploadFile.hide()
 				.parents(".wrapUploadFile")
-					.find("a").attr("href", fileInfo4.originalFileUrl).data("title", fileInfo4.originalFileName)
-					.find("img").attr("src", fileInfo4.imgSrc).data("fullName", fileInfo4.fullName).data("seqImage", item.seq);
-		$btnUploadFile.next().show();
+				.find("a").attr("href", fileInfo4.originalFileUrl).data("title", fileInfo4.originalFileName)
+				.find("img").attr("src", fileInfo4.imgSrc).data("fullName", fileInfo4.fullName).data("seqImage", item.seq);
+			$btnUploadFile.next().show();
+		}
 	});
 	
-//	getSweetMessageList(1);
+	renderSweetMessageList(data.sweetMessageVO, pageMaker);
 }
 
 function getSweetMessageList(pageItem) {
 	var requestParam = {
-			page : pageItem
+			page : pageItem,
+			invSeq : syntheticInvitation.invitationInfo.seq
 	};
 	
 	$.ajax({
-		url : "/admin/invitation/getSweetMessageList?" + $.param(requestParam),
+		url : "/admin/invitation/getSweetMessageList.do?" + $.param(requestParam),
 		type : "GET",
 		error : function(xhr, status, msg) {
 			alert("status : " + status + "\nHttp error msg : " + msg);
@@ -356,40 +382,117 @@ function getSweetMessageList(pageItem) {
 		success : function(result) {
 			console.log(result);
 			
-			var option = {
-				data : result.list,
-				columnDefs : [{
-					targets : 0,
-					data : 'seq'
-				}, {
-					targets : 1,
-					data : 'dateTimeUpdate'
-				}, {
-					targets : 2,
-					data : 'registerName'
-				}, {
-					targets : 3,
-					data : 'registerContent'
-				}, {
-					targets : 4,
-					data : 'registerPassword'
-				}, {
-					targets : 5,
-					data : function(row, type, val, meta) {
-						if(row.isDelete) {
-							return "삭제됨";
-						} else {
-							return "삭제";
-						}
+			renderSweetMessageList(result.list, result.pageMaker);
+		}
+	});
+}
+
+function renderSweetMessageList(list, pageMaker) {
+	var option = {
+			data : list,
+			columnDefs : [{
+				targets : 0,
+				data : 'seq'
+			}, {
+				targets : 1,
+				data : 'dateTimeUpdate'
+			}, {
+				targets : 2,
+				data : 'registerName'
+			}, {
+				targets : 3,
+				data : 'registerContent'
+			}, {
+				targets : 4,
+				data : 'registerPassword'
+			}, {
+				targets : 5,
+				data : function(row, type, val, meta) {
+					if(row.isDelete) {
+						return "삭제됨";
+					} else {
+						return "삭제";
 					}
-				}],
-				rowId : function(row) {
-					return row.seq;
 				}
-			};
+			}],
+			rowId : function(row) {
+				return row.seq;
+			}
+		};
+		
+		utilDataTable("tableSweetMessageList", option, pageMaker.totalCount);
+		utilDataTablePaging("divPagingWrap", "tableSweetMessageList", pageMaker);
+}
+
+function resetRender() {
+	$(".btnDeleteImage").each(function(){
+		var $wrapUploadFile = $(this).parents(".wrapUploadFile");
+		
+		$wrapUploadFile.find("a").attr("href", "").removeData("title", "")
+								.find("img").attr("src", DEFAULT_IMG_SRC).removeData("fullName");
+		$wrapUploadFile.find(".btnUploadFile").val("").show()
+								.prev().show()
+								.next().next().hide();
+	});
+	
+	$("#wrapListLS").empty();
+}
+
+function validModifyInvitation($cardBody) {
+	var result = {
+			resFlag : true,
+			resData : {},
+			resMessage : "",
+			modifyCategory : "invitation"
+		},
+		datePeriod = $("#inputDatePeriod").val().split(" - "),
+		today = getFormattedDate(new Date()),
+		periodBegin = "",
+		periodEnd = "",
+		visible = $("input[name=checkboxVisibleYN]").prop("checked") == true ? "N" : "Y",
+		formCode = "hookup";
+	
+	if($("#inputId").val() != $("#inputId").data("id")) {
+		result.resFlag = false;
+		result.resMessage = "기본정보의 아이디를 정확히 입력 해주세요.";
+		return result;
+	}
+	
+	periodBegin = (datePeriod[0]).replace(/-/g, "");
+	periodEnd = (datePeriod[1]).replace(/-/g, "");
+	if(Number(today) > Number(periodEnd)) {
+		result.resFlag = false;
+		result.resMessage = "게시 기간을 확인해주세요.";
+		return result;
+	}
+	
+	result.resData = {
+			periodBegin : periodBegin,
+			periodEnd : periodEnd,
+			visible : visible,
+			formCode : formCode
+	}
+	return result;
+}
+
+function modifyInvitation(data) {
+	$.ajax({
+		url : "/admin/invitation/" + URL[data.modifyCategory],
+		type : "POST",
+		dataType : "json",
+		data : JSON.stringify(data.resData),
+		contentType : "application/json;charset=utf-8;",
+		error : function(xhr, status, msg) {
+			alert("satus : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
 			
-			utilDataTable("tableSweetMessageList", option, result.pageMaker.totalCount);
-			utilDataTablePaging("divPagingWrap", "tableSweetMessageList", result.pageMaker);
+			if(result.resFlag) {
+				alert("수정이 완료되었습니다.");
+			} else {
+				alert(result.resMessage);
+			}
 		}
 	});
 }

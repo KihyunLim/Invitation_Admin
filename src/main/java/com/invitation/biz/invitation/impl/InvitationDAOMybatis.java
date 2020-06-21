@@ -2,8 +2,10 @@ package com.invitation.biz.invitation.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.invitation.biz.common.paging.Criteria;
 import com.invitation.biz.invitation.GalleryVO;
 import com.invitation.biz.invitation.InvitationVO;
 import com.invitation.biz.invitation.LoveStoryVO;
@@ -60,12 +63,27 @@ public class InvitationDAOMybatis {
 		return mybatis.selectList("InvitationDAO.getMemberInvitation", id);
 	}
 	
+	public List<SweetMessageVO> getSweetMessageList(Criteria cri, String invSeq) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("invSeq", invSeq);
+		param.put("pageStart",  cri.getPageStart());
+		param.put("perPageNum", cri.getPerPageNum());
+		
+		return mybatis.selectList("InvitationDAO.selectSweetMessage", param);
+	}
+	
+	public int getSweetMessageCount(String invSeq) {
+		return mybatis.selectOne("InvitationDAO.getSweetMessageCount", invSeq);
+	}
+	
 	public SyntheticInvitationVO getSyntheticInvitation(String invSeq) {
 		SyntheticInvitationVO resultSyntheticInvitation = new SyntheticInvitationVO();
 		List<LoveStoryVO> listLS = new ArrayList<>();
 		List<WhenWhereVO> listWW = new ArrayList<>();
 		List<GalleryVO> listG = new ArrayList<>();
 		List<SweetMessageVO> listSM = new ArrayList<>();
+		Criteria cri = new Criteria();
 		
 		resultSyntheticInvitation.setInvitationVO(mybatis.selectOne("InvitationDAO.selectInvitation", invSeq));
 		resultSyntheticInvitation.setMainInfoVO(mybatis.selectOne("InvitationDAO.selectMainInfo", invSeq));
@@ -75,7 +93,8 @@ public class InvitationDAOMybatis {
 		resultSyntheticInvitation.setWhenWhereVO((ArrayList<WhenWhereVO>) listWW);
 		listG = mybatis.selectList("InvitationDAO.selectGallery", invSeq);
 		resultSyntheticInvitation.setGalleryVO((ArrayList<GalleryVO>) listG);
-		listSM = mybatis.selectList("InvitationDAO.selectSweetMessage", invSeq);
+		listSM = getSweetMessageList(cri, invSeq);
+//		listSM = mybatis.selectList("InvitationDAO.selectSweetMessage1", invSeq);
 		resultSyntheticInvitation.setSweetMessageVO((ArrayList<SweetMessageVO>) listSM);
 		
 		return resultSyntheticInvitation;

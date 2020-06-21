@@ -43,7 +43,7 @@
 								<h3 class="card-title header-padding-top">▶ 기본 정보 (필수)</h3>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-primary btn-sm" id="">수정</button>
+										<button type="button" class="btn btn-primary btn-sm btnModifyInvitation">수정</button>
 									</div>
 								</div>
 							</div>
@@ -81,7 +81,7 @@
 								<h3 class="card-title header-padding-top">▶ Home, Groom &amp; Bride (필수)</h3>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-primary btn-sm" id="">수정</button>
+										<button type="button" class="btn btn-primary btn-sm btnModifyInvitation" >수정</button>
 									</div>
 								</div>
 							</div>
@@ -124,8 +124,8 @@
 										<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
 											<img src="../css/img/uploadImage.png" class="mb-2 img-thumnail-h100px">
 										</a>
-										<label for="imgHGB1">업로드</label>
-										<input type="file" class="btnUploadFile" id="imgHGB1" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<label for="imgMI1">업로드</label>
+										<input type="file" class="btnUploadFile" id="imgMI1" accept="image/png, image/jpeg, image/jpg, image/gif" />
 										<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 									</div>
 									<div class="col-md-6">
@@ -147,8 +147,8 @@
 										<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
 											<img src="../css/img/uploadImage.png" class="mb-2 img-thumnail-h100px">
 										</a>
-										<label for="imgHGB2">업로드</label>
-										<input type="file" class="btnUploadFile" id="imgHGB2" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<label for="imgMI2">업로드</label>
+										<input type="file" class="btnUploadFile" id="imgMI2" accept="image/png, image/jpeg, image/jpg, image/gif" />
 										<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 									</div>
 									<div class="col-md-2">
@@ -158,8 +158,8 @@
 										<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
 											<img src="../css/img/uploadImage.png" class="mb-2 img-thumnail-h100px">
 										</a>
-										<label for="imgHGB3">업로드</label>
-										<input type="file" class="btnUploadFile" id="imgHGB3" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<label for="imgMI3">업로드</label>
+										<input type="file" class="btnUploadFile" id="imgMI3" accept="image/png, image/jpeg, image/jpg, image/gif" />
 										<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 									</div>
 								</div>
@@ -172,7 +172,7 @@
 								<h3 class="card-title header-padding-top">▶ Love story (선택)</h3>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-primary btn-sm" id="">수정</button>
+										<button type="button" class="btn btn-primary btn-sm btnModifyInvitation" >수정</button>
 									</div>
 								</div>
 							</div>
@@ -249,7 +249,7 @@
 								<h3 class="card-title header-padding-top">▶ When Where (필수)</h3>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-primary btn-sm" id="">수정</button>
+										<button type="button" class="btn btn-primary btn-sm btnModifyInvitation" >수정</button>
 									</div>
 								</div>
 							</div>
@@ -339,7 +339,7 @@
 								<h3 class="card-title header-padding-top">▶ Gallery (선택)</h3>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-primary btn-sm" id="">수정</button>
+										<button type="button" class="btn btn-primary btn-sm btnModifyInvitation" >수정</button>
 									</div>
 								</div>
 							</div>
@@ -492,7 +492,7 @@
 								<h3 class="card-title header-padding-top">▶ Sweet Message (선택)</h3>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-primary btn-sm" id="">수정</button>
+										<button type="button" class="btn btn-primary btn-sm btnModifyInvitation" >수정</button>
 									</div>
 								</div>
 							</div>

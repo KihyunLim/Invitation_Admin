@@ -179,7 +179,7 @@ public class InvitationControllerTest {
 	public void test_getSyntheticInvitation() throws Exception {
 		mock.perform(
 				get("/invitation/getSyntheticInvitation.do")
-				.param("invSeq", "2"))
+				.param("invSeq", "1"))
 		.andDo(print())
 		.andExpect(status().isOk())
 		.andExpect(handler().handlerType(InvitationController.class))

@@ -18,9 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.invitation.biz.common.exception.CommonException;
+import com.invitation.biz.common.paging.Criteria;
+import com.invitation.biz.common.paging.PageMaker;
 import com.invitation.biz.invitation.InvitationService;
 import com.invitation.biz.invitation.MainInfoVO;
 import com.invitation.biz.invitation.MemberInfoVO;
+import com.invitation.biz.invitation.SweetMessageVO;
 import com.invitation.biz.invitation.SyntheticInvitationVO;
 
 @Controller
@@ -153,12 +156,19 @@ public class InvitationController {
 		Boolean resFlag = false;
 		String resMessage = "";
 		SyntheticInvitationVO resSyntheticInvitation = null;
+		PageMaker resPageMaker = null;
 		
 		LOGGER.info("getSyntheTicInvitation.do");
 		try {
 			resSyntheticInvitation = invitationService.getSyntheticInvitation(invSeq);
 			
+			PageMaker pageMaker = new PageMaker();
+			Criteria cri = new Criteria();
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(invitationService.getSweetMessageCount(invSeq));
+			
 			resFlag = true;
+			resPageMaker = pageMaker;
 		} catch(Exception e) {
 			LOGGER.error("error message : " + e.getMessage());
 			LOGGER.error("error trace : ", e);
@@ -169,6 +179,44 @@ public class InvitationController {
 			result.put("resFlag", resFlag);
 			result.put("resMessage", resMessage);
 			result.put("resSyntheticInvitation", resSyntheticInvitation);
+			result.put("pageMaker", resPageMaker);
+		}
+		
+		return result;
+	}
+	
+	@GetMapping(value="/getSweetMessageList.do")
+	@ResponseBody
+	public Map<String, Object> getSweetMessageList(Criteria cri,
+			@RequestParam(value="invSeq", required=true) String invSeq) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		List<SweetMessageVO> resSweetMessageList = null;
+		PageMaker resPageMaker = null;
+		
+		LOGGER.info("getSweetMessageList");
+		try {
+			List<SweetMessageVO> sweetMessageList = invitationService.getSweetMessageList(cri, invSeq);
+			
+			PageMaker pageMaker = new PageMaker();
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(invitationService.getSweetMessageCount(invSeq));
+			
+			resFlag = true;
+			resSweetMessageList = sweetMessageList;
+			resPageMaker = pageMaker;
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "청첩장 댓글 조회에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("resSweetMessageList", resSweetMessageList);
+			result.put("pageMaker", resPageMaker);
 		}
 		
 		return result;

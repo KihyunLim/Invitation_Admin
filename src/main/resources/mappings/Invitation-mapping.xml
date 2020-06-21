@@ -376,9 +376,31 @@
 		;
 	</select>
 	
+	<select id="selectSweetMessage1" resultMap="resultSweetMessageVO">
+		SELECT
+			*
+		FROM
+			SWEET_MESSAGE
+		WHERE
+			INV_SEQ = #{invSeq}
+		;
+	</select>
 	<select id="selectSweetMessage" resultMap="resultSweetMessageVO">
 		SELECT
 			*
+		FROM
+			SWEET_MESSAGE
+		WHERE
+			INV_SEQ = #{invSeq}
+		ORDER BY
+			DATETIME_REGISTER DESC
+		LIMIT #{pageStart}, #{perPageNum}
+		;
+	</select>
+	
+	<select id="getSweetMessageCount" resultType="int">
+		SELECT
+			COUNT(SEQ)
 		FROM
 			SWEET_MESSAGE
 		WHERE

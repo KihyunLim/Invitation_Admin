@@ -114,8 +114,8 @@
 										<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
 											<img src="../css/img/uploadImage.png" class="mb-2 img-thumnail-h100px">
 										</a>
-										<label for="imgHGB1">업로드</label>
-										<input type="file" class="btnUploadFile" id="imgHGB1" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<label for="imgMI1">업로드</label>
+										<input type="file" class="btnUploadFile" id="imgMI1" accept="image/png, image/jpeg, image/jpg, image/gif" />
 										<!-- <form method="post" enctype="multipart/form-data">
 											<input type="file" class="btnUploadFile" />
 										</form> -->
@@ -140,8 +140,8 @@
 										<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
 											<img src="../css/img/uploadImage.png" class="mb-2 img-thumnail-h100px">
 										</a>
-										<label for="imgHGB2">업로드</label>
-										<input type="file" class="btnUploadFile" id="imgHGB2" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<label for="imgMI2">업로드</label>
+										<input type="file" class="btnUploadFile" id="imgMI2" accept="image/png, image/jpeg, image/jpg, image/gif" />
 										<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 									</div>
 									<div class="col-md-2">
@@ -151,8 +151,8 @@
 										<a class="aFileData" href="" data-toggle="lightbox" data-title="image title">
 											<img src="../css/img/uploadImage.png" class="mb-2 img-thumnail-h100px">
 										</a>
-										<label for="imgHGB3">업로드</label>
-										<input type="file" class="btnUploadFile" id="imgHGB3" accept="image/png, image/jpeg, image/jpg, image/gif" />
+										<label for="imgMI3">업로드</label>
+										<input type="file" class="btnUploadFile" id="imgMI3" accept="image/png, image/jpeg, image/jpg, image/gif" />
 										<button type="button" class="btn btn-default btn-sm btnDeleteImage" style="display:none;">삭제</button>
 									</div>
 								</div>

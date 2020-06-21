@@ -13,11 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.invitation.biz.common.exception.CommonException;
 import com.invitation.biz.common.fileUpload.FileUploadService;
+import com.invitation.biz.common.paging.Criteria;
 import com.invitation.biz.invitation.GalleryVO;
 import com.invitation.biz.invitation.InvitationService;
 import com.invitation.biz.invitation.LoveStoryVO;
 import com.invitation.biz.invitation.MainInfoVO;
 import com.invitation.biz.invitation.MemberInfoVO;
+import com.invitation.biz.invitation.SweetMessageVO;
 import com.invitation.biz.invitation.SyntheticInvitationVO;
 import com.invitation.biz.invitation.WhenWhereVO;
 
@@ -149,6 +151,16 @@ public class InvitationServiceImpl implements InvitationService {
 		return memberInvitationInfo;
 	}
 
+	@Override
+	public List<SweetMessageVO> getSweetMessageList(Criteria cri, String invSeq) {
+		return invitationDAO.getSweetMessageList(cri, invSeq);
+	}
+	
+	@Override
+	public int getSweetMessageCount(String invSeq) {
+		return invitationDAO.getSweetMessageCount(invSeq);
+	}
+	
 	@Override
 	public SyntheticInvitationVO getSyntheticInvitation(String invSeq) {
 		return invitationDAO.getSyntheticInvitation(invSeq);

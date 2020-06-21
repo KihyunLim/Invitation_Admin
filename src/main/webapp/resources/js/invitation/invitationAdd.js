@@ -179,7 +179,7 @@ function jusoCallBack(...res) {
 }
 
 function validateData() {
-	var invitation = {}, hgb = {}, ls = {}, ww = {}, gallery = {}, sm = {},
+	var invitation = {}, mi = {}, ls = {}, ww = {}, gallery = {}, sm = {},
 		result = {
 			resFlag : true,
 			resData : {},
@@ -213,57 +213,57 @@ function validateData() {
 	
 	var dateTimeWedding = $("#inputDateTimeWedding").val() || "";
 	dateTimeWedding = dateTimeWedding.split(" ");
-	hgb.dateWedding = (dateTimeWedding[0]).replace(/-/g, "");
-	hgb.timeWedding = (dateTimeWedding[1]).replace(/:/g, "");
-	if(Number(hgb.dateWedding) < Number(invitation.periodBegin) || Number(hgb.dateWedding) > Number(invitation.periodEnd)) {
+	mi.dateWedding = (dateTimeWedding[0]).replace(/-/g, "");
+	mi.timeWedding = (dateTimeWedding[1]).replace(/:/g, "");
+	if(Number(mi.dateWedding) < Number(invitation.periodBegin) || Number(mi.dateWedding) > Number(invitation.periodEnd)) {
 		result.resFlag = false;
 		result.resMessage = "결혼 일자를 확인해주세요.";
 		return result;
 	}
 	
 	var infoAddr = $("#infoWeddingPlace").data("infoWeddingPlace") || "";
-	hgb.address = infoAddr.addr || "";
-	hgb.placeX = infoAddr.placeX || "";
-	hgb.placeY = infoAddr.placeY || "";
+	mi.address = infoAddr.addr || "";
+	mi.placeX = infoAddr.placeX || "";
+	mi.placeY = infoAddr.placeY || "";
 	if(infoAddr == undefined || infoAddr == "") {
 		result.resFlag = false;
 		result.resMessage = "결혼식 장소를 확인해주세요.";
 		return result;
 	}
-	if(hgb.address == "" || hgb.placeX == "" || hgb.placeY == "") {
+	if(mi.address == "" || mi.placeX == "" || mi.placeY == "") {
 		result.resFlag = false;
 		result.resMessage = "결혼식 장소를 확인해주세요.";
 		return result;
 	}
 	
-	hgb.contentGroom = $("#contentGroom").val();
-	hgb.contentBride = $("#contentBride").val();
+	mi.contentGroom = $("#contentGroom").val();
+	mi.contentBride = $("#contentBride").val();
 	
-	hgb.fullNameMain = $("#imgHGB1").parents(".wrapUploadFile").find("img").data("fullName");
-	if(hgb.fullNameMain == undefined) {
+	mi.fullNameMain = $("#imgMI1").parents(".wrapUploadFile").find("img").data("fullName");
+	if(mi.fullNameMain == undefined) {
 		result.resFlag = false;
 		result.resMessage = "메인 사진을 확인해주세요.";
 		return result;
 	}
 	
-	hgb.fullNameGroom = $("#imgHGB2").parents(".wrapUploadFile").find("img").data("fullName");
-	hgb.fullNameBride = $("#imgHGB3").parents(".wrapUploadFile").find("img").data("fullName");
-	hgb.useEachImage = invitation.useEachImage;
-	if(hgb.useEachImage == "Y") {
-		if(hgb.fullNameGroom == undefined) {
+	mi.fullNameGroom = $("#imgMI2").parents(".wrapUploadFile").find("img").data("fullName");
+	mi.fullNameBride = $("#imgMI3").parents(".wrapUploadFile").find("img").data("fullName");
+	mi.useEachImage = invitation.useEachImage;
+	if(mi.useEachImage == "Y") {
+		if(mi.fullNameGroom == undefined) {
 			result.resFlag = false;
 			result.resMessage = "신랑 사진을 확인해주세요.";
 			return result;
 		}
 		
-		if(hgb.fullNameBride == undefined) {
+		if(mi.fullNameBride == undefined) {
 			result.resFlag = false;
 			result.resMessage = "신부 사진을 확인해주세요.";
 			return result;
 		}
 	} else {
-		hgb.fullNameGroom = "";
-		hgb.fullNameBride = "";
+		mi.fullNameGroom = "";
+		mi.fullNameBride = "";
 	}
 	
 	ls.listLS = [];
@@ -300,11 +300,11 @@ function validateData() {
 	ww.listWW = [];
 	ww.listWW.push({
 		flagPyebaek : "N",
-		dateWedding : hgb.dateWedding,
-		timeWedding : hgb.timeWedding,
-		address : hgb.address,
-		placeX : hgb.placeX,
-		placeY : hgb.placeY,
+		dateWedding : mi.dateWedding,
+		timeWedding : mi.timeWedding,
+		address : mi.address,
+		placeX : mi.placeX,
+		placeY : mi.placeY,
 		title : $("#inputTitleWeddingWW").val(),
 		content : $("#inputContentWeddingWW").val()
 	});
@@ -356,7 +356,7 @@ function validateData() {
 	
 	result.resData = {
 		invitationVO : invitation,
-		mainInfoVO : hgb,
+		mainInfoVO : mi,
 		loveStoryVO : ls.listLS,
 		whenWhereVO : ww.listWW,
 		galleryVO : gallery.listG
