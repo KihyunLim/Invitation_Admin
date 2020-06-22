@@ -194,9 +194,9 @@ public class InvitationControllerTest {
 		
 		invitationVO.setFormCode("hookup");
 		invitationVO.setPeriodBegin("20200611");
-		invitationVO.setPeriodEnd("2020721");
+		invitationVO.setPeriodEnd("20200721");
 		invitationVO.setVisible("Y");
-		invitationVO.setSeq(2);
+		invitationVO.setSeq(1);
 		
 		mock.perform(
 					post("/invitation/modifyInvitation.do")

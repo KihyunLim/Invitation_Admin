@@ -73,14 +73,14 @@ public class LoveStoryVO {
 	}
 	public String getDateTimeRegister() {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return simpleDateFormat.format(dateTimeRegister);
+		return (dateTimeRegister == null) ? "" : simpleDateFormat.format(dateTimeRegister);
 	}
 	public void setDateTimeRegister(Date dateTimeRegister) {
 		this.dateTimeRegister = dateTimeRegister;
 	}
 	public String getDateTimeUpdate() {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return simpleDateFormat.format(dateTimeUpdate);
+		return (dateTimeUpdate == null) ? "" : simpleDateFormat.format(dateTimeUpdate);
 	}
 	public void setDateTimeUpdate(Date dateTimeUpdate) {
 		this.dateTimeUpdate = dateTimeUpdate;

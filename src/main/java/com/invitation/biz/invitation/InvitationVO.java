@@ -3,6 +3,9 @@ package com.invitation.biz.invitation;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class InvitationVO {
 
 	private int seq;
@@ -19,6 +22,8 @@ public class InvitationVO {
 	private String useSM;
 	private Date dateTimeRegister;
 	private Date dateTimeUpdate;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(InvitationVO.class);
 	
 	public int getSeq() {
 		return seq;
@@ -94,14 +99,14 @@ public class InvitationVO {
 	}
 	public String getDateTimeRegister() {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return simpleDateFormat.format(dateTimeRegister);
+		return (dateTimeRegister == null) ? "" : simpleDateFormat.format(dateTimeRegister);
 	}
 	public void setDateTimeRegister(Date dateTimeRegister) {
 		this.dateTimeRegister = dateTimeRegister;
 	}
 	public String getDateTimeUpdate() {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return simpleDateFormat.format(dateTimeUpdate);
+		return (dateTimeUpdate == null) ? "" : simpleDateFormat.format(dateTimeUpdate);
 	}
 	public void setDateTimeUpdate(Date dateTimeUpdate) {
 		this.dateTimeUpdate = dateTimeUpdate;

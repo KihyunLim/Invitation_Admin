@@ -119,53 +119,29 @@ $(function(){
 		resetTagId();
 	});
 	
-	$("#btnModifyInvitation").on("click", function(){
-		var result = validModifyInvitation($(this).parents(".card").find(".card-body"));
+	$(".btnModifyInvitation").on("click", function(){
+		var result = "";
 		
-		if(result.resFlag) {
-			modifyInvitationInfo(result);
-		} else {
-			alert(result.resMessage);
+		switch($(this).data("category")) {
+		case "invitation" : 
+			result = validModifyInvitation($(this).parents(".card").find(".card-body"));
+			break;
+		case "mi" : 
+			result = validModifyMainInfo($(this).parents(".card").find(".card-body"));
+			break;
+		case "ls" : 
+			result = validModifyLoveStory($(this).parents(".card").find(".card-body"));
+			break;
+		case "ww" : 
+			result = validModifyWhenWhere($(this).parents(".card").find(".card-body"));
+			break;
+		case "gallery" : 
+			result = validModifyGallery($(this).parents(".card").find(".card-body"));
+			break;
+		case "sm" : 
+			result = validModifySweetMessage($(this).parents(".card").find(".card-body"));
+			break;
 		}
-	});
-	$("#btnModifyMainInfo").on("click", function(){
-		var result = validModifyMainInfo($(this).parents(".card").find(".card-body"));
-		
-		if(result.resFlag) {
-			modifyInvitationInfo(result);
-		} else {
-			alert(result.resMessage);
-		}
-	});
-	$("#btnModifyLoveStory").on("click", function(){
-		var result = validModifyLoveStory($(this).parents(".card").find(".card-body"));
-		
-		if(result.resFlag) {
-			modifyInvitationInfo(result);
-		} else {
-			alert(result.resMessage);
-		}
-	});
-	$("#btnModifyWhenWhere").on("click", function(){
-		var result = validModifyWhenWhere($(this).parents(".card").find(".card-body"));
-		
-		if(result.resFlag) {
-			modifyInvitationInfo(result);
-		} else {
-			alert(result.resMessage);
-		}
-	});
-	$("#btnModifyGallery").on("click", function(){
-		var result = validModifyGallery($(this).parents(".card").find(".card-body"));
-		
-		if(result.resFlag) {
-			modifyInvitationInfo(result);
-		} else {
-			alert(result.resMessage);
-		}
-	});
-	$("#btnModifySweetMessage").on("click", function(){
-		var result = validModifySweetMessage($(this).parents(".card").find(".card-body"));
 		
 		if(result.resFlag) {
 			modifyInvitationInfo(result);
