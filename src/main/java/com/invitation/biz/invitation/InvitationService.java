@@ -20,4 +20,6 @@ public interface InvitationService {
 	int getSweetMessageCount(String invSeq);
 	
 	SyntheticInvitationVO getSyntheticInvitation(String invSeq);
+	
+	void modifyInvitation(InvitationVO invitationVO);
 }

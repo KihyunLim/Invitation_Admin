@@ -43,7 +43,7 @@
 								<h3 class="card-title header-padding-top">▶ 기본 정보 (필수)</h3>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-primary btn-sm btnModifyInvitation">수정</button>
+										<button type="button" class="btn btn-primary btn-sm" id="btnModifyInvitation">수정</button>
 									</div>
 								</div>
 							</div>
@@ -81,7 +81,7 @@
 								<h3 class="card-title header-padding-top">▶ Home, Groom &amp; Bride (필수)</h3>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-primary btn-sm btnModifyInvitation" >수정</button>
+										<button type="button" class="btn btn-primary btn-sm" id="btnModifyMainInfo" >수정</button>
 									</div>
 								</div>
 							</div>
@@ -172,7 +172,7 @@
 								<h3 class="card-title header-padding-top">▶ Love story (선택)</h3>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-primary btn-sm btnModifyInvitation" >수정</button>
+										<button type="button" class="btn btn-primary btn-sm" id="btnModifyLoveStory" >수정</button>
 									</div>
 								</div>
 							</div>
@@ -249,7 +249,7 @@
 								<h3 class="card-title header-padding-top">▶ When Where (필수)</h3>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-primary btn-sm btnModifyInvitation" >수정</button>
+										<button type="button" class="btn btn-primary btn-sm" id="btnModifyWhenWhere" >수정</button>
 									</div>
 								</div>
 							</div>
@@ -339,7 +339,7 @@
 								<h3 class="card-title header-padding-top">▶ Gallery (선택)</h3>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-primary btn-sm btnModifyInvitation" >수정</button>
+										<button type="button" class="btn btn-primary btn-sm" id="btnModifyGallery" >수정</button>
 									</div>
 								</div>
 							</div>
@@ -492,7 +492,7 @@
 								<h3 class="card-title header-padding-top">▶ Sweet Message (선택)</h3>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-primary btn-sm btnModifyInvitation" >수정</button>
+										<button type="button" class="btn btn-primary btn-sm" id="btnModifySweetMessage" >수정</button>
 									</div>
 								</div>
 							</div>

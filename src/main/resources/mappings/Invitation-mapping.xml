@@ -407,4 +407,18 @@
 			INV_SEQ = #{invSeq}
 		;
 	</select>
+	
+	<update id="updateInvitation">
+		UPDATE
+			INVITATION_LIST
+		SET
+			VISIBLE = #{visible}
+			, DATE_BEGIN = #{periodBegin}
+			, DATE_END = #{periodEnd}
+			, FORMCODE = #{formCode}
+			, DATETIME_UPDATE = NOW()
+		WHERE
+			SEQ = #{seq}
+		;
+	</update>
 </mapper>

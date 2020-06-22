@@ -174,8 +174,8 @@ public class InvitationControllerTest {
 		.andExpect(handler().methodName("getMemberInvitation"));
 	}
 	
-	@Test
-//	@Ignore
+//	@Test
+	@Ignore
 	public void test_getSyntheticInvitation() throws Exception {
 		mock.perform(
 				get("/invitation/getSyntheticInvitation.do")
@@ -184,5 +184,27 @@ public class InvitationControllerTest {
 		.andExpect(status().isOk())
 		.andExpect(handler().handlerType(InvitationController.class))
 		.andExpect(handler().methodName("getSyntheticInvitation"));
+	}
+	
+	@Test
+//	@Ignore
+	public void test_modifyInvitation() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		InvitationVO invitationVO = new InvitationVO();
+		
+		invitationVO.setFormCode("hookup");
+		invitationVO.setPeriodBegin("20200611");
+		invitationVO.setPeriodEnd("2020721");
+		invitationVO.setVisible("Y");
+		invitationVO.setSeq(2);
+		
+		mock.perform(
+					post("/invitation/modifyInvitation.do")
+					.content(mapper.writeValueAsString(invitationVO))
+					.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(handler().handlerType(InvitationController.class))
+				.andExpect(handler().methodName("modifyInvitation"));
 	}
 }

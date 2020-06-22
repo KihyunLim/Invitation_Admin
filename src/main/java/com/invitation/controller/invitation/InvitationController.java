@@ -21,6 +21,7 @@ import com.invitation.biz.common.exception.CommonException;
 import com.invitation.biz.common.paging.Criteria;
 import com.invitation.biz.common.paging.PageMaker;
 import com.invitation.biz.invitation.InvitationService;
+import com.invitation.biz.invitation.InvitationVO;
 import com.invitation.biz.invitation.MainInfoVO;
 import com.invitation.biz.invitation.MemberInfoVO;
 import com.invitation.biz.invitation.SweetMessageVO;
@@ -217,6 +218,32 @@ public class InvitationController {
 			result.put("resMessage", resMessage);
 			result.put("resSweetMessageList", resSweetMessageList);
 			result.put("pageMaker", resPageMaker);
+		}
+		
+		return result;
+	}
+	
+	@PostMapping(value="/modifyInvitation.do", headers= {"Content-type=application/json"})
+	@ResponseBody
+	public Map<String, Object> modifyInvitation(@RequestBody InvitationVO vo) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		
+		LOGGER.info("modifyInvitation.do");
+		try {
+			invitationService.modifyInvitation(vo);
+			
+			resFlag = true;
+		} catch (Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "기본정보 수정에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
 		}
 		
 		return result;

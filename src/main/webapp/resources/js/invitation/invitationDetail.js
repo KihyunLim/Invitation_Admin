@@ -119,11 +119,56 @@ $(function(){
 		resetTagId();
 	});
 	
-	$(".btnModifyInvitation").on("click", function(){
+	$("#btnModifyInvitation").on("click", function(){
 		var result = validModifyInvitation($(this).parents(".card").find(".card-body"));
 		
 		if(result.resFlag) {
-			modifyInvitation(result);
+			modifyInvitationInfo(result);
+		} else {
+			alert(result.resMessage);
+		}
+	});
+	$("#btnModifyMainInfo").on("click", function(){
+		var result = validModifyMainInfo($(this).parents(".card").find(".card-body"));
+		
+		if(result.resFlag) {
+			modifyInvitationInfo(result);
+		} else {
+			alert(result.resMessage);
+		}
+	});
+	$("#btnModifyLoveStory").on("click", function(){
+		var result = validModifyLoveStory($(this).parents(".card").find(".card-body"));
+		
+		if(result.resFlag) {
+			modifyInvitationInfo(result);
+		} else {
+			alert(result.resMessage);
+		}
+	});
+	$("#btnModifyWhenWhere").on("click", function(){
+		var result = validModifyWhenWhere($(this).parents(".card").find(".card-body"));
+		
+		if(result.resFlag) {
+			modifyInvitationInfo(result);
+		} else {
+			alert(result.resMessage);
+		}
+	});
+	$("#btnModifyGallery").on("click", function(){
+		var result = validModifyGallery($(this).parents(".card").find(".card-body"));
+		
+		if(result.resFlag) {
+			modifyInvitationInfo(result);
+		} else {
+			alert(result.resMessage);
+		}
+	});
+	$("#btnModifySweetMessage").on("click", function(){
+		var result = validModifySweetMessage($(this).parents(".card").find(".card-body"));
+		
+		if(result.resFlag) {
+			modifyInvitationInfo(result);
 		} else {
 			alert(result.resMessage);
 		}
@@ -467,15 +512,16 @@ function validModifyInvitation($cardBody) {
 	}
 	
 	result.resData = {
+			seq : syntheticInvitation.invitationVO.seq,
+			visible : visible,
 			periodBegin : periodBegin,
 			periodEnd : periodEnd,
-			visible : visible,
 			formCode : formCode
 	}
 	return result;
 }
 
-function modifyInvitation(data) {
+function modifyInvitationInfo(data) {
 	$.ajax({
 		url : "/admin/invitation/" + URL[data.modifyCategory],
 		type : "POST",

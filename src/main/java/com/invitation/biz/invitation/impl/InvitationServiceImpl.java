@@ -16,6 +16,7 @@ import com.invitation.biz.common.fileUpload.FileUploadService;
 import com.invitation.biz.common.paging.Criteria;
 import com.invitation.biz.invitation.GalleryVO;
 import com.invitation.biz.invitation.InvitationService;
+import com.invitation.biz.invitation.InvitationVO;
 import com.invitation.biz.invitation.LoveStoryVO;
 import com.invitation.biz.invitation.MainInfoVO;
 import com.invitation.biz.invitation.MemberInfoVO;
@@ -164,5 +165,10 @@ public class InvitationServiceImpl implements InvitationService {
 	@Override
 	public SyntheticInvitationVO getSyntheticInvitation(String invSeq) {
 		return invitationDAO.getSyntheticInvitation(invSeq);
+	}
+
+	@Override
+	public void modifyInvitation(InvitationVO invitationVO) {
+		invitationDAO.modifyInvitation(invitationVO);
 	}
 }

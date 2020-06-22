@@ -99,4 +99,8 @@ public class InvitationDAOMybatis {
 		
 		return resultSyntheticInvitation;
 	}
+	
+	public void modifyInvitation(InvitationVO invitationVO) {
+		mybatis.update("InvitationDAO.updateInvitation", invitationVO);
+	}
 }
