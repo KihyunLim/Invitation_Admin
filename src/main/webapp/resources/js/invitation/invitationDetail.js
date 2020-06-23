@@ -497,6 +497,57 @@ function validModifyInvitation($cardBody) {
 	return result;
 }
 
+function validModifyMainInfo($cardBody) {
+	var result = {
+			resFlag : true,
+			resData : {},
+			resMessage : "",
+			modifyCategory : "mi"
+		},
+		contentBride = $("#contentBride").val(),
+		fullNameMain = $("#imgMI1").parents(".wrapUploadFile").find("img").data("fullName"),
+		fullNameGroom = $("#imgMI2").parents(".wrapUploadFile").find("img").data("fullName"),
+		fullNameBride = $("#imgMI3").parents(".wrapUploadFile").find("img").data("fullName"),
+		useEachImage = $("input[name=checkboxEachImgYN]").prop("checked") == true ? "N" : "Y";
+	
+	var today = getFormattedDate(new Date()),
+		datePeriod = $("#inputDatePeriod").val().split(" - "),
+		periodBegin = (datePeriod[0]).replace(/-/g, ""),
+		periodEnd = (datePeriod[1]).replace(/-/g, "");
+	if(Number(today) > Number(periodEnd)) {
+		result.resFlag = false;
+		result.resMessage = "기본정보의 게시 기간을 확인해주세요.";
+		return result;
+	}
+	
+	var dateTimeWedding = dateTimeWedding.split(" ");
+	result.resData.dateWedding = (dateTimeWedding[0]).replace(/-/g, "");
+	result.resData.timeWedding = (dateTimeWedding[1]).replace(/:/g, "");
+	if(Number(result.resData.dateWedding) < Number(periodBegin) || Number(result.resData.dateWedding) > Number(periodEnd)) {
+		result.resFlag = false;
+		result.resMessage = "결혼 일자를 확인해주세요.";
+		return result;
+	}
+	
+	var infoAddr = $("#infoWeddingPlace").data("infoWeddingPlace") || "";
+	result.resData.address = infoAddr.addr || "";
+	result.resData.placeX = infoAddr.placeX || "";
+	result.resData.placeY = infoAddr.placeY || "";
+	if(infoAddr == undefined || infoAddr == "") {
+		result.resFlag = false;
+		result.resMessage = "결혼식 장소를 확인해주세요.";
+		return result;
+	}
+	if(result.resData.address == "" || result.resData.placeX == "" || result.resData.placeY == "") {
+		result.resFlag = false;
+		result.resMessage = "결혼식 장소를 확인해주세요.";
+		return result;
+	}
+	
+	result.resData.contentGroom = $("#contentGroom").val();
+	result.resData.contentBride = $("#contentBride").val();
+}
+
 function modifyInvitationInfo(data) {
 	$.ajax({
 		url : "/admin/invitation/" + URL[data.modifyCategory],
