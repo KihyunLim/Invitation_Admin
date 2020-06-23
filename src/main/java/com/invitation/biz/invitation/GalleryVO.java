@@ -7,6 +7,7 @@ public class GalleryVO {
 
 	private int seq;
 	private int invSeq;
+	private int orderSeq;
 	private String id;
 	private Boolean isDelete;
 	private int seqImage;
@@ -25,6 +26,12 @@ public class GalleryVO {
 	}
 	public void setInvSeq(int invSeq) {
 		this.invSeq = invSeq;
+	}
+	public int getOrderSeq() {
+		return orderSeq;
+	}
+	public void setOrderSeq(int orderSeq) {
+		this.orderSeq = orderSeq;
 	}
 	public String getId() {
 		return id;
@@ -67,8 +74,8 @@ public class GalleryVO {
 	
 	@Override
 	public String toString() {
-		return "GalleryVO [seq=" + seq + ", invSeq=" + invSeq + ", id=" + id + ", isDelete=" + isDelete + ", seqImage="
-				+ seqImage + ", fullName=" + fullName + ", dateTimeRegister=" + dateTimeRegister + ", dateTimeUpdate="
-				+ dateTimeUpdate + "]";
+		return "GalleryVO [seq=" + seq + ", invSeq=" + invSeq + ", orderSeq=" + orderSeq + ", id=" + id + ", isDelete="
+				+ isDelete + ", seqImage=" + seqImage + ", fullName=" + fullName + ", dateTimeRegister="
+				+ dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate + "]";
 	}
 }

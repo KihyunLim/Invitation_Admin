@@ -268,7 +268,7 @@ function validateData() {
 	
 	ls.listLS = [];
 	var noImageCount = 0;
-	$(".itemLoveStory").each(function(){
+	$(".itemLoveStory").each(function(index){
 		var $this = $(this),
 			fullNameImg = $this.find("img").data("fullName") || "";
 		
@@ -280,7 +280,8 @@ function validateData() {
 			dateStory : ($this.find(".inputDateLoveStory").val()).replace(/-/g, ""),
 			title : $this.find(".inputTitleLS").val(),
 			content : $this.find(".inputContentLS").val(),
-			fullNameImg : fullNameImg 
+			fullNameImg : fullNameImg ,
+			orderSeq : index + 1
 		});
 	});
 	if(noImageCount > 0){
@@ -339,11 +340,11 @@ function validateData() {
 	
 	gallery.listG = [];
 	if(invitation.useG == "Y") {
-		$("#tableGallery").find(".wrapUploadFile").each(function(){
+		$("#tableGallery").find(".wrapUploadFile").each(function(index){
 			var fullName = $(this).find("img").data("fullName") || "";
 			
 			if(fullName != "") {
-				gallery.listG.push({fullName : fullName});
+				gallery.listG.push({fullName : fullName, orderSeq : index + 1});
 			}
 		});
 		

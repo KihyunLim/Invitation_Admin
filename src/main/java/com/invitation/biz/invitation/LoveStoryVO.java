@@ -7,6 +7,7 @@ public class LoveStoryVO {
 
 	private int seq;
 	private int invSeq;
+	private int orderSeq;
 	private String id;
 	private Boolean isDelete;
 	private String dateStory;
@@ -28,6 +29,12 @@ public class LoveStoryVO {
 	}
 	public void setInvSeq(int invSeq) {
 		this.invSeq = invSeq;
+	}
+	public int getOrderSeq() {
+		return orderSeq;
+	}
+	public void setOrderSeq(int orderSeq) {
+		this.orderSeq = orderSeq;
 	}
 	public String getId() {
 		return id;
@@ -88,9 +95,9 @@ public class LoveStoryVO {
 	
 	@Override
 	public String toString() {
-		return "LoveStoryVO [seq=" + seq + ", invSeq=" + invSeq + ", id=" + id + ", isDelete=" + isDelete
-				+ ", dateStory=" + dateStory + ", title=" + title + ", content=" + content + ", seqImage=" + seqImage
-				+ ", fullNameImg=" + fullNameImg + ", dateTimeRegister=" + dateTimeRegister + ", dateTimeUpdate="
-				+ dateTimeUpdate + "]";
+		return "LoveStoryVO [seq=" + seq + ", invSeq=" + invSeq + ", orderSeq=" + orderSeq + ", id=" + id
+				+ ", isDelete=" + isDelete + ", dateStory=" + dateStory + ", title=" + title + ", content=" + content
+				+ ", seqImage=" + seqImage + ", fullNameImg=" + fullNameImg + ", dateTimeRegister=" + dateTimeRegister
+				+ ", dateTimeUpdate=" + dateTimeUpdate + "]";
 	}
 }

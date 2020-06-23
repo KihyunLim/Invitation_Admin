@@ -94,7 +94,6 @@ public class InvitationDAOMybatis {
 		listG = mybatis.selectList("InvitationDAO.selectGallery", invSeq);
 		resultSyntheticInvitation.setGalleryVO((ArrayList<GalleryVO>) listG);
 		listSM = getSweetMessageList(cri, invSeq);
-//		listSM = mybatis.selectList("InvitationDAO.selectSweetMessage1", invSeq);
 		resultSyntheticInvitation.setSweetMessageVO((ArrayList<SweetMessageVO>) listSM);
 		
 		return resultSyntheticInvitation;

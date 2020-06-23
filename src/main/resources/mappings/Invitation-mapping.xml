@@ -45,6 +45,7 @@
 	<resultMap id="resultLoveStoryVO" type="loveStoryVO">
 		<result column="SEQ" property="seq" />
 		<result column="INV_SEQ" property="invSeq" />
+		<result column="ORDER_SEQ" property="orderSeq" />
 		<result column="ID" property="id" />
 		<result column="IS_DELETE" property="isDelete" />
 		<result column="DATE_STORY" property="dateStory" />
@@ -75,6 +76,7 @@
 	<resultMap id="resultGalleryVO" type="galleryVO">
 		<result column="SEQ" property="seq" />
 		<result column="INV_SEQ" property="invSeq" />
+		<result column="ORDER_SEQ" property="orderSeq" />
 		<result column="ID" property="id" />
 		<result column="IS_DELETE" property="isDelete" />
 		<result column="SEQ_IMAGE" property="seqImage" />
@@ -196,6 +198,7 @@
 			LOVE_STORY (
 				SEQ
 				, INV_SEQ
+				, ORDER_SEQ
 				, ID
 				, IS_DELETE
 				, DATE_STORY
@@ -209,6 +212,7 @@
 			<foreach collection="loveStoryVO" item="item" open="(" close=")" separator="), (">
 				null
 				, #{item.invSeq}
+				, #{item.orderSeq}
 				, #{item.id}
 				, #{item.isDelete}
 				, #{item.dateStory}
@@ -261,6 +265,7 @@
 			GALLERY (
 				SEQ
 				, INV_SEQ
+				, ORDER_SEQ
 				, ID
 				, IS_DELETE
 				, SEQ_IMAGE
@@ -271,6 +276,7 @@
 			<foreach collection="galleryVO" item="item" open="(" close=")" separator="), (">
 				null
 				, #{item.invSeq}
+				, #{item.orderSeq}
 				, #{item.id}
 				, #{item.isDelete}
 				, #{item.seqImage}
@@ -331,6 +337,7 @@
 		SELECT
 			SEQ
 			, INV_SEQ
+			, ORDER_SEQ
 			, ID
 			, IS_DELETE
 			, DATE_STORY
@@ -345,6 +352,8 @@
 		WHERE
 			IS_DELETE = FALSE
 			AND INV_SEQ = #{invSeq}
+		ORDER BY
+			ORDER_SEQ ASC
 		;
 	</select>
 	
@@ -373,18 +382,11 @@
 		WHERE
 			IS_DELETE = FALSE
 			AND INV_SEQ = #{invSeq}
+		ORDER BY
+			ORDER_SEQ ASC
 		;
 	</select>
 	
-	<select id="selectSweetMessage1" resultMap="resultSweetMessageVO">
-		SELECT
-			*
-		FROM
-			SWEET_MESSAGE
-		WHERE
-			INV_SEQ = #{invSeq}
-		;
-	</select>
 	<select id="selectSweetMessage" resultMap="resultSweetMessageVO">
 		SELECT
 			*
