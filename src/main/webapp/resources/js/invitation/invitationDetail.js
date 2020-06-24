@@ -83,7 +83,7 @@ $(function(){
 			$this.hide()
 					.parents(".wrapUploadFile")
 						.find("a").attr("href", res.originalFileUrl).data("title", res.originalFileName)
-						.find("img").attr("src", res.imgSrc).data("fullName", res.fullName);
+						.find("img").attr("src", res.imgSrc).data("fullName", res.fullName).removeData("seqImage");
 			$this.next().show();
 		});
 	});
@@ -103,7 +103,7 @@ $(function(){
 		var $wrapUploadFile = $(this).parents(".wrapUploadFile");
 		
 		$wrapUploadFile.find("a").attr("href", "").removeData("title", "")
-								.find("img").attr("src", DEFAULT_IMG_SRC).removeData("fullName");
+								.find("img").attr("src", DEFAULT_IMG_SRC).removeData("fullName").removeData("seqImage");
 		$wrapUploadFile.find(".btnUploadFile").val("").show()
 								.prev().show()
 								.next().next().hide();
@@ -503,12 +503,9 @@ function validModifyMainInfo($cardBody) {
 			resData : {},
 			resMessage : "",
 			modifyCategory : "mi"
-		},
-		contentBride = $("#contentBride").val(),
-		fullNameMain = $("#imgMI1").parents(".wrapUploadFile").find("img").data("fullName"),
-		fullNameGroom = $("#imgMI2").parents(".wrapUploadFile").find("img").data("fullName"),
-		fullNameBride = $("#imgMI3").parents(".wrapUploadFile").find("img").data("fullName"),
-		useEachImage = $("input[name=checkboxEachImgYN]").prop("checked") == true ? "N" : "Y";
+	};
+	
+	result.resData.invSeq = syntheticInvitation.invitationVO.seq;
 	
 	var today = getFormattedDate(new Date()),
 		datePeriod = $("#inputDatePeriod").val().split(" - "),
@@ -520,7 +517,7 @@ function validModifyMainInfo($cardBody) {
 		return result;
 	}
 	
-	var dateTimeWedding = dateTimeWedding.split(" ");
+	var dateTimeWedding = $("#inputDateTimeWedding").val().split(" ");
 	result.resData.dateWedding = (dateTimeWedding[0]).replace(/-/g, "");
 	result.resData.timeWedding = (dateTimeWedding[1]).replace(/:/g, "");
 	if(Number(result.resData.dateWedding) < Number(periodBegin) || Number(result.resData.dateWedding) > Number(periodEnd)) {
@@ -546,6 +543,36 @@ function validModifyMainInfo($cardBody) {
 	
 	result.resData.contentGroom = $("#contentGroom").val();
 	result.resData.contentBride = $("#contentBride").val();
+	
+	result.resData.fullNameMain = $("#imgMI1").parents(".wrapUploadFile").find("img").data("fullName");
+	result.resData.seqImgMain = $("#imgMI1").parents(".wrapUploadFile").find("img").data("seqImage") || -1;
+	if(result.resData.fullNameMain == undefined) {
+		result.resFlag = false;
+		result.resMessage = "메인 사진을 확인해주세요.";
+		return result;
+	}
+	
+	result.resData.useEachImage = $("input[name=checkboxEachImgYN]").prop("checked") == true ? "N" : "Y";
+	
+	result.resData.fullNameGroom = $("#imgMI2").parents(".wrapUploadFile").find("img").data("fullName");
+	result.resData.seqImgGroom = $("#imgMI2").parents(".wrapUploadFile").find("img").data("seqImage") || -1;
+	result.resData.fullNameBride = $("#imgMI3").parents(".wrapUploadFile").find("img").data("fullName");
+	result.resData.seqImgBride = $("#imgMI3").parents(".wrapUploadFile").find("img").data("seqImage") || -1;
+	if(result.resData.useEachImage == "Y") {
+		if(result.resData.fullNameGroom == undefined) {
+			result.resFlag = false;
+			result.resMessage = "신랑 사진을 확인해주세요.";
+			return result;
+		}
+		
+		if(result.resData.fullNameBride == undefined) {
+			result.resFlag = false;
+			result.resMessage = "신부 사진을 확인해주세요.";
+			return result;
+		}
+	}
+	
+	return result;
 }
 
 function modifyInvitationInfo(data) {
@@ -562,6 +589,7 @@ function modifyInvitationInfo(data) {
 			console.log(result);
 			
 			if(result.resFlag) {
+				syntheticInvitation.invitationVO = result.resInvitationVO;
 				alert("수정이 완료되었습니다.");
 			} else {
 				alert(result.resMessage);

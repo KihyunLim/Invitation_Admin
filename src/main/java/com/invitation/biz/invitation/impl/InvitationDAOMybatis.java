@@ -99,7 +99,19 @@ public class InvitationDAOMybatis {
 		return resultSyntheticInvitation;
 	}
 	
-	public void modifyInvitation(InvitationVO invitationVO) {
+	public String getFormCode(int invSeq) {
+		return mybatis.selectOne("InvitationDAO.getFormCode", invSeq);
+	}
+	
+	public InvitationVO modifyInvitation(InvitationVO invitationVO) {
 		mybatis.update("InvitationDAO.updateInvitation", invitationVO);
+		
+		return mybatis.selectOne("InvitationDAO.selectInvitation", invitationVO.getSeq());
+	}
+	
+	public InvitationVO modifyMainInfo(MainInfoVO mainInfoVO) {
+		mybatis.update("InvitationDAO.updateMainInfo", mainInfoVO);
+		
+		return mybatis.selectOne("InvitationDAO.selectInvitation", mainInfoVO.getInvSeq());
 	}
 }

@@ -48,16 +48,10 @@ public class InvitationServiceImpl implements InvitationService {
 	}
 
 	@Override
-	public int getLastInsertID() {
-		return invitationDAO.getLastInsertID();
-	}
-
-	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void registerInvitation(SyntheticInvitationVO vo) {
 		Integer lastInsertID_vo = null;
 		Integer lastInsertID_file = null;
-		Map<String, Object> mapAttach = new HashMap<String, Object>();
 		Iterator<LoveStoryVO> iteratorLS = vo.getLoveStoryVO().iterator();
 		Iterator<WhenWhereVO> iteratorWW = vo.getWhenWhereVO().iterator();
 		Iterator<GalleryVO> iteratorG = vo.getGalleryVO().iterator();
@@ -70,28 +64,13 @@ public class InvitationServiceImpl implements InvitationService {
 		vo.getMainInfoVO().setInvSeq(lastInsertID_vo);
 		vo.getMainInfoVO().setId(vo.getInvitationVO().getId());
 		//
-		mapAttach.put("invSeq", lastInsertID_vo);
-		mapAttach.put("fullName", vo.getMainInfoVO().getFullNameMain());
-		mapAttach.put("category", "MI");
-		mapAttach.put("formCode", vo.getInvitationVO().getFormCode());
-		fileUploadService.insertFileInfo(mapAttach);
-		lastInsertID_file = getLastInsertID();
+		lastInsertID_file = getFileLastInsertID(lastInsertID_vo, vo.getMainInfoVO().getFullNameMain(), "MI", vo.getInvitationVO().getFormCode());
 		vo.getMainInfoVO().setSeqImgMain(lastInsertID_file);
 		//
-		mapAttach.put("invSeq",  lastInsertID_vo);
-		mapAttach.put("fullName",  vo.getMainInfoVO().getFullNameGroom());
-		mapAttach.put("category",  "MI");
-		mapAttach.put("formCode",  vo.getInvitationVO().getFormCode());
-		fileUploadService.insertFileInfo(mapAttach);
-		lastInsertID_file = getLastInsertID();
+		lastInsertID_file = getFileLastInsertID(lastInsertID_vo, vo.getMainInfoVO().getFullNameGroom(), "MI", vo.getInvitationVO().getFormCode());
 		vo.getMainInfoVO().setSeqImgGroom(lastInsertID_file);
 		//
-		mapAttach.put("invSeq",  lastInsertID_vo);
-		mapAttach.put("fullName",  vo.getMainInfoVO().getFullNameBride());
-		mapAttach.put("category",  "MI");
-		mapAttach.put("formCode",  vo.getInvitationVO().getFormCode());
-		fileUploadService.insertFileInfo(mapAttach);
-		lastInsertID_file = getLastInsertID();
+		lastInsertID_file = getFileLastInsertID(lastInsertID_vo, vo.getMainInfoVO().getFullNameBride(), "MI", vo.getInvitationVO().getFormCode());
 		vo.getMainInfoVO().setSeqImgBride(lastInsertID_file);
 		//
 		invitationDAO.insertMainInfo(vo);
@@ -102,12 +81,7 @@ public class InvitationServiceImpl implements InvitationService {
 //		}
 		while(iteratorLS.hasNext()) {
 			LoveStoryVO item = iteratorLS.next();
-			mapAttach.put("invSeq", lastInsertID_vo);
-			mapAttach.put("fullName", item.getFullNameImg());
-			mapAttach.put("category", "LS");
-			mapAttach.put("formCode", vo.getInvitationVO().getFormCode());
-			fileUploadService.insertFileInfo(mapAttach);
-			lastInsertID_file = getLastInsertID();
+			lastInsertID_file = getFileLastInsertID(lastInsertID_vo, item.getFullNameImg(), "LS", vo.getInvitationVO().getFormCode());
 			item.setInvSeq(lastInsertID_vo);
 			item.setId(vo.getInvitationVO().getId());
 			item.setIsDelete(false);
@@ -123,15 +97,10 @@ public class InvitationServiceImpl implements InvitationService {
 		}
 		invitationDAO.insertWhenWhere(vo);
 		
-		LOGGER.debug("insertGallery");
+		LOGGER.debug("insertGallery >>> ");
 		while(iteratorG.hasNext()) {
 			GalleryVO item = iteratorG.next();
-			mapAttach.put("invSeq", lastInsertID_vo);
-			mapAttach.put("fullName", item.getFullName());
-			mapAttach.put("category", "G");
-			mapAttach.put("formCode", vo.getInvitationVO().getFormCode());
-			fileUploadService.insertFileInfo(mapAttach);
-			lastInsertID_file = getLastInsertID();
+			lastInsertID_file = getFileLastInsertID(lastInsertID_vo, item.getFullName(), "G", vo.getInvitationVO().getFormCode());
 			item.setInvSeq(lastInsertID_vo);
 			item.setId(vo.getInvitationVO().getId());
 			item.setIsDelete(false);
@@ -168,7 +137,47 @@ public class InvitationServiceImpl implements InvitationService {
 	}
 
 	@Override
-	public void modifyInvitation(InvitationVO invitationVO) {
-		invitationDAO.modifyInvitation(invitationVO);
+	public InvitationVO modifyInvitation(InvitationVO invitationVO) {
+		return invitationDAO.modifyInvitation(invitationVO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public InvitationVO modifyMainInfo(MainInfoVO mainInfoVO) {
+		Integer lastInsertID_file = null;
+		String formCode = invitationDAO.getFormCode(mainInfoVO.getInvSeq());
+		
+		if(mainInfoVO.getSeqImgMain() == -1) {
+			lastInsertID_file = getFileLastInsertID(mainInfoVO.getInvSeq(), mainInfoVO.getFullNameMain(), "MI", formCode);
+			mainInfoVO.setSeqImgMain(lastInsertID_file);
+		}
+		if(mainInfoVO.getSeqImgGroom() == -1) {
+			lastInsertID_file = getFileLastInsertID(mainInfoVO.getInvSeq(), mainInfoVO.getFullNameGroom(), "MI", formCode);
+			mainInfoVO.setSeqImgGroom(lastInsertID_file);
+		}
+		if(mainInfoVO.getSeqImgBride() == -1) {
+			lastInsertID_file = getFileLastInsertID(mainInfoVO.getInvSeq(), mainInfoVO.getFullNameBride(), "MI", formCode);
+			mainInfoVO.setSeqImgBride(lastInsertID_file);
+		}
+		
+		return invitationDAO.modifyMainInfo(mainInfoVO);
+	}
+	
+	@Override
+	public int getLastInsertID() {
+		return invitationDAO.getLastInsertID();
+	}
+	
+	private int getFileLastInsertID(int invSeq, String fullName, String category, String formCode) {
+		Map<String, Object> mapAttach = new HashMap<String, Object>();
+		
+		mapAttach.put("invSeq", invSeq);
+		mapAttach.put("fullName", fullName);
+		mapAttach.put("category", category);
+		mapAttach.put("formCode", formCode);
+		
+		fileUploadService.insertFileInfo(mapAttach);
+		
+		return getLastInsertID();
 	}
 }

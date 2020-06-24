@@ -371,6 +371,7 @@
 		SELECT
 			SEQ
 			, INV_SEQ
+			, ORDER_SEQ
 			, ID
 			, IS_DELETE
 			, SEQ_IMAGE
@@ -410,6 +411,16 @@
 		;
 	</select>
 	
+	<select id="getFormCode" resultType="int">
+		SELECT
+			FORMCODE
+		FROM
+			INVITATION_LIST
+		WHERE
+			SEQ = #{invSeq}
+		;
+	</select>
+	
 	<update id="updateInvitation">
 		UPDATE
 			INVITATION_LIST
@@ -418,6 +429,27 @@
 			, DATE_BEGIN = #{periodBegin}
 			, DATE_END = #{periodEnd}
 			, FORMCODE = #{formCode}
+			, DATETIME_UPDATE = NOW()
+		WHERE
+			SEQ = #{seq}
+		;
+	</update>
+	
+	<update id="updateMainInfo">
+		UPDATE
+			MAIN_INFO
+		SET
+			DATE_WEDDING = #{dateWedding}
+			, TIME_WEDDING = #{dateWedding}
+			, X_PLACE = #{placeX}
+			, Y_PLACE = #{placeY}
+			, ADDRESS = #{address}
+			, CONTENT_GROOM = #{contentGroom}
+			, CONTENT_BRIDE = #{contentBride}
+			, SEQ_IMG_MAIN = #{seqImgMain}
+			, YN_EACH_IMAGE = #{useEachImage}
+			, SEQ_IMG_GROOM = #{seqImgGroom}
+			, SEQ_IMG_BRIDE = #{seqImgBride}
 			, DATETIME_UPDATE = NOW()
 		WHERE
 			SEQ = #{seq}

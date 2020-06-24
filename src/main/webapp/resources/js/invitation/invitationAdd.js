@@ -261,9 +261,6 @@ function validateData() {
 			result.resMessage = "신부 사진을 확인해주세요.";
 			return result;
 		}
-	} else {
-		mi.fullNameGroom = "";
-		mi.fullNameBride = "";
 	}
 	
 	ls.listLS = [];
@@ -339,20 +336,17 @@ function validateData() {
 	}
 	
 	gallery.listG = [];
-	if(invitation.useG == "Y") {
-		$("#tableGallery").find(".wrapUploadFile").each(function(index){
-			var fullName = $(this).find("img").data("fullName") || "";
-			
-			if(fullName != "") {
-				gallery.listG.push({fullName : fullName, orderSeq : index + 1});
-			}
-		});
+	$("#tableGallery").find(".wrapUploadFile").each(function(index){
+		var fullName = $(this).find("img").data("fullName") || "";
 		
-		if(gallery.listG.length < 1) {
-			result.resFlag = false;
-			result.resMessage = "Gallery에 사진을 확인해주세요.";
-			return result;
+		if(fullName != "") {
+			gallery.listG.push({fullName : fullName, orderSeq : index + 1});
 		}
+	});
+	if(invitation.useG == "Y" && gallery.listG.length < 1) {
+		result.resFlag = false;
+		result.resMessage = "Gallery에 사진을 확인해주세요.";
+		return result;
 	}
 	
 	result.resData = {

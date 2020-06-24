@@ -9,8 +9,6 @@ public interface InvitationService {
 
 	MemberInfoVO getMemberInfo(String id) throws Exception;
 
-	int getLastInsertID();
-	
 	void registerInvitation(SyntheticInvitationVO syntheticInvitationVO);
 	
 	Map<String, Object> getMemberInvitation(String id) throws Exception;
@@ -21,5 +19,9 @@ public interface InvitationService {
 	
 	SyntheticInvitationVO getSyntheticInvitation(String invSeq);
 	
-	void modifyInvitation(InvitationVO invitationVO);
+	InvitationVO modifyInvitation(InvitationVO invitationVO);
+	
+	InvitationVO modifyMainInfo(MainInfoVO mainInfoVO);
+	
+	int getLastInsertID();
 }
