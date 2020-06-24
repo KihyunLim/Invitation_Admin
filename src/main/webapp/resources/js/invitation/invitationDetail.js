@@ -385,6 +385,7 @@ function renderSyntheticInvitation(data, pageMaker) {
 		}
 	});
 	
+	utilDataTableDestroy("tableSweetMessageList");
 	renderSweetMessageList(data.sweetMessageVO, pageMaker);
 }
 
@@ -505,6 +506,7 @@ function validModifyMainInfo($cardBody) {
 			modifyCategory : "mi"
 	};
 	
+	result.resData.seq = syntheticInvitation.mainInfoVO.seq;
 	result.resData.invSeq = syntheticInvitation.invitationVO.seq;
 	
 	var today = getFormattedDate(new Date()),
@@ -552,7 +554,7 @@ function validModifyMainInfo($cardBody) {
 		return result;
 	}
 	
-	result.resData.useEachImage = $("input[name=checkboxEachImgYN]").prop("checked") == true ? "N" : "Y";
+	result.resData.useEachImage = $("input[name=checkboxEachImgYN]").prop("checked") == true ? "Y" : "N";
 	
 	result.resData.fullNameGroom = $("#imgMI2").parents(".wrapUploadFile").find("img").data("fullName");
 	result.resData.seqImgGroom = $("#imgMI2").parents(".wrapUploadFile").find("img").data("seqImage") || -1;

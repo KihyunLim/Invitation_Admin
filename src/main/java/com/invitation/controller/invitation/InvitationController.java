@@ -261,6 +261,7 @@ public class InvitationController {
 		
 		LOGGER.info("modifyMainInfo.do");
 		try {
+			resInvitationVO = invitationService.modifyMainInfo(vo);
 			
 			resFlag = true;
 		} catch (Exception e) {

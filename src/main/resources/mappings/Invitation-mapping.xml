@@ -411,7 +411,7 @@
 		;
 	</select>
 	
-	<select id="getFormCode" resultType="int">
+	<select id="getFormCode" resultType="String">
 		SELECT
 			FORMCODE
 		FROM
@@ -440,7 +440,7 @@
 			MAIN_INFO
 		SET
 			DATE_WEDDING = #{dateWedding}
-			, TIME_WEDDING = #{dateWedding}
+			, TIME_WEDDING = #{timeWedding}
 			, X_PLACE = #{placeX}
 			, Y_PLACE = #{placeY}
 			, ADDRESS = #{address}
