@@ -1,5 +1,6 @@
 package com.invitation.biz.invitation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,8 @@ public interface InvitationService {
 	InvitationVO modifyInvitation(InvitationVO invitationVO);
 	
 	InvitationVO modifyMainInfo(MainInfoVO mainInfoVO);
+	
+	InvitationVO modifyLoveStory(String useLS, ArrayList<LoveStoryVO> loveStoryVO);
 	
 	int getLastInsertID();
 }

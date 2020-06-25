@@ -264,34 +264,32 @@ function validateData() {
 	}
 	
 	ls.listLS = [];
-	var noImageCount = 0;
+	var noImageCount = 0,
+		isUndefinedImg = false;
 	$(".itemLoveStory").each(function(index){
 		var $this = $(this),
 			fullNameImg = $this.find("img").data("fullName") || "";
 		
 		if(fullNameImg == "") {
-			noImageCount++;
+			isUndefinedImg = true;
+			return false;
 		}
 		
 		ls.listLS.push({
 			dateStory : ($this.find(".inputDateLoveStory").val()).replace(/-/g, ""),
 			title : $this.find(".inputTitleLS").val(),
 			content : $this.find(".inputContentLS").val(),
-			fullNameImg : fullNameImg ,
+			fullNameImg : fullNameImg,
 			orderSeq : index + 1
 		});
 	});
-	if(noImageCount > 0){
+	if(isUndefinedImg){
 		result.resFlag = false;
 		result.resMessage = "Love Story에 사진을 확인해주세요.";
 		return result;
 	} else if(invitation.useLS == "Y" && ls.listLS.length < 1) {
 		result.resFlag = false;
 		result.resMessage = "Love Story에 사진을 확인해주세요.";
-		return result;
-	} else if(invitation.useLS == "N" && ls.listLS.length > 0) {
-		result.resFlag = false;
-		result.resMessage = "Love Story의 사용 여부를 확인해주세요.";
 		return result;
 	}
 	

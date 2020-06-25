@@ -225,6 +225,37 @@
 		;
 	</insert>
 	
+	<insert id="insertLoveStoryItem">
+		INSERT INTO
+			LOVE_STORY (
+				SEQ
+				, INV_SEQ
+				, ORDER_SEQ
+				, ID
+				, IS_DELETE
+				, DATE_STORY
+				, TITLE
+				, CONTENT
+				, SEQ_IMAGE
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			)
+			VALUES (
+				null
+				, #{invSeq}
+				, #{orderSeq}
+				, #{id}
+				, #{isDelete}
+				, #{dateStory}
+				, #{title}
+				, #{content}
+				, #{seqImage}
+				, null
+				, null
+			)
+		;
+	</insert>
+	
 	<insert id="insertWhenWhere">
 		INSERT INTO
 			WHEN_WHERE (
@@ -421,6 +452,27 @@
 		;
 	</select>
 	
+	<update id="updateInvitationUseFlag">
+		UPDATE
+			INVITATION_LIST
+		SET
+		<if test="useCategory == ''ls">
+			USE_LS = #{useFlag}
+		</if>
+		<if test="useCategory == ''ww">
+			USE_PYEBAEK = #{useFlag}
+		</if>
+		<if test="useCategory == ''gallery">
+			USE_G = #{useFlag}
+		</if>
+		<if test="useCategory == ''sm">
+			USE_SM = #{useFlag}
+		</if>
+		WHERE
+			SEQ = #{invSeq}
+		;
+	</update>
+	
 	<update id="updateInvitation">
 		UPDATE
 			INVITATION_LIST
@@ -450,6 +502,20 @@
 			, YN_EACH_IMAGE = #{useEachImage}
 			, SEQ_IMG_GROOM = #{seqImgGroom}
 			, SEQ_IMG_BRIDE = #{seqImgBride}
+			, DATETIME_UPDATE = NOW()
+		WHERE
+			SEQ = #{seq}
+		;
+	</update>
+	
+	<update id="updateLoveStory">
+		UPDATE
+			LOVE_STORY
+		SET
+			ORDER_SEQ = #{orderSeq}
+			, DATE_STORY = #{dateStory}
+			, TITLE = #{title}
+			, CONTENT = #{content}
 			, DATETIME_UPDATE = NOW()
 		WHERE
 			SEQ = #{seq}

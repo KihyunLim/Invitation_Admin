@@ -1,5 +1,6 @@
 package com.invitation.controller.invitation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import com.invitation.biz.common.paging.Criteria;
 import com.invitation.biz.common.paging.PageMaker;
 import com.invitation.biz.invitation.InvitationService;
 import com.invitation.biz.invitation.InvitationVO;
+import com.invitation.biz.invitation.LoveStoryVO;
 import com.invitation.biz.invitation.MainInfoVO;
 import com.invitation.biz.invitation.MemberInfoVO;
 import com.invitation.biz.invitation.SweetMessageVO;
@@ -270,6 +272,35 @@ public class InvitationController {
 			
 			resFlag = false;
 			resMessage = "메인정보 수정에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("resInvitationVO", resInvitationVO);
+		}
+		
+		return result;
+	}
+	
+	@PostMapping(value="/modifyLoveStory.do", headers= {"Content-type=application/json"})
+	@ResponseBody
+	public Map<String, Object> modifyLoveStory(@RequestParam(value="useLS", required=true) String useLS, 
+			@RequestBody ArrayList<LoveStoryVO> vo) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		InvitationVO resInvitationVO = new InvitationVO();
+		
+		LOGGER.info("modifyLoveStory.do");
+		try {
+			
+			
+			resFlag = true;
+		} catch (Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "Love Story 수정에 실패했습니다.";
 		} finally {
 			result.put("resFlag", resFlag);
 			result.put("resMessage", resMessage);

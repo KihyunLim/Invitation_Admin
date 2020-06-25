@@ -1,5 +1,6 @@
 package com.invitation.biz.invitation.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -141,26 +142,61 @@ public class InvitationServiceImpl implements InvitationService {
 		return invitationDAO.modifyInvitation(invitationVO);
 	}
 
+	/**
+	 * trigger 실습을 위해 MAIN_INFO update 후 아래 내용 trigger 적용 
+	 * INVITATION_LIST > USE_EACH_IMAGE / WHEN_WHERE > ADDRESS, X_PALCE, Y_PALCE, DATE_WW, TIME_WW
+	 * (나머지 INVITATION_LIST의 USE_*플래그들은 직접 UPDATE 처리)
+	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public InvitationVO modifyMainInfo(MainInfoVO mainInfoVO) {
 		Integer lastInsertID_file = null;
-		String formCode = invitationDAO.getFormCode(mainInfoVO.getInvSeq());
+		String formCode = "";
 		
-		if(mainInfoVO.getSeqImgMain() == -1) {
-			lastInsertID_file = getFileLastInsertID(mainInfoVO.getInvSeq(), mainInfoVO.getFullNameMain(), "MI", formCode);
-			mainInfoVO.setSeqImgMain(lastInsertID_file);
-		}
-		if(mainInfoVO.getSeqImgGroom() == -1) {
-			lastInsertID_file = getFileLastInsertID(mainInfoVO.getInvSeq(), mainInfoVO.getFullNameGroom(), "MI", formCode);
-			mainInfoVO.setSeqImgGroom(lastInsertID_file);
-		}
-		if(mainInfoVO.getSeqImgBride() == -1) {
-			lastInsertID_file = getFileLastInsertID(mainInfoVO.getInvSeq(), mainInfoVO.getFullNameBride(), "MI", formCode);
-			mainInfoVO.setSeqImgBride(lastInsertID_file);
+		if(mainInfoVO.getSeqImgMain() == -1 || mainInfoVO.getSeqImgGroom() == -1 || mainInfoVO.getSeqImgBride() == -1) {
+			formCode = invitationDAO.getFormCode(mainInfoVO.getInvSeq());
+			
+			if(mainInfoVO.getSeqImgMain() == -1) {
+				lastInsertID_file = getFileLastInsertID(mainInfoVO.getInvSeq(), mainInfoVO.getFullNameMain(), "MI", formCode);
+				mainInfoVO.setSeqImgMain(lastInsertID_file);
+			}
+			if(mainInfoVO.getSeqImgGroom() == -1) {
+				lastInsertID_file = getFileLastInsertID(mainInfoVO.getInvSeq(), mainInfoVO.getFullNameGroom(), "MI", formCode);
+				mainInfoVO.setSeqImgGroom(lastInsertID_file);
+			}
+			if(mainInfoVO.getSeqImgBride() == -1) {
+				lastInsertID_file = getFileLastInsertID(mainInfoVO.getInvSeq(), mainInfoVO.getFullNameBride(), "MI", formCode);
+				mainInfoVO.setSeqImgBride(lastInsertID_file);
+			}
 		}
 		
 		return invitationDAO.modifyMainInfo(mainInfoVO);
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public InvitationVO modifyLoveStory(String useLS, ArrayList<LoveStoryVO> loveStoryVO) {
+		Integer lastInsertID_file = null;
+		Iterator<LoveStoryVO> iteratorLS = loveStoryVO.iterator();
+		String formCode = invitationDAO.getFormCode(loveStoryVO.get(0).getInvSeq());
+		List<Integer> newLoveStory = new ArrayList<Integer>();
+		
+		while(iteratorLS.hasNext()) {
+			LoveStoryVO item = iteratorLS.next();
+			
+			if(item.getSeqImage() == -1) {
+				lastInsertID_file = getFileLastInsertID(item.getInvSeq(), item.getFullNameImg(), "LS", formCode);
+				item.setSeqImage(lastInsertID_file);
+				invitationDAO.insertLoveStoryItem(item);
+			} else {
+				invitationDAO.modifyLoveStory(item);
+			}
+			
+			newLoveStory.add(getLastInsertID());
+		}
+		// not in ㄱㄱ
+		
+		return modifyInvitationUseFlag(loveStoryVO.get(0).getInvSeq(), "ls", useLS);
 	}
 	
 	@Override
@@ -179,5 +215,9 @@ public class InvitationServiceImpl implements InvitationService {
 		fileUploadService.insertFileInfo(mapAttach);
 		
 		return getLastInsertID();
+	}
+	
+	private InvitationVO modifyInvitationUseFlag(int invSeq, String useCategory, String useFlag) {
+		return invitationDAO.modifyInvitationUseFlag(invSeq, useCategory, useFlag);
 	}
 }

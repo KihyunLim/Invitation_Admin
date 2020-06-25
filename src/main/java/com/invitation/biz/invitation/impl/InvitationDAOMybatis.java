@@ -51,6 +51,10 @@ public class InvitationDAOMybatis {
 		mybatis.insert("InvitationDAO.insertLoveStory", syntheticInvitationVO);
 	}
 	
+	public void insertLoveStoryItem(LoveStoryVO loveStoryVO) {
+		mybatis.insert("InvitationDAO.insertLoveStoryItem", loveStoryVO);
+	}
+	
 	public void insertWhenWhere(SyntheticInvitationVO syntheticInvitationVO) {
 		mybatis.insert("InvitationDAO.insertWhenWhere", syntheticInvitationVO);
 	}
@@ -103,6 +107,18 @@ public class InvitationDAOMybatis {
 		return mybatis.selectOne("InvitationDAO.getFormCode", invSeq);
 	}
 	
+	public InvitationVO modifyInvitationUseFlag(int invSeq, String useCategory, String useFlag) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("invSeq", invSeq);
+		param.put("useCategory", useCategory);
+		param.put("useFlag", useFlag);
+		
+		mybatis.update("InvitationDAO.updateInvitationUseFlag", param);
+		
+		return mybatis.selectOne("InvitationDAO.selectInvitation", invSeq);
+	}
+	
 	public InvitationVO modifyInvitation(InvitationVO invitationVO) {
 		mybatis.update("InvitationDAO.updateInvitation", invitationVO);
 		
@@ -113,5 +129,9 @@ public class InvitationDAOMybatis {
 		mybatis.update("InvitationDAO.updateMainInfo", mainInfoVO);
 		
 		return mybatis.selectOne("InvitationDAO.selectInvitation", mainInfoVO.getInvSeq());
+	}
+	
+	public void modifyLoveStory(LoveStoryVO loveStoryVO) {
+		mybatis.update("InvitationDAO.updateLoveStory", loveStoryVO);
 	}
 }

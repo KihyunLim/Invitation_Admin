@@ -577,9 +577,63 @@ function validModifyMainInfo($cardBody) {
 	return result;
 }
 
+function validModifyLoveStory($cardBody) {
+	var result = {
+			resFlag : true,
+			resData : {},
+			resMessage : "",
+			useLS : $("input[name=checkboxUseLSYN]").prop("checked") == true ? "Y" : "N",
+			modifyCategory : "ls"
+	};
+	
+	result.resData.listLS = [];
+	var noImageCount = 0,
+		isUndefinedImg = false;
+	$(".itemLoveStory").each(function(index){
+		var $this = $(this),
+			fullNameImg = $this.find("img").data("fullName") || "";
+		
+		if(fullNameImg == "") {
+			isUndefinedImg = true;
+			return false;
+		}
+		
+		result.resData.listLS.push({
+			seq : syntheticInvitation.invitationVO.seq,
+			invSeq : syntheticInvitation.invitationVO.seq,
+			id : syntheticInvitation.invitationVO.id,
+			isDelete : false,
+			dateStory : ($this.find(".inputDateLoveStory").val()).replace(/-/g, ""),
+			title : $this.find(".inputTitleLS").val(),
+			content : $this.find(".inputContentLS").val(),
+			fullNameImg : fullNameImg,
+			seqImage : $this.find("img").data("seqImage") || -1,
+			orderSeq : index + 1
+		});
+	});
+	
+	if(isUndefinedImg){
+		result.resFlag = false;
+		result.resMessage = "Love Story에 사진을 확인해주세요.";
+		return result;
+	} else if(result.useLS == "Y" && result.resData.listLS.length < 1) {
+		result.resFlag = false;
+		result.resMessage = "Love Story에 사진을 확인해주세요.";
+		return result;
+	}
+	
+	return result;
+}
+
 function modifyInvitationInfo(data) {
+	var addParam = "";
+	
+	if(URL[data.modifyCategory] == "ls") {
+		addParam = "?" + $.param({useLS : data.useLS});
+	}
+	
 	$.ajax({
-		url : "/admin/invitation/" + URL[data.modifyCategory],
+		url : "/admin/invitation/" + URL[data.modifyCategory] + addParam,
 		type : "POST",
 		dataType : "json",
 		data : JSON.stringify(data.resData),
