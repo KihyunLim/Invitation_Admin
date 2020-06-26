@@ -28,6 +28,7 @@ import com.invitation.biz.invitation.MainInfoVO;
 import com.invitation.biz.invitation.MemberInfoVO;
 import com.invitation.biz.invitation.SweetMessageVO;
 import com.invitation.biz.invitation.SyntheticInvitationVO;
+import com.invitation.biz.invitation.WhenWhereVO;
 
 @Controller
 @RequestMapping(value="/invitation")
@@ -284,13 +285,41 @@ public class InvitationController {
 	@PostMapping(value="/modifyLoveStory.do", headers= {"Content-type=application/json"})
 	@ResponseBody
 	public Map<String, Object> modifyLoveStory(@RequestParam(value="useLS", required=true) String useLS, 
-			@RequestBody ArrayList<LoveStoryVO> vo) {
+			@RequestBody LoveStoryVO vo) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Boolean resFlag = false;
 		String resMessage = "";
 		InvitationVO resInvitationVO = new InvitationVO();
 		
 		LOGGER.info("modifyLoveStory.do");
+		try {
+			resInvitationVO = invitationService.modifyLoveStory(useLS, (ArrayList<LoveStoryVO>) vo.getListLoveStory());
+			
+			resFlag = true;
+		} catch (Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "Love Story 수정에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("resInvitationVO", resInvitationVO);
+		}
+		
+		return result;
+	}
+	
+	@PostMapping(value="/modifyWhenWhere.do", headers= {"Content-type-application/json"})
+	@ResponseBody
+	public Map<String, Object> modifyWhenWhere(@RequestBody WhenWhereVO vo) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		InvitationVO resInvitationVO = new InvitationVO();
+		
+		LOGGER.info("modifyWhenWhere.do");
 		try {
 			
 			
@@ -300,7 +329,7 @@ public class InvitationController {
 			LOGGER.error("error trace : ", e);
 			
 			resFlag = false;
-			resMessage = "Love Story 수정에 실패했습니다.";
+			resMessage = "When Where 수정에 실패했습니다.";
 		} finally {
 			result.put("resFlag", resFlag);
 			result.put("resMessage", resMessage);

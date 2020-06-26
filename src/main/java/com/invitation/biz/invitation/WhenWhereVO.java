@@ -18,6 +18,7 @@ public class WhenWhereVO {
 	private String content;
 	private Date dateTimeRegister;
 	private Date dateTimeUpdate;
+	private String modifyType;
 	
 	public int getSeq() {
 		return seq;
@@ -99,13 +100,18 @@ public class WhenWhereVO {
 	public void setDateTimeUpdate(Date dateTimeUpdate) {
 		this.dateTimeUpdate = dateTimeUpdate;
 	}
+	public String getModifyType() {
+		return modifyType;
+	}
+	public void setModifyType(String modifyType) {
+		this.modifyType = modifyType;
+	}
 	
 	@Override
 	public String toString() {
 		return "WhenWhereVO [seq=" + seq + ", invSeq=" + invSeq + ", id=" + id + ", flagPyebaek=" + flagPyebaek
 				+ ", dateWedding=" + dateWedding + ", timeWedding=" + timeWedding + ", placeX=" + placeX + ", placeY="
 				+ placeY + ", address=" + address + ", title=" + title + ", content=" + content + ", dateTimeRegister="
-				+ dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate + "]";
+				+ dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate + ", modifyType=" + modifyType + "]";
 	}
-	
 }

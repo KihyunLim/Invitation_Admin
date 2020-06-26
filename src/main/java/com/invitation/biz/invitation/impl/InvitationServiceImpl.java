@@ -188,13 +188,14 @@ public class InvitationServiceImpl implements InvitationService {
 				lastInsertID_file = getFileLastInsertID(item.getInvSeq(), item.getFullNameImg(), "LS", formCode);
 				item.setSeqImage(lastInsertID_file);
 				invitationDAO.insertLoveStoryItem(item);
+				newLoveStory.add(getLastInsertID());
 			} else {
 				invitationDAO.modifyLoveStory(item);
+				newLoveStory.add(item.getSeq());
 			}
-			
-			newLoveStory.add(getLastInsertID());
 		}
-		// not in ㄱㄱ
+		LOGGER.info("newLoveStory : " + newLoveStory.toString());
+		invitationDAO.changeDeleteFlagLS(loveStoryVO.get(0).getInvSeq(), newLoveStory);
 		
 		return modifyInvitationUseFlag(loveStoryVO.get(0).getInvSeq(), "ls", useLS);
 	}

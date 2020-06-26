@@ -103,7 +103,10 @@ $(function(){
 		var $wrapUploadFile = $(this).parents(".wrapUploadFile");
 		
 		$wrapUploadFile.find("a").attr("href", "").removeData("title", "")
-								.find("img").attr("src", DEFAULT_IMG_SRC).removeData("fullName").removeData("seqImage");
+								.find("img").attr("src", DEFAULT_IMG_SRC)
+									.removeData("fullName")
+									.removeData("seqImage")
+									.removeData("seq");
 		$wrapUploadFile.find(".btnUploadFile").val("").show()
 								.prev().show()
 								.next().next().hide();
@@ -179,7 +182,10 @@ function cloneLoveStory(isSet, data) {
 			$btnUploadFile.hide()
 				.parents(".wrapUploadFile")
 				.find("a").attr("href", fileInfo.originalFileUrl).data("title", fileInfo.originalFileName)
-				.find("img").attr("src", fileInfo.imgSrc).data("fullName", fileInfo.fullName).data("seqImage", data.seqImage);
+				.find("img").attr("src", fileInfo.imgSrc)
+					.data("fullName", fileInfo.fullName)
+					.data("seqImage", data.seqImage)
+					.data("seq", data.seq);
 			$btnUploadFile.next().show();
 		}
 		
@@ -348,11 +354,13 @@ function renderSyntheticInvitation(data, pageMaker) {
 		cloneLoveStory(true, item);
 	});
 	
+	$("#inputDateTimeWedding_copy").data("seq", data.whenWhereVO[0].seq).data("invSeq", data.whenWhereVO[0].invSeq);
 	$("#inputDateTimeWedding_copy").val(dateTimeWedding1);
 	$("#inputTitleWeddingWW").val(data.whenWhereVO[0].title);
 	$("#inputContentWeddingWW").val(data.whenWhereVO[0].content);
-	if(data.invitationVO.usePyebaek == "Y") {
+	if(data.whenWhereVO.length == 2) {
 		$("input[name=checkboxDoPyebaek]").prop("checked", true);
+		$("#inputDatePyebaek").data("seq", data.whenWhereVO[1].seq).data("invSeq", data.whenWhereVO[1].invSeq);
 		var dateTimeWedding2 = data.whenWhereVO[1].dateWedding.substr(0,4)
 											+ "-" + data.whenWhereVO[1].dateWedding.substr(4,2)
 											+ "-" + data.whenWhereVO[1].dateWedding.substr(6,2)
@@ -586,7 +594,7 @@ function validModifyLoveStory($cardBody) {
 			modifyCategory : "ls"
 	};
 	
-	result.resData.listLS = [];
+	result.resData.listLoveStory = [];
 	var noImageCount = 0,
 		isUndefinedImg = false;
 	$(".itemLoveStory").each(function(index){
@@ -598,8 +606,8 @@ function validModifyLoveStory($cardBody) {
 			return false;
 		}
 		
-		result.resData.listLS.push({
-			seq : syntheticInvitation.invitationVO.seq,
+		result.resData.listLoveStory.push({
+			seq : $this.find("img").data("seq") || 0,
 			invSeq : syntheticInvitation.invitationVO.seq,
 			id : syntheticInvitation.invitationVO.id,
 			isDelete : false,
@@ -616,7 +624,7 @@ function validModifyLoveStory($cardBody) {
 		result.resFlag = false;
 		result.resMessage = "Love Story에 사진을 확인해주세요.";
 		return result;
-	} else if(result.useLS == "Y" && result.resData.listLS.length < 1) {
+	} else if(result.useLS == "Y" && result.resData.listLoveStory.length < 1) {
 		result.resFlag = false;
 		result.resMessage = "Love Story에 사진을 확인해주세요.";
 		return result;
@@ -625,10 +633,64 @@ function validModifyLoveStory($cardBody) {
 	return result;
 }
 
+function validModifyWhenWhere($cardBody) {
+	var result = {
+			resFlag : true,
+			resData : {},
+			resMessage : "",
+			usePyebaek : $("input[name=checkboxDoPyebaek]").prop("checked") == true ? "Y" : "N",
+			modifyCategory : "ww"
+	},
+	checkPhebaek = $("#inputDateTimeWedding_copy").data("seq") || -1;
+	
+	result.resData.listWhenWhere = [];
+	result.resData.listWhenWhere.push({
+		seq : $("#inputDateTimeWedding_copy").data("seq") || -1,
+		invSeq : $("#inputDateTimeWedding_copy").data("invSeq"),
+		title : $("#inputTitleWeddingWW").val(),
+		content : $("#inputContentWeddingWW").val(),
+		modifyType : "part"
+	});
+	if(result.usePyebaek == "Y" || (result.usePyebaek == "N" && checkPhebaek != -1)) {
+		var modifyType = result.usePyebaek == "Y" ? "all" : "add",
+			dateTimePyebaek = $("#inputDatePyebaek").val() || "";
+			dateTimePyebaek = dateTimePyebaek.split(" ");
+		
+		var infoAddrPyebaek = $("#inputAddrPyebaek").data("infoPyebaek") || "";
+		
+		if(infoAddrPyebaek == undefined || infoAddrPyebaek == "") {
+			result.resFlag = false;
+			result.resMessage = "폐백 장소를 확인해주세요.";
+			return result;
+		}
+		if(infoAddrPyebaek.address == "" || infoAddrPyebaek.placeX == "" || infoAddrPyebaek.placeY == "") {
+			result.resFlag = false;
+			result.resMessage = "폐백 장소를 확인해주세요.";
+			return result;
+		}
+		
+		result.resData.listWhenWhere.push({
+			seq : $("#inputDatePyebaek").data("seq") || -1,
+			invSeq : $("#inputDatePyebaek").data("invSeq") || -1,
+			flagPyebaek : result.usePyebaek,
+			dateWedding : (dateTimePyebaek[0]).replace(/-/g, ""),
+			timeWedding : (dateTimePyebaek[1]).replace(/:/g, ""),
+			address : infoAddrPyebaek.addr || "",
+			placeX : infoAddrPyebaek.placeX || "",
+			placeY : infoAddrPyebaek.placeY || "",
+			title : $("#inputTitlePyebaekWW").val(),
+			content : $("#inputContentPyebaekWW").val(),
+			modifyType : modifyType
+		});
+	}
+	
+	return result;
+}
+
 function modifyInvitationInfo(data) {
 	var addParam = "";
 	
-	if(URL[data.modifyCategory] == "ls") {
+	if(data.modifyCategory == "ls") {
 		addParam = "?" + $.param({useLS : data.useLS});
 	}
 	

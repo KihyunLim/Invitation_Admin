@@ -134,4 +134,13 @@ public class InvitationDAOMybatis {
 	public void modifyLoveStory(LoveStoryVO loveStoryVO) {
 		mybatis.update("InvitationDAO.updateLoveStory", loveStoryVO);
 	}
+	
+	public void changeDeleteFlagLS(Integer invSeq, List<Integer> newLoveStory) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("invSeq", invSeq);
+		param.put("newLoveStory", newLoveStory);
+		
+		mybatis.update("InvitationDAO.changeDeleteFlagLS", param);
+	}
 }

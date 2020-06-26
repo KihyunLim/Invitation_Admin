@@ -456,18 +456,19 @@
 		UPDATE
 			INVITATION_LIST
 		SET
-		<if test="useCategory == ''ls">
+		<if test="useCategory == 'ls'">
 			USE_LS = #{useFlag}
 		</if>
-		<if test="useCategory == ''ww">
+		<if test="useCategory == 'ww'">
 			USE_PYEBAEK = #{useFlag}
 		</if>
-		<if test="useCategory == ''gallery">
+		<if test="useCategory == 'gallery'">
 			USE_G = #{useFlag}
 		</if>
-		<if test="useCategory == ''sm">
+		<if test="useCategory == 'sm'">
 			USE_SM = #{useFlag}
 		</if>
+			, DATETIME_UPDATE = NOW()
 		WHERE
 			SEQ = #{invSeq}
 		;
@@ -520,5 +521,26 @@
 		WHERE
 			SEQ = #{seq}
 		;
+	</update>
+	
+	<update id="changeDeleteFlagLS">
+		UPDATE
+			LOVE_STORY
+		SET
+			IS_DELETE = TRUE
+			, DATETIME_UPDATE = NOW()
+		WHERE
+			INV_SEQ = #{invSeq}
+			AND SEQ NOT IN <foreach collection="newLoveStory" item="item" open="(" close=")" separator=",">#{item}</foreach>
+		;
+	</update>
+	
+	<!-- modifyType 따라서 업데이트 항목 분기 ㄱㄱ -->
+	<update id="updateWhenWhere">
+		UPDATE
+			WHEN_WHERE
+		SET
+			FLAG_PYEBAEK = #{}
+			, 
 	</update>
 </mapper>

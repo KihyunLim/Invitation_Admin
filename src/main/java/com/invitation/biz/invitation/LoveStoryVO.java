@@ -2,6 +2,7 @@ package com.invitation.biz.invitation;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class LoveStoryVO {
 
@@ -17,6 +18,7 @@ public class LoveStoryVO {
 	private String fullNameImg;
 	private Date dateTimeRegister;
 	private Date dateTimeUpdate;
+	private List<LoveStoryVO> listLoveStory;
 	
 	public int getSeq() {
 		return seq;
@@ -92,12 +94,18 @@ public class LoveStoryVO {
 	public void setDateTimeUpdate(Date dateTimeUpdate) {
 		this.dateTimeUpdate = dateTimeUpdate;
 	}
+	public List<LoveStoryVO> getListLoveStory() {
+		return listLoveStory;
+	}
+	public void setListLoveStory(List<LoveStoryVO> listLoveStory) {
+		this.listLoveStory = listLoveStory;
+	}
 	
 	@Override
 	public String toString() {
 		return "LoveStoryVO [seq=" + seq + ", invSeq=" + invSeq + ", orderSeq=" + orderSeq + ", id=" + id
 				+ ", isDelete=" + isDelete + ", dateStory=" + dateStory + ", title=" + title + ", content=" + content
 				+ ", seqImage=" + seqImage + ", fullNameImg=" + fullNameImg + ", dateTimeRegister=" + dateTimeRegister
-				+ ", dateTimeUpdate=" + dateTimeUpdate + "]";
+				+ ", dateTimeUpdate=" + dateTimeUpdate + ", listLoveStory=" + listLoveStory + "]";
 	}
 }
