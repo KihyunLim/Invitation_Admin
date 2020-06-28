@@ -134,10 +134,9 @@ public class InvitationController {
 			resFlag = true;
 		} catch(CommonException e) {
 			LOGGER.error("error message : " + e.getMessage());
-			LOGGER.error("error trace : ", e);
 			
 			resFlag = false;
-			resMessage = "청첩장 목록 조회에 실패했습니다.";
+			resMessage = "일치하는 회원이 없습니다.";
 		} catch(Exception e) {
 			LOGGER.error("error message : " + e.getMessage());
 			LOGGER.error("error trace : ", e);
@@ -311,7 +310,7 @@ public class InvitationController {
 		return result;
 	}
 	
-	@PostMapping(value="/modifyWhenWhere.do", headers= {"Content-type-application/json"})
+	@PostMapping(value="/modifyWhenWhere.do", headers= {"Content-type=application/json"})
 	@ResponseBody
 	public Map<String, Object> modifyWhenWhere(@RequestBody WhenWhereVO vo) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -321,7 +320,7 @@ public class InvitationController {
 		
 		LOGGER.info("modifyWhenWhere.do");
 		try {
-			
+			resInvitationVO = invitationService.modifyWhenWhere((ArrayList<WhenWhereVO>) vo.getListWhenWhere());
 			
 			resFlag = true;
 		} catch (Exception e) {

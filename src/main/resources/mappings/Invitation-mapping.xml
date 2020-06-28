@@ -289,6 +289,42 @@
 				, null
 				, null
 			</foreach>
+		;
+	</insert>
+	
+	<insert id="insertWhenWhereItem">
+		INSERT INTO
+			WHEN_WHERE (
+				SEQ
+				, INV_SEQ
+				, ID
+				, FLAG_PYEBAEK
+				, DATE_WW
+				, TIME_WW
+				, X_PLACE
+				, Y_PLACE
+				, ADDRESS
+				, TITLE
+				, CONTENT
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			)
+			VALUES (
+				null
+				, #{invSeq}
+				, #{id}
+				, #{flagPyebaek}
+				, #{dateWedding}
+				, #{timeWedding}
+				, #{placeX}
+				, #{placeY}
+				, #{address}
+				, #{title}
+				, #{content}
+				, null
+				, null
+			)
+		;
 	</insert>
 	
 	<insert id="insertGallery">
@@ -314,6 +350,7 @@
 				, null
 				, null
 			</foreach>
+		;
 	</insert>
 	
 	<select id="getMemberInvitation" resultMap="resultMainInfoVO">
@@ -535,12 +572,23 @@
 		;
 	</update>
 	
-	<!-- modifyType 따라서 업데이트 항목 분기 ㄱㄱ -->
 	<update id="updateWhenWhere">
 		UPDATE
 			WHEN_WHERE
 		SET
-			FLAG_PYEBAEK = #{}
-			, 
+			TITLE = #{title}
+			, CONTENT = #{content}
+		<if test="modifyType == 'all'">
+			, FLAG_PYEBAEK = #{flagPyebaek}
+			, DATE_WW = #{dateWedding}
+			, TIME_WW = #{timeWedding}
+			, X_PLACE = #{placeX}
+			, Y_PLACE = #{placeY}
+			, ADDRESS = #{address}
+		</if>
+			, DATETIME_UPDATE = NOW()
+		WHERE
+			SEQ = #{seq}
+		;
 	</update>
 </mapper>

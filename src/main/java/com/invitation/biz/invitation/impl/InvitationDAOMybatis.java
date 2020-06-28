@@ -59,6 +59,10 @@ public class InvitationDAOMybatis {
 		mybatis.insert("InvitationDAO.insertWhenWhere", syntheticInvitationVO);
 	}
 	
+	public void insertWhenWhereItem(WhenWhereVO whenWhereVO) {
+		mybatis.insert("InvitationDAO.insertWhenWhereItem", whenWhereVO);
+	}
+	
 	public void insertGallery(SyntheticInvitationVO syntheticInvitationVO) {
 		mybatis.insert("InvitationDAO.insertGallery", syntheticInvitationVO);
 	}
@@ -133,6 +137,10 @@ public class InvitationDAOMybatis {
 	
 	public void modifyLoveStory(LoveStoryVO loveStoryVO) {
 		mybatis.update("InvitationDAO.updateLoveStory", loveStoryVO);
+	}
+	
+	public void modifyWhenWhere(WhenWhereVO whenWhereVO) {
+		mybatis.update("InvitationDAO.updateWhenWhere", whenWhereVO);
 	}
 	
 	public void changeDeleteFlagLS(Integer invSeq, List<Integer> newLoveStory) {

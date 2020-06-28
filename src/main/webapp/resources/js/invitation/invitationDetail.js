@@ -246,6 +246,10 @@ function getMemberInvitationInfo(id) {
 					cloneMemberInvitation(result.resMemberInvitation.memberInvitationList[i]);
 				}
 			} else {
+				$("#inputId").removeData("id");
+				$("#inputName").val("");
+				$("#divMemberInvitationWrap").empty();
+				
 				alert(result.resMessage);
 			}
 		}
@@ -359,7 +363,7 @@ function renderSyntheticInvitation(data, pageMaker) {
 	$("#inputTitleWeddingWW").val(data.whenWhereVO[0].title);
 	$("#inputContentWeddingWW").val(data.whenWhereVO[0].content);
 	if(data.whenWhereVO.length == 2) {
-		$("input[name=checkboxDoPyebaek]").prop("checked", true);
+		$("input[name=checkboxDoPyebaek]").prop("checked", data.whenWhereVO[1].flagPyebaek == "Y" ? true : false);
 		$("#inputDatePyebaek").data("seq", data.whenWhereVO[1].seq).data("invSeq", data.whenWhereVO[1].invSeq);
 		var dateTimeWedding2 = data.whenWhereVO[1].dateWedding.substr(0,4)
 											+ "-" + data.whenWhereVO[1].dateWedding.substr(4,2)
@@ -641,18 +645,19 @@ function validModifyWhenWhere($cardBody) {
 			usePyebaek : $("input[name=checkboxDoPyebaek]").prop("checked") == true ? "Y" : "N",
 			modifyCategory : "ww"
 	},
-	checkPhebaek = $("#inputDateTimeWedding_copy").data("seq") || -1;
+	checkPhebaek = $("#inputDatePyebaek").data("seq") || -1;
 	
 	result.resData.listWhenWhere = [];
 	result.resData.listWhenWhere.push({
 		seq : $("#inputDateTimeWedding_copy").data("seq") || -1,
 		invSeq : $("#inputDateTimeWedding_copy").data("invSeq"),
+		flagPyebaek : result.usePyebaek,
 		title : $("#inputTitleWeddingWW").val(),
 		content : $("#inputContentWeddingWW").val(),
 		modifyType : "part"
 	});
 	if(result.usePyebaek == "Y" || (result.usePyebaek == "N" && checkPhebaek != -1)) {
-		var modifyType = result.usePyebaek == "Y" ? "all" : "add",
+		var modifyType = checkPhebaek == -1 ? "add" : "all",
 			dateTimePyebaek = $("#inputDatePyebaek").val() || "";
 			dateTimePyebaek = dateTimePyebaek.split(" ");
 		
@@ -671,7 +676,8 @@ function validModifyWhenWhere($cardBody) {
 		
 		result.resData.listWhenWhere.push({
 			seq : $("#inputDatePyebaek").data("seq") || -1,
-			invSeq : $("#inputDatePyebaek").data("invSeq") || -1,
+			invSeq : syntheticInvitation.invitationVO.seq,
+			id : syntheticInvitation.invitationVO.id,
 			flagPyebaek : result.usePyebaek,
 			dateWedding : (dateTimePyebaek[0]).replace(/-/g, ""),
 			timeWedding : (dateTimePyebaek[1]).replace(/:/g, ""),

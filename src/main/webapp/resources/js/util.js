@@ -234,7 +234,7 @@ function uploadFile($this, callback) {
 function setFileInfo(fullName) {
 	var originalFileName = "", imgSrc = "", originalFileUrl = "", uuidFileName = "";
 	
-	if(fullName == "") {
+	if(fullName == false || fullName == null || fullName == undefined || fullName == "") {
 		return {
 			originalFileName : "",
 			imgSrc : DEFAULT_IMG_SRC,

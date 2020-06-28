@@ -26,5 +26,7 @@ public interface InvitationService {
 	
 	InvitationVO modifyLoveStory(String useLS, ArrayList<LoveStoryVO> loveStoryVO);
 	
+	InvitationVO modifyWhenWhere(ArrayList<WhenWhereVO> whenWhereVO);
+	
 	int getLastInsertID();
 }

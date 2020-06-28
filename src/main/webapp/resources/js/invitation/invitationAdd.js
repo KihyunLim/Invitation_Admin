@@ -295,7 +295,7 @@ function validateData() {
 	
 	ww.listWW = [];
 	ww.listWW.push({
-		flagPyebaek : "N",
+		flagPyebaek : "W",
 		dateWedding : mi.dateWedding,
 		timeWedding : mi.timeWedding,
 		address : mi.address,

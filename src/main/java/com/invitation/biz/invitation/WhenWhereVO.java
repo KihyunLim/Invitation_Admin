@@ -2,6 +2,7 @@ package com.invitation.biz.invitation;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class WhenWhereVO {
 
@@ -19,6 +20,7 @@ public class WhenWhereVO {
 	private Date dateTimeRegister;
 	private Date dateTimeUpdate;
 	private String modifyType;
+	private List<WhenWhereVO> listWhenWhere;
 	
 	public int getSeq() {
 		return seq;
@@ -106,12 +108,19 @@ public class WhenWhereVO {
 	public void setModifyType(String modifyType) {
 		this.modifyType = modifyType;
 	}
+	public List<WhenWhereVO> getListWhenWhere() {
+		return listWhenWhere;
+	}
+	public void setListWhenWhere(List<WhenWhereVO> listWhenWhere) {
+		this.listWhenWhere = listWhenWhere;
+	}
 	
 	@Override
 	public String toString() {
 		return "WhenWhereVO [seq=" + seq + ", invSeq=" + invSeq + ", id=" + id + ", flagPyebaek=" + flagPyebaek
 				+ ", dateWedding=" + dateWedding + ", timeWedding=" + timeWedding + ", placeX=" + placeX + ", placeY="
 				+ placeY + ", address=" + address + ", title=" + title + ", content=" + content + ", dateTimeRegister="
-				+ dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate + ", modifyType=" + modifyType + "]";
+				+ dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate + ", modifyType=" + modifyType
+				+ ", listWhenWhere=" + listWhenWhere + "]";
 	}
 }

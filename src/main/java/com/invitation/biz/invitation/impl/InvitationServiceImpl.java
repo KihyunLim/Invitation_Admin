@@ -28,7 +28,6 @@ import com.invitation.biz.invitation.WhenWhereVO;
 @Service("invitation")
 public class InvitationServiceImpl implements InvitationService {
 	
-	
 	private static final Logger LOGGER = LoggerFactory.getLogger(InvitationServiceImpl.class);
 
 	@Autowired
@@ -41,7 +40,7 @@ public class InvitationServiceImpl implements InvitationService {
 	public MemberInfoVO getMemberInfo(String id) throws Exception {
 		MemberInfoVO memberInfoVO = invitationDAO.getMemberInfo(id);
 		
-		if(memberInfoVO.equals(null)) {
+		if(memberInfoVO == null) {
 			throw new CommonException("조회 결과 없음!!");
 		}
 		
@@ -77,18 +76,24 @@ public class InvitationServiceImpl implements InvitationService {
 		invitationDAO.insertMainInfo(vo);
 		
 		LOGGER.debug("insertLoveStory >>> ");
-//		for(LoveStoryVO item : vo.getLoveStoryVO()) { 
-//			LOGGER.debug(item.toString());
-//		}
-		while(iteratorLS.hasNext()) {
-			LoveStoryVO item = iteratorLS.next();
+		for(LoveStoryVO item : vo.getLoveStoryVO()) { 
 			lastInsertID_file = getFileLastInsertID(lastInsertID_vo, item.getFullNameImg(), "LS", vo.getInvitationVO().getFormCode());
 			item.setInvSeq(lastInsertID_vo);
 			item.setId(vo.getInvitationVO().getId());
 			item.setIsDelete(false);
 			item.setSeqImage(lastInsertID_file);
 		}
-		invitationDAO.insertLoveStory(vo);
+//		while(iteratorLS.hasNext()) {
+//			LoveStoryVO item = iteratorLS.next();
+//			lastInsertID_file = getFileLastInsertID(lastInsertID_vo, item.getFullNameImg(), "LS", vo.getInvitationVO().getFormCode());
+//			item.setInvSeq(lastInsertID_vo);
+//			item.setId(vo.getInvitationVO().getId());
+//			item.setIsDelete(false);
+//			item.setSeqImage(lastInsertID_file);
+//		}
+		if(vo.getLoveStoryVO().size() > 0) {
+			invitationDAO.insertLoveStory(vo);
+		}
 		
 		LOGGER.debug("insertWhenWhere >>> ");
 		while(iteratorWW.hasNext()) {
@@ -99,15 +104,24 @@ public class InvitationServiceImpl implements InvitationService {
 		invitationDAO.insertWhenWhere(vo);
 		
 		LOGGER.debug("insertGallery >>> ");
-		while(iteratorG.hasNext()) {
-			GalleryVO item = iteratorG.next();
+		for(GalleryVO item : vo.getGalleryVO()) { 
 			lastInsertID_file = getFileLastInsertID(lastInsertID_vo, item.getFullName(), "G", vo.getInvitationVO().getFormCode());
 			item.setInvSeq(lastInsertID_vo);
 			item.setId(vo.getInvitationVO().getId());
 			item.setIsDelete(false);
 			item.setSeqImage(lastInsertID_file);
 		}
-		invitationDAO.insertGallery(vo);
+//		while(iteratorG.hasNext()) {
+//			GalleryVO item = iteratorG.next();
+//			lastInsertID_file = getFileLastInsertID(lastInsertID_vo, item.getFullName(), "G", vo.getInvitationVO().getFormCode());
+//			item.setInvSeq(lastInsertID_vo);
+//			item.setId(vo.getInvitationVO().getId());
+//			item.setIsDelete(false);
+//			item.setSeqImage(lastInsertID_file);
+//		}
+		if(vo.getGalleryVO().size() > 0) {
+			invitationDAO.insertGallery(vo);
+		}
 	}
 
 	@Override
@@ -195,9 +209,27 @@ public class InvitationServiceImpl implements InvitationService {
 			}
 		}
 		LOGGER.info("newLoveStory : " + newLoveStory.toString());
-		invitationDAO.changeDeleteFlagLS(loveStoryVO.get(0).getInvSeq(), newLoveStory);
+		if(newLoveStory.size() > 0) {
+			invitationDAO.changeDeleteFlagLS(loveStoryVO.get(0).getInvSeq(), newLoveStory);
+		}
 		
 		return modifyInvitationUseFlag(loveStoryVO.get(0).getInvSeq(), "ls", useLS);
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public InvitationVO modifyWhenWhere(ArrayList<WhenWhereVO> whenWhereVO) {
+		invitationDAO.modifyWhenWhere(whenWhereVO.get(0));
+		
+		if(whenWhereVO.size() == 2) {
+			if(whenWhereVO.get(1).getModifyType().equals("add")) {
+				invitationDAO.insertWhenWhereItem(whenWhereVO.get(1));
+			} else {
+				invitationDAO.modifyWhenWhere(whenWhereVO.get(1));
+			}
+		}
+		
+		return modifyInvitationUseFlag(whenWhereVO.get(0).getInvSeq(), "ww", whenWhereVO.get(0).getFlagPyebaek());
 	}
 	
 	@Override

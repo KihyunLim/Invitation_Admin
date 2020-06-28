@@ -42,7 +42,7 @@ public class UserMemberServiceImpl implements UserMemberService {
 	public UserMemberInfoVO getMemberInfo(String id) throws Exception {
 		UserMemberInfoVO userMemberInfoVO = userMemberDAO.getMemberInfo(id);
 		
-		if(userMemberInfoVO.equals(null)) {
+		if(userMemberInfoVO == null) {
 			throw new CommonException("회원정보 불일치!!");
 		}
 		
@@ -60,7 +60,7 @@ public class UserMemberServiceImpl implements UserMemberService {
 	
 	@Override
 	public void deleteMember(String id) throws Exception {
-		if(id.equals(null)) {
+		if(id == null) {
 			throw new CommonException("삭제 할 아이디 확인 필요!!");
 		}
 		
