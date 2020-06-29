@@ -353,6 +353,31 @@
 		;
 	</insert>
 	
+	<insert id="insertGalleryItem">
+		INSERT INTO
+			GALLERY (
+				SEQ
+				, INV_SEQ
+				, ORDER_SEQ
+				, ID
+				, IS_DELETE
+				, SEQ_IMAGE
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			)
+			VALUES (
+				null
+				, #{invSeq}
+				, #{orderSeq}
+				, #{id}
+				, #{isDelete}
+				, #{seqImage}
+				, null
+				, null
+			)
+		;
+	</insert>
+	
 	<select id="getMemberInvitation" resultMap="resultMainInfoVO">
 		SELECT 
 			*
@@ -511,6 +536,23 @@
 		;
 	</update>
 	
+	<update id="changeDeleteFlag">
+		UPDATE
+		<if test="category == 'ls'">
+			LOVE_STORY
+		</if>
+		<if test="category == 'gallery'">
+			GALLERY
+		</if>
+		SET
+			IS_DELETE = TRUE
+			, DATETIME_UPDATE = NOW()
+		WHERE
+			INV_SEQ = #{invSeq}
+			AND SEQ NOT IN <foreach collection="newList" item="item" open="(" close=")" separator=",">#{item}</foreach>
+		;
+	</update>
+	
 	<update id="updateInvitation">
 		UPDATE
 			INVITATION_LIST
@@ -560,18 +602,6 @@
 		;
 	</update>
 	
-	<update id="changeDeleteFlagLS">
-		UPDATE
-			LOVE_STORY
-		SET
-			IS_DELETE = TRUE
-			, DATETIME_UPDATE = NOW()
-		WHERE
-			INV_SEQ = #{invSeq}
-			AND SEQ NOT IN <foreach collection="newLoveStory" item="item" open="(" close=")" separator=",">#{item}</foreach>
-		;
-	</update>
-	
 	<update id="updateWhenWhere">
 		UPDATE
 			WHEN_WHERE
@@ -586,6 +616,28 @@
 			, Y_PLACE = #{placeY}
 			, ADDRESS = #{address}
 		</if>
+			, DATETIME_UPDATE = NOW()
+		WHERE
+			SEQ = #{seq}
+		;
+	</update>
+	
+	<update id="updateGallery">
+		UPDATE
+			GALLERY
+		SET
+			ORDER_SEQ = #{orderSeq}
+			, DATETIME_UPDATE = NOW()
+		WHERE
+			SEQ = #{seq}
+		;
+	</update>
+	
+	<update id="updateSweetMessageDeleteFlag">
+		UPDATE
+			SWEET_MESSAGE
+		SET
+			IS_DELETE = #{isDelete}
 			, DATETIME_UPDATE = NOW()
 		WHERE
 			SEQ = #{seq}

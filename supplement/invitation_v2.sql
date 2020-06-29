@@ -216,7 +216,8 @@ CREATE TABLE SWEET_MESSAGE (
 );
 DROP TABLE sweet_message;
 
-SELECT * FROM SWEET_MESSAGE;
+SELECT * FROM sweet_message;
+
 
 select host, user, password from mysql.user;
 show grants for 'root'@'%';
@@ -240,7 +241,6 @@ TRUNCATE TABLE MAIN_INFO;
 
 DROP TABLE love_story;
 SELECT * FROM LOVE_STORY;
-SELECT * FROM love_story WHERE inv_seq = 5 AND seq NOT IN (11);
 TRUNCATE TABLE LOVE_STORY;
 
 DROP TABLE when_where;

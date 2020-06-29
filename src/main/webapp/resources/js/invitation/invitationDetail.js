@@ -122,27 +122,46 @@ $(function(){
 		resetTagId();
 	});
 	
+	$("#divPagingWrap").on("click", ".aPaging", function(e){
+		e.preventDefault();
+		var $this = $(this),
+			tabindex = $this.attr("tabindex");
+		
+		if($this.data("dt-idx") == "next") {
+			tabindex = Number($(".active .aPaging").attr("tabindex")) + 1;
+		} else if($this.data("dt-idx") == "previous") {
+			tabindex = Number($(".active .aPaging").attr("tabindex")) - 1;
+		}
+		
+		utilDataTableDestroy("tableSweetMessageList");
+		getSweetMessageList(Number(tabindex));
+	});
+	
+	$("#tableSweetMessageList").on("click", ".btnSweetMessageDelete", function(){
+		deleteSweetMessage($(this).parents("tr").attr("id"), $(this).data("statedata"));
+	});
+	
 	$(".btnModifyInvitation").on("click", function(){
 		var result = "";
 		
 		switch($(this).data("category")) {
 		case "invitation" : 
-			result = validModifyInvitation($(this).parents(".card").find(".card-body"));
+			result = validModifyInvitation();
 			break;
 		case "mi" : 
-			result = validModifyMainInfo($(this).parents(".card").find(".card-body"));
+			result = validModifyMainInfo();
 			break;
 		case "ls" : 
-			result = validModifyLoveStory($(this).parents(".card").find(".card-body"));
+			result = validModifyLoveStory();
 			break;
 		case "ww" : 
-			result = validModifyWhenWhere($(this).parents(".card").find(".card-body"));
+			result = validModifyWhenWhere();
 			break;
 		case "gallery" : 
-			result = validModifyGallery($(this).parents(".card").find(".card-body"));
+			result = validModifyGallery();
 			break;
 		case "sm" : 
-			result = validModifySweetMessage($(this).parents(".card").find(".card-body"));
+			result = validModifySweetMessage();
 			break;
 		}
 		
@@ -392,11 +411,14 @@ function renderSyntheticInvitation(data, pageMaker) {
 			$btnUploadFile.hide()
 				.parents(".wrapUploadFile")
 				.find("a").attr("href", fileInfo4.originalFileUrl).data("title", fileInfo4.originalFileName)
-				.find("img").attr("src", fileInfo4.imgSrc).data("fullName", fileInfo4.fullName).data("seqImage", item.seq);
+				.find("img").attr("src", fileInfo4.imgSrc).data("fullName", fileInfo4.fullName)
+																	.data("seq", item.seq)
+																	.data("seqImage", item.seqImage);
 			$btnUploadFile.next().show();
 		}
 	});
 	
+	$("input[name=checkboxUseSM]").prop("checked", data.invitationVO.useSM == "Y" ? true : false);
 	utilDataTableDestroy("tableSweetMessageList");
 	renderSweetMessageList(data.sweetMessageVO, pageMaker);
 }
@@ -404,7 +426,7 @@ function renderSyntheticInvitation(data, pageMaker) {
 function getSweetMessageList(pageItem) {
 	var requestParam = {
 			page : pageItem,
-			invSeq : syntheticInvitation.invitationInfo.seq
+			invSeq : syntheticInvitation.invitationVO.seq
 	};
 	
 	$.ajax({
@@ -416,7 +438,7 @@ function getSweetMessageList(pageItem) {
 		success : function(result) {
 			console.log(result);
 			
-			renderSweetMessageList(result.list, result.pageMaker);
+			renderSweetMessageList(result.resSweetMessageList, result.pageMaker);
 		}
 	});
 }
@@ -442,11 +464,19 @@ function renderSweetMessageList(list, pageMaker) {
 			}, {
 				targets : 5,
 				data : function(row, type, val, meta) {
+					var $btn = "";
+					
 					if(row.isDelete) {
-						return "삭제됨";
+						stateText = "비게시";
+						stateData = true;
 					} else {
-						return "삭제";
+						stateText = "게시";
+						stateData = false;
 					}
+					
+					$btn = "<button type='button' class='btn btn-warning btn-sm btnSweetMessageDelete' data-statedata=" + stateData + ">" + stateText + "</button>";
+					
+					return $btn;
 				}
 			}],
 			rowId : function(row) {
@@ -472,7 +502,7 @@ function resetRender() {
 	$("#wrapListLS").empty();
 }
 
-function validModifyInvitation($cardBody) {
+function validModifyInvitation() {
 	var result = {
 			resFlag : true,
 			resData : {},
@@ -510,7 +540,7 @@ function validModifyInvitation($cardBody) {
 	return result;
 }
 
-function validModifyMainInfo($cardBody) {
+function validModifyMainInfo() {
 	var result = {
 			resFlag : true,
 			resData : {},
@@ -589,7 +619,7 @@ function validModifyMainInfo($cardBody) {
 	return result;
 }
 
-function validModifyLoveStory($cardBody) {
+function validModifyLoveStory() {
 	var result = {
 			resFlag : true,
 			resData : {},
@@ -637,7 +667,7 @@ function validModifyLoveStory($cardBody) {
 	return result;
 }
 
-function validModifyWhenWhere($cardBody) {
+function validModifyWhenWhere() {
 	var result = {
 			resFlag : true,
 			resData : {},
@@ -693,11 +723,62 @@ function validModifyWhenWhere($cardBody) {
 	return result;
 }
 
+function validModifyGallery() {
+	var result = {
+			resFlag : true,
+			resData : {},
+			resMessage : "",
+			useG : $("input[name=checkboxUseG]").prop("checked") == true ? "Y" : "N",
+			modifyCategory : "gallery"
+	};
+	
+	result.resData.listGallery = [];
+	$("#tableGallery").find(".wrapUploadFile").each(function(index){
+		var $this = $(this),
+			fullName = $this.find("img").data("fullName") || "";
+		
+		if(fullName != "") {
+			result.resData.listGallery.push({
+				seq : $this.find("img").data("seq") || 0,
+				invSeq : syntheticInvitation.invitationVO.seq,
+				orderSeq : index + 1,
+				id : syntheticInvitation.invitationVO.id,
+				isDelete : false,
+				seqImage : $this.find("img").data("seqImage") || -1,
+				fullName : fullName
+			});
+		}
+	});
+	if(result.useG == "Y" && result.resData.listGallery.length < 1) {
+		result.resFlag = false;
+		result.resMessage = "Gallery에 사진을 확인해주세요.";
+		return result;
+	}
+	
+	return result;
+}
+
+function validModifySweetMessage() {
+	var result = {
+			resFlag : true,
+			resData : syntheticInvitation.invitationVO.seq,
+			resMessage : "",
+			useSM : $("input[name=checkboxUseSM]").prop("checked") == true ? "Y" : "N",
+			modifyCategory : "sm"
+	};
+	
+	return result;
+}
+
 function modifyInvitationInfo(data) {
 	var addParam = "";
 	
 	if(data.modifyCategory == "ls") {
 		addParam = "?" + $.param({useLS : data.useLS});
+	} else if(data.modifyCategory == "gallery") {
+		addParam = "?" + $.param({useG : data.useG});
+	} else if(data.modifyCategory == "sm") {
+		addParam = "?" + $.param({useSM : data.useSM});
 	}
 	
 	$.ajax({
@@ -715,6 +796,26 @@ function modifyInvitationInfo(data) {
 			if(result.resFlag) {
 				syntheticInvitation.invitationVO = result.resInvitationVO;
 				alert("수정이 완료되었습니다.");
+			} else {
+				alert(result.resMessage);
+			}
+		}
+	});
+}
+
+function deleteSweetMessage(seq, stateData) {
+	$.ajax({
+		url : "/admin/invitation/deleteSweetMessage.do?" + $.param({seq : Number(seq), isDelete : !stateData}),
+		type : "GET",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			if(result.resFlag) {
+				var tabindex = Number($(".active .aPaging").attr("tabindex"));
+				
+				utilDataTableDestroy("tableSweetMessageList");
+				getSweetMessageList(Number(tabindex));
 			} else {
 				alert(result.resMessage);
 			}

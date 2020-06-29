@@ -210,7 +210,7 @@ public class InvitationServiceImpl implements InvitationService {
 		}
 		LOGGER.info("newLoveStory : " + newLoveStory.toString());
 		if(newLoveStory.size() > 0) {
-			invitationDAO.changeDeleteFlagLS(loveStoryVO.get(0).getInvSeq(), newLoveStory);
+			invitationDAO.changeDeleteFlag("ls", loveStoryVO.get(0).getInvSeq(), newLoveStory);
 		}
 		
 		return modifyInvitationUseFlag(loveStoryVO.get(0).getInvSeq(), "ls", useLS);
@@ -230,6 +230,42 @@ public class InvitationServiceImpl implements InvitationService {
 		}
 		
 		return modifyInvitationUseFlag(whenWhereVO.get(0).getInvSeq(), "ww", whenWhereVO.get(0).getFlagPyebaek());
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public InvitationVO modifyGallery(String useG, ArrayList<GalleryVO> galleryVO) {
+		Integer lastInsertID_file = null;
+		String formCode = invitationDAO.getFormCode(galleryVO.get(0).getInvSeq());
+		List<Integer> newGallery = new ArrayList<Integer>();
+		
+		for(GalleryVO item : galleryVO) {
+			if(item.getSeqImage() == -1) {
+				lastInsertID_file = getFileLastInsertID(item.getInvSeq(), item.getFullName(), "G", formCode);
+				item.setSeqImage(lastInsertID_file);
+				invitationDAO.insertGalleryItem(item);
+				newGallery.add(getLastInsertID());
+			} else {
+				invitationDAO.modifyGallery(item);
+				newGallery.add(item.getSeq());
+			}
+		}
+		LOGGER.info("newGallery : " + newGallery.toString());
+		if(newGallery.size() > 0) {
+			invitationDAO.changeDeleteFlag("gallery", galleryVO.get(0).getInvSeq(), newGallery);
+		}
+		
+		return modifyInvitationUseFlag(galleryVO.get(0).getInvSeq(), "gallery", useG);
+	}
+	
+	@Override
+	public InvitationVO modifySweetMessage(String useSM, String invSeq) {
+		return modifyInvitationUseFlag(Integer.parseInt(invSeq), "sm", useSM);
+	}
+	
+	@Override
+	public void modifySweetMessageDeleteFlag(Integer seq, Boolean isDelete) {
+		invitationDAO.modifySweetMessageDeleteFlag(seq, isDelete);
 	}
 	
 	@Override

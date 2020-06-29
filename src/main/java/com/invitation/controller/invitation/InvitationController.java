@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.invitation.biz.common.exception.CommonException;
 import com.invitation.biz.common.paging.Criteria;
 import com.invitation.biz.common.paging.PageMaker;
+import com.invitation.biz.invitation.GalleryVO;
 import com.invitation.biz.invitation.InvitationService;
 import com.invitation.biz.invitation.InvitationVO;
 import com.invitation.biz.invitation.LoveStoryVO;
@@ -333,6 +334,91 @@ public class InvitationController {
 			result.put("resFlag", resFlag);
 			result.put("resMessage", resMessage);
 			result.put("resInvitationVO", resInvitationVO);
+		}
+		
+		return result;
+	}
+	
+	@PostMapping(value="/modifyGallery.do", headers= {"Content-type=application/json"})
+	@ResponseBody
+	public Map<String, Object> modifyGallery(@RequestParam(value="useG", required=true) String useG,
+			@RequestBody GalleryVO vo) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		InvitationVO resInvitationVO = new InvitationVO();
+		
+		LOGGER.info("modifyGallery.do");
+		try {
+			resInvitationVO = invitationService.modifyGallery(useG, (ArrayList<GalleryVO>) vo.getListGallery());
+			
+			resFlag = true;
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "Gallery 수정에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("resInvitationVO", resInvitationVO);
+		}
+		
+		return result;
+	}
+	
+	@PostMapping(value="/modifySweetMessage.do", headers= {"Content-type=application/json"})
+	@ResponseBody
+	public Map<String, Object> modifySweetMessage(@RequestParam(value="useSM", required=true) String useSM,
+			@RequestBody String invSeq) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		InvitationVO resInvitationVO = new InvitationVO();
+		
+		LOGGER.info("modifySweetMessage.do");
+		try {
+			invitationService.modifySweetMessage(useSM, invSeq);
+			
+			resFlag = true;
+		} catch(Exception e) {
+			LOGGER.error("error emssage : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "Sweet Message  수정에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("resInvitationVO", resInvitationVO);
+		}
+		
+		return result;
+	}
+	
+	@GetMapping(value="/deleteSweetMessage.do")
+	@ResponseBody
+	public Map<String, Object> deleteSweetMessage(@RequestParam(value="seq", required=true) Integer seq,
+			@RequestParam(value="isDelete", required=true) Boolean isDelete) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		
+		LOGGER.info("deleteSweetMessage.do");
+		try {
+			invitationService.modifySweetMessageDeleteFlag(seq, isDelete);
+			
+			resFlag = true;
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "Sweet Message 삭제에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
 		}
 		
 		return result;

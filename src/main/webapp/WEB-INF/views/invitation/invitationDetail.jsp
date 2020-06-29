@@ -517,11 +517,11 @@
 											<thead>
 												<tr>
 													<th style="width:5%;" class="text-center">순번</th>
-													<th style="width:10%;" class="text-center">일시</th>
+													<th style="width:20%;" class="text-center">일시</th>
 													<th style="width:10%;" class="text-center">이름</th>
-													<th style="width:50%;" class="text-center">내용</th>
+													<th style="width:45%;" class="text-center">내용</th>
 													<th style="width:10%;" class="text-center">비밀번호</th>
-													<th style="width:5%;" class="text-center">삭제</th>
+													<th style="width:10%;" class="text-center">삭제</th>
 												</tr>
 											</thead>
 											<tbody></tbody>

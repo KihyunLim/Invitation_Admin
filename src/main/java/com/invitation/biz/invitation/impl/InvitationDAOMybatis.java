@@ -67,6 +67,10 @@ public class InvitationDAOMybatis {
 		mybatis.insert("InvitationDAO.insertGallery", syntheticInvitationVO);
 	}
 	
+	public void insertGalleryItem(GalleryVO galleryVO) {
+		mybatis.insert("InvitationDAO.insertGalleryItem", galleryVO);
+	}
+	
 	public List<MainInfoVO> getMemberInvitation(String id) {
 		return mybatis.selectList("InvitationDAO.getMemberInvitation", id);
 	}
@@ -143,12 +147,26 @@ public class InvitationDAOMybatis {
 		mybatis.update("InvitationDAO.updateWhenWhere", whenWhereVO);
 	}
 	
-	public void changeDeleteFlagLS(Integer invSeq, List<Integer> newLoveStory) {
+	public void modifyGallery(GalleryVO galleryVO) {
+		mybatis.update("InvitationDAO.updateGallery", galleryVO);
+	}
+	
+	public void modifySweetMessageDeleteFlag(Integer seq, Boolean isDelete) {
 		Map<String, Object> param = new HashMap<String, Object>();
 		
-		param.put("invSeq", invSeq);
-		param.put("newLoveStory", newLoveStory);
+		param.put("seq", seq);
+		param.put("isDelete", isDelete);
 		
-		mybatis.update("InvitationDAO.changeDeleteFlagLS", param);
+		mybatis.update("InvitationDAO.updateSweetMessageDeleteFlag", param);
+	}
+	
+	public void changeDeleteFlag(String category, Integer invSeq, List<Integer> newList) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("category", category);
+		param.put("invSeq", invSeq);
+		param.put("newList", newList);
+		
+		mybatis.update("InvitationDAO.changeDeleteFlag", param);
 	}
 }

@@ -147,7 +147,7 @@ function getMemberInfo(id) {
 		url : "/admin/invitation/getMemberInfo?" + $.param({id : id}),
 		type : "GET",
 		error : function(xhr, status, msg) {
-			alert("status : ", status, "\nHttp error msg : ", msg);
+			alert("status : " + status + "\nHttp error msg : " + msg);
 		},
 		success : function(result) {
 			if(result.resFlag) {

@@ -28,5 +28,11 @@ public interface InvitationService {
 	
 	InvitationVO modifyWhenWhere(ArrayList<WhenWhereVO> whenWhereVO);
 	
+	InvitationVO modifyGallery(String useG, ArrayList<GalleryVO> galleryVO);
+	
+	InvitationVO modifySweetMessage(String useSM, String invSeq);
+	
+	void modifySweetMessageDeleteFlag(Integer seq, Boolean isDelete);
+	
 	int getLastInsertID();
 }
