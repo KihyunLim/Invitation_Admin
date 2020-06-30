@@ -231,6 +231,23 @@ function uploadFile($this, callback) {
 	});
 };
 
+function excelDownload() {
+	$.ajax({
+		url : "/admin/common/excelDownload.do",
+		data : "",
+		processData : false,
+		contentType : false,
+		type : "POST",
+		enctype : "multipart/form-data",
+		error : function(xhr, status, msg) {
+			alert("status : " + status + "\nHttp error msg : " + msg);
+		},
+		success : function(result) {
+			console.log(result);
+		}
+	});
+}
+
 function setFileInfo(fullName) {
 	var originalFileName = "", imgSrc = "", originalFileUrl = "", uuidFileName = "";
 	

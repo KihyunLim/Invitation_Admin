@@ -18,6 +18,8 @@ public interface InvitationService {
 	
 	int getSweetMessageCount(String invSeq);
 	
+	List<SweetMessageVO> getSweetMessageListAll(String invSeq);
+	
 	SyntheticInvitationVO getSyntheticInvitation(String invSeq);
 	
 	InvitationVO modifyInvitation(InvitationVO invitationVO);

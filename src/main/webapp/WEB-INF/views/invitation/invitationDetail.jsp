@@ -508,7 +508,7 @@
 								</div>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-default btn-sm" id="">방명록 다운로드</button>
+										<button type="button" class="btn btn-default btn-sm" id="btnExcelDownload">방명록 다운로드</button>
 									</div>
 								</div>
 								<div class="row">

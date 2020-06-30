@@ -89,6 +89,10 @@ public class InvitationDAOMybatis {
 		return mybatis.selectOne("InvitationDAO.getSweetMessageCount", invSeq);
 	}
 	
+	public List<SweetMessageVO> getSweetMessageListAll(String invSeq) {
+		return mybatis.selectList("InvitationDAO.selectSweetMessageAll", invSeq);
+	}
+	
 	public SyntheticInvitationVO getSyntheticInvitation(String invSeq) {
 		SyntheticInvitationVO resultSyntheticInvitation = new SyntheticInvitationVO();
 		List<LoveStoryVO> listLS = new ArrayList<>();

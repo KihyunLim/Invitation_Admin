@@ -504,6 +504,19 @@
 		;
 	</select>
 	
+	<select id="selectSweetMessageAll" resultMap="resultSweetMessageVO">
+		SELECT
+			*
+		FROM
+			SWEET_MESSAGE
+		WHERE
+			INV_SEQ = #{invSeq}
+			AND IS_DELETE = FALSE
+		ORDER BY
+			DATETIME_REGISTER DESC
+		;
+	</select>
+	
 	<select id="getFormCode" resultType="String">
 		SELECT
 			FORMCODE

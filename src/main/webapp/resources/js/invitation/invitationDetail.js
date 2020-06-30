@@ -122,6 +122,10 @@ $(function(){
 		resetTagId();
 	});
 	
+	$("#btnExcelDownload").on("click", function(){
+		excelDownload();
+	});
+	
 	$("#divPagingWrap").on("click", ".aPaging", function(e){
 		e.preventDefault();
 		var $this = $(this),
