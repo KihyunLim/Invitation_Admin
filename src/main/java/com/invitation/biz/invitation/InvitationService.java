@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+
 import com.invitation.biz.common.paging.Criteria;
 
 public interface InvitationService {
@@ -18,7 +20,7 @@ public interface InvitationService {
 	
 	int getSweetMessageCount(String invSeq);
 	
-	List<SweetMessageVO> getSweetMessageListAll(String invSeq);
+	SXSSFWorkbook getSweetMessageListAll(String invSeq);
 	
 	SyntheticInvitationVO getSyntheticInvitation(String invSeq);
 	

@@ -123,7 +123,7 @@ $(function(){
 	});
 	
 	$("#btnExcelDownload").on("click", function(){
-		excelDownload();
+		excelDownload(syntheticInvitation.invitationVO.seq);
 	});
 	
 	$("#divPagingWrap").on("click", ".aPaging", function(e){

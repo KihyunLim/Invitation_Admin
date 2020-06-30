@@ -231,10 +231,11 @@ function uploadFile($this, callback) {
 	});
 };
 
-function excelDownload() {
+function excelDownload(invSeq) {
 	$.ajax({
 		url : "/admin/common/excelDownload.do",
-		data : "",
+		data : invSeq,
+		dataType : "text",
 		processData : false,
 		contentType : false,
 		type : "POST",
