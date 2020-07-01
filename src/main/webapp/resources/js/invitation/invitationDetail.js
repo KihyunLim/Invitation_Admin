@@ -122,8 +122,14 @@ $(function(){
 		resetTagId();
 	});
 	
-	$("#btnExcelDownload").on("click", function(){
-		excelDownload(syntheticInvitation.invitationVO.seq);
+	$("#btnExcelDownload").on("click", function(e){
+		e.preventDefault();
+		
+		$("input[name=invSeq]").val(String(syntheticInvitation.invitationVO.seq));
+		
+		var form = document.formExcelDownload;
+		form.action = "/admin/common/excelDownload.do";
+		form.submit();
 	});
 	
 	$("#divPagingWrap").on("click", ".aPaging", function(e){

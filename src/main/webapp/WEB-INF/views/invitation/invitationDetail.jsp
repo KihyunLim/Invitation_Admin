@@ -508,7 +508,10 @@
 								</div>
 								<div class="row">
 									<div class="col-md-12">
-										<button type="button" class="btn btn-default btn-sm" id="btnExcelDownload">방명록 다운로드</button>
+										<form name="formExcelDownload" method="GET" enctype="multipart/form-data">
+											<input type="hidden" name="invSeq" />
+											<button type="button" class="btn btn-default btn-sm" id="btnExcelDownload">방명록 다운로드</button>
+										</form>
 									</div>
 								</div>
 								<div class="row">

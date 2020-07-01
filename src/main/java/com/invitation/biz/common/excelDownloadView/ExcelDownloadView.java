@@ -25,11 +25,11 @@ public class ExcelDownloadView extends AbstractView {
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		Locale locale = (Locale) model.get("locale");
-		String workbookName = (String) model.get("workbookname");
+		String workbookName = (String) model.get("workbookName");
 		
 		Date date = new Date();
-		SimpleDateFormat formatDate = new SimpleDateFormat("yyyyMMdd_hhmmss", locale);
-		String fileName = workbookName + "_" + formatDate.format(date);
+		SimpleDateFormat formatDate = new SimpleDateFormat("yyyyMMdd_HHmmss", locale);
+		String fileName = workbookName + "_" + formatDate.format(date) + ".xlsx";
 		
 		String browser = request.getHeader("User-Agent");
 		if(browser.indexOf("MSIE") > -1) {
@@ -52,6 +52,8 @@ public class ExcelDownloadView extends AbstractView {
 					sb.append(c);
 				}
 			}
+			
+			fileName = sb.toString();
 		} else if(browser.indexOf("Safari") > -1) {
 			fileName = "\"" + new String(fileName.getBytes("UTF-8"), "8859_1") + "\"";
 		} else {

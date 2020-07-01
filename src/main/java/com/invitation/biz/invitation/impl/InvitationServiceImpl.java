@@ -6,10 +6,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -305,42 +311,66 @@ public class InvitationServiceImpl implements InvitationService {
 		SXSSFSheet sheet = workbook.createSheet("방명록");
 		
 		// 순번, 일시, 이름, 내용, 비밀번호
-		sheet.setColumnWidth(0, 3000);
-		sheet.setColumnWidth(1, 3000);
-		sheet.setColumnWidth(2, 3000);
-		sheet.setColumnWidth(3, 3000);
+		sheet.setColumnWidth(0, 2000);
+		sheet.setColumnWidth(1, 7000);
+		sheet.setColumnWidth(2, 4000);
+		sheet.setColumnWidth(3, 20000);
 		
 		Row headerRow = sheet.createRow(0);
 		
+		XSSFCellStyle headerXSSFCellStyle = (XSSFCellStyle) workbook.createCellStyle();
+		headerXSSFCellStyle.setFillForegroundColor(new XSSFColor(new byte[] {(byte) 216, (byte) 216, (byte) 216}, null));
+		headerXSSFCellStyle.setAlignment(HorizontalAlignment.CENTER);
+		headerXSSFCellStyle.setFillPattern(FillPatternType.FINE_DOTS);
+		headerXSSFCellStyle.setBorderTop(BorderStyle.THIN);
+		headerXSSFCellStyle.setBorderRight(BorderStyle.THIN);
+		headerXSSFCellStyle.setBorderBottom(BorderStyle.THIN);
+		headerXSSFCellStyle.setBorderLeft(BorderStyle.THIN);
+		
 		Cell headerCell = headerRow.createCell(0);
+		headerCell.setCellStyle(headerXSSFCellStyle);
 		headerCell.setCellValue("순번");
 		
 		headerCell = headerRow.createCell(1);
+		headerCell.setCellStyle(headerXSSFCellStyle);
 		headerCell.setCellValue("일시");
 		
 		headerCell = headerRow.createCell(2);
+		headerCell.setCellStyle(headerXSSFCellStyle);
 		headerCell.setCellValue("이름");
 		
 		headerCell = headerRow.createCell(3);
+		headerCell.setCellStyle(headerXSSFCellStyle);
 		headerCell.setCellValue("내용");
+		
 		
 		Row bodyRow = null;
 		Cell bodyCell = null;
+		CellStyle CellStyleBorder = workbook.createCellStyle();
+		CellStyleBorder.setBorderTop(BorderStyle.THIN);
+		CellStyleBorder.setBorderRight(BorderStyle.THIN);
+		CellStyleBorder.setBorderBottom(BorderStyle.THIN);
+		CellStyleBorder.setBorderLeft(BorderStyle.THIN);
+		
 		for(int i = 0 ; i < listSweetMessage.size() ; i++) {
 			SweetMessageVO item = listSweetMessage.get(i);
 			
 			bodyRow = sheet.createRow(i+1);
 			
 			bodyCell = bodyRow.createCell(0);
+			bodyCell.setCellStyle(CellStyleBorder);
 			bodyCell.setCellValue(item.getSeq());
 			
 			bodyCell = bodyRow.createCell(1);
+			bodyCell.setCellStyle(CellStyleBorder);
 			bodyCell.setCellValue(item.getDateTimeUpdate());
 			
 			bodyCell = bodyRow.createCell(2);
+			bodyCell.setCellStyle(CellStyleBorder);
 			bodyCell.setCellValue(item.getRegisterName());
 			
 			bodyCell = bodyRow.createCell(3);
+			bodyCell.setCellStyle(CellStyleBorder);
 			bodyCell.setCellValue(item.getRegisterContent());
 		}
 		
