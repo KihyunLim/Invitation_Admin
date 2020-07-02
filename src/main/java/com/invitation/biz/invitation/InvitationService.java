@@ -38,5 +38,9 @@ public interface InvitationService {
 	
 	void modifySweetMessageDeleteFlag(Integer seq, Boolean isDelete);
 	
+	List<InvitationList> getInvitationList(Criteria cri, String id, String name, String beginDate, String endDate);
+	
+	int getInvitationListCount(String id, String name, String beginDate, String endDate);
+	
 	int getLastInsertID();
 }

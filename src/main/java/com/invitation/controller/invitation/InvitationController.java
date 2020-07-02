@@ -22,6 +22,7 @@ import com.invitation.biz.common.exception.CommonException;
 import com.invitation.biz.common.paging.Criteria;
 import com.invitation.biz.common.paging.PageMaker;
 import com.invitation.biz.invitation.GalleryVO;
+import com.invitation.biz.invitation.InvitationList;
 import com.invitation.biz.invitation.InvitationService;
 import com.invitation.biz.invitation.InvitationVO;
 import com.invitation.biz.invitation.LoveStoryVO;
@@ -423,4 +424,44 @@ public class InvitationController {
 		
 		return result;
 	}
+	
+	@GetMapping(value="/getInvitationList.do")
+	@ResponseBody
+	public Map<String, Object> getInvitationList(Criteria cri,
+			@RequestParam(value="searchId", defaultValue="", required=true) String id, 
+			@RequestParam(value="searchName", defaultValue="", required=true) String name,
+			@RequestParam(value="searchWeddingBegin", defaultValue="", required=true) String beginDate,
+			@RequestParam(value="searchWeddingEnd", defaultValue="", required=true) String endDate) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		List<InvitationList> resInvitationList = null;
+		PageMaker resPageMaker = null;
+		
+		LOGGER.info("getInvitationList.do");
+		try {
+			resInvitationList = invitationService.getInvitationList(cri, id, name, beginDate, endDate);
+			
+			PageMaker pageMaker = new PageMaker();
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(invitationService.getInvitationListCount(id, name, beginDate, endDate));
+			
+			resFlag = true;
+			resPageMaker = pageMaker;
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "청첩장 목록 조회에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("list", resInvitationList);
+			result.put("pageMaker", resPageMaker);
+		}
+		
+		return result;
+	}
+	
 }

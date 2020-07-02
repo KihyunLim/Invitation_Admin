@@ -15,6 +15,7 @@
 		<typeAlias alias="whenWhereVO" type="com.invitation.biz.invitation.WhenWhereVO"></typeAlias> 
 		<typeAlias alias="galleryVO" type="com.invitation.biz.invitation.GalleryVO"></typeAlias> 
 		<typeAlias alias="sweetMessageVO" type="com.invitation.biz.invitation.SweetMessageVO"></typeAlias> 
+		<typeAlias alias="invitationList" type="com.invitation.biz.invitation.InvitationList"></typeAlias>
 	</typeAliases>
 	
 	<mappers>

@@ -5,9 +5,10 @@
 <html>
 <head>
 	<%@ include file="../include/adminlte3/head.jsp"%>
-	<!-- dataTable-select -->
+	<!-- daterange picker -->
+	<link rel="stylesheet" href="../adminlte3/plugins/daterangepicker/daterangepicker.css">
+	<!-- dataTable -->
 	<link rel="stylesheet" href="../adminlte3/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
-	<link rel="stylesheet" href="../adminlte3/plugins/datatables-select/css/select.bootstrap4.css">
 	
 	<title>청첩장 목록</title>
 </head>
@@ -37,7 +38,34 @@
 					<div class="col-12">
 						<div class="card dataTables_wrapper">
 							<div class="card-body">
-								검색조건 영역
+								<div class="row">
+									<table class="table table-valign-middle table-bordered dataTable">
+										<tbody>
+											<tr>
+												<td class="text-center" style="width:10%;">아이디</td>
+												<td class="" style="width:40%;">
+													<input type="text" id="inputSearchId" />
+												</td>
+												<td class="text-center" style="width:10%;">이름</td>
+												<td class="" style="width:40%;">
+													<input type="text" id="inputSearchName" />
+												</td>
+											</tr>
+											<tr>
+												<td class="text-center">결혼일자</td>
+												<td class="">
+													<input type="text" id="inputSearchWeddingDate" />
+												</td>
+												<td colspan="2"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="row">
+									<div class="col-md-12 text-center">
+										<button type="button" class="btn btn-default btn-sm" id="btnSearch">검색</button>
+									</div>
+								</div>
 							</div>
 							<!-- /.card-body -->
 						</div>
@@ -49,31 +77,22 @@
 				<div class="row">
 					<div class="col-12">
 						<div class="card dataTables_wrapper">
-							<div class="card-header">
-								<!-- <h3 class="card-title">추가/삭제/검색 영역</h3> -->
-								<div class="row">
-									<div class="col-md-12">
-										<button type="button" class="btn btn-danger" id="">삭제</button>
-										<button type="button" class="btn btn-primary" id="">추가</button>
-									</div>
-								</div>
-							</div>
 							<!-- /.card-header -->
 							<div class="card-body">
 								<div class="row">
 									<div class="col-md-12">
-										<table id="" class="table table-bordered table-hover dataTable">
+										<table id="tableInvitationList" class="table table-bordered table-hover dataTable">
 											<thead>
 												<tr>
-													<th style="width:5%;"></th>
-													<th style="width:7%;">순번</th>
-													<th style="width:15%;">아이디</th>
-													<th style="width:15%;">이름</th>
-													<th style="width:7%;">게시 상태</th>
+													<th style="width:5%;">순번</th>
+													<th style="width:13%;">아이디</th>
+													<th style="width:10%;">이름</th>
+													<th style="width:10%;">게시 상태</th>
 													<th style="width:15%;">게시 시작일</th>
 													<th style="width:15%;">게시 종료일</th>
-													<th style="width:10%;">상세보기</th>
-													<th style="width:11%;">청첩장 이동</th>
+													<th style="width:15%;">결혼식 일시</th>
+													<th style="width:7%;">상세</th>
+													<th style="width:7%;">청첩장</th>
 												</tr>
 											</thead>
 											<tbody></tbody>
@@ -107,10 +126,14 @@
 	<!-- ./wrapper -->
 
 	<%@ include file="../include/adminlte3/js.jsp"%>
+	<!-- jQuery-ui -->
+	<script src="../adminlte3/plugins/jquery-ui/jquery-ui.min.js"></script>
+	<!-- date-range-picker -->
+	<script src="../adminlte3/plugins/daterangepicker/moment.min.js"></script>
+	<script src="../adminlte3/plugins/daterangepicker/daterangepicker.js"></script>
 	<!-- DataTables -->
 	<script src="../adminlte3/plugins/datatables/jquery.dataTables.js"></script>
 	<script src="../adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
-	<script src="../adminlte3/plugins/datatables-select/js/dataTables.select.js"></script>
 	
 	<script type="text/javascript" src="../js/util.js"></script>
 	<script type="text/javascript" src="../js/def.js"></script>

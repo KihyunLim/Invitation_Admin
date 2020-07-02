@@ -23,6 +23,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.invitation.biz.invitation.GalleryVO;
@@ -51,8 +53,8 @@ public class InvitationControllerTest {
 		mock = MockMvcBuilders.standaloneSetup(invitationController).build();
 	}
 	
-	@Test
-//	@Ignore
+//	@Test
+	@Ignore
 	public void test_getMemberInfo() throws Exception {
 //		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 //		params.add("id", "admin");
@@ -66,6 +68,25 @@ public class InvitationControllerTest {
 		.andExpect(status().isOk())
 		.andExpect(handler().handlerType(InvitationController.class))
 		.andExpect(handler().methodName("getMemberInfo"));
+	}
+	
+	@Test
+//	@Ignore
+	public void test_getInvitationList() throws Exception {
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("id", "");
+		params.add("name", "");
+		params.add("beginDate", "");
+		params.add("endDate", "");
+//		params.add("page", "1");
+		
+		mock.perform(
+				get("/invitation/getInvitationList.do")
+				.params(params))
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(handler().handlerType(InvitationController.class))
+		.andExpect(handler().methodName("getInvitationList"));
 	}
 	
 //	@Test

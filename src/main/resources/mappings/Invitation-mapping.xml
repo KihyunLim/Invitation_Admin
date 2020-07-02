@@ -656,4 +656,53 @@
 			SEQ = #{seq}
 		;
 	</update>
+	
+	<select id="getInvitationList" resultType="invitationList">
+		SELECT
+			IL.SEQ AS invSeq
+			, IL.ID AS id
+			, (SELECT NAME FROM USERES U WHERE U.ID = IL.ID) AS NAME
+			, IL.VISIBLE AS visible
+			, IL.DATE_BEGIN AS periodBegin
+			, IL.DATE_END AS periodEnd
+			, (SELECT DATE_WEDDING FROM MAIN_INFO MI WHERE MI.INV_SEQ = IL.SEQ) AS weddingDate
+		FROM
+			INVITATION_LIST IL
+		WHERE
+			1=1
+		<if test='id != ""'>
+			AND IL.ID = #{id}
+		</if>
+		<if test='name != ""'>
+			AND IL.NAME = #{name}
+		</if>
+		<if test='beginDate != "" and endDate != ""'>
+			AND IL.DATE_BEGIN <![CDATA[>=]]> CONVERT(#{beginDate}, INTEGER)
+			AND IL.DATE_END <![CDATA[<=]]> CONVERT(#{endDate}, INTEGER)
+		</if>
+		ORDER BY
+			IL.SEQ DESC
+		LIMIT #{pageStart}, #{perPageNum}
+		;
+	</select>
+	
+	<select id="getInvitationListCount" resultType="int">
+		SELECT
+			COUNT(IL.SEQ)
+		FROM
+			INVITATION_LIST IL
+		WHERE
+			1=1
+		<if test='id != ""'>
+			AND IL.ID = #{id}
+		</if>
+		<if test='name != ""'>
+			AND IL.NAME = #{name}
+		</if>
+		<if test='beginDate != "" and endDate != ""'>
+			AND IL.DATE_BEGIN <![CDATA[>=]]> CONVERT(#{beginDate}, INTEGER)
+			AND IL.DATE_END <![CDATA[<=]]> CONVERT(#{endDate}, INTEGER)
+		</if>
+		;
+	</select>
 </mapper>

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import com.invitation.biz.common.paging.Criteria;
 import com.invitation.biz.invitation.GalleryVO;
+import com.invitation.biz.invitation.InvitationList;
 import com.invitation.biz.invitation.InvitationVO;
 import com.invitation.biz.invitation.LoveStoryVO;
 import com.invitation.biz.invitation.MainInfoVO;
@@ -162,6 +163,30 @@ public class InvitationDAOMybatis {
 		param.put("isDelete", isDelete);
 		
 		mybatis.update("InvitationDAO.updateSweetMessageDeleteFlag", param);
+	}
+	
+	public List<InvitationList> getInvitationList(Criteria cri, String id, String name, String beginDate, String endDate) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("id", id);
+		param.put("name", name);
+		param.put("beginDate", beginDate);
+		param.put("endDate", endDate);
+		param.put("pageStart", cri.getPageStart());
+		param.put("perPageNum", cri.getPerPageNum());
+		
+		return mybatis.selectList("InvitationDAO.getInvitationList", param);
+	}
+	
+	public int getInvitationListCount(String id, String name, String beginDate, String endDate) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("id", id);
+		param.put("name", name);
+		param.put("beginDate", beginDate);
+		param.put("endDate", endDate);
+		
+		return mybatis.selectOne("InvitationDAO.getInvitationListCount", param);
 	}
 	
 	public void changeDeleteFlag(String category, Integer invSeq, List<Integer> newList) {

@@ -26,6 +26,7 @@ import com.invitation.biz.common.exception.CommonException;
 import com.invitation.biz.common.fileUpload.FileUploadService;
 import com.invitation.biz.common.paging.Criteria;
 import com.invitation.biz.invitation.GalleryVO;
+import com.invitation.biz.invitation.InvitationList;
 import com.invitation.biz.invitation.InvitationService;
 import com.invitation.biz.invitation.InvitationVO;
 import com.invitation.biz.invitation.LoveStoryVO;
@@ -281,6 +282,16 @@ public class InvitationServiceImpl implements InvitationService {
 	@Override
 	public void modifySweetMessageDeleteFlag(Integer seq, Boolean isDelete) {
 		invitationDAO.modifySweetMessageDeleteFlag(seq, isDelete);
+	}
+	
+	@Override
+	public List<InvitationList> getInvitationList(Criteria cri, String id, String name, String beginDate, String endDate) {
+		return invitationDAO.getInvitationList(cri, id, name, beginDate, endDate);
+	}
+	
+	@Override
+	public int getInvitationListCount(String id, String name, String beginDate, String endDate) {
+		return invitationDAO.getInvitationListCount(id, name, beginDate, endDate);
 	}
 	
 	@Override
