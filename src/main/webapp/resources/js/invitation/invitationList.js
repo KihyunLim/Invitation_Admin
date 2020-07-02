@@ -91,13 +91,31 @@ function getInvitationList(pageItem) {
 					data : 'visible'
 				}, {
 					targets : 4,
-					data : 'periodBegin'
+					data : function(row, type, val, meta) {
+						var periodBegin = row.periodBegin.substr(0,4)
+						+ "-" + row.periodBegin.substr(4,2)
+						+ "-" + row.periodBegin.substr(6,2)
+						
+						return periodBegin;
+					}
 				}, {
 					targets : 5,
-					data : 'periodEnd'
+					data : function(row, type, val, meta) {
+						var periodEnd = row.periodEnd.substr(0,4)
+						+ "-" + row.periodEnd.substr(4,2)
+						+ "-" + row.periodEnd.substr(6,2)
+						
+						return periodEnd;
+					}
 				}, {
 					targets : 6,
-					data : 'weddingDate'
+					data : function(row, type, val, meta) {
+						var weddingDate = row.weddingDate.substr(0,4)
+						+ "-" + row.weddingDate.substr(4,2)
+						+ "-" + row.weddingDate.substr(6,2)
+						
+						return weddingDate;
+					}
 				}, {
 					targets : 7,
 					data : function(row, type, val, meta) {
