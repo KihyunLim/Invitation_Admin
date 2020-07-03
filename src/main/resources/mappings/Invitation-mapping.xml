@@ -661,7 +661,7 @@
 		SELECT
 			IL.SEQ AS invSeq
 			, IL.ID AS id
-			, (SELECT NAME FROM USERES U WHERE U.ID = IL.ID) AS NAME
+			, (SELECT NAME FROM USERES U WHERE U.ID = IL.ID) AS name
 			, IL.VISIBLE AS visible
 			, IL.DATE_BEGIN AS periodBegin
 			, IL.DATE_END AS periodEnd
@@ -671,14 +671,14 @@
 		WHERE
 			1=1
 		<if test='id != ""'>
-			AND IL.ID = #{id}
+			AND IL.ID LIKE CONCAT('%', #{id}, '%')
 		</if>
 		<if test='name != ""'>
-			AND IL.NAME = #{name}
+			AND (SELECT NAME FROM USERES U WHERE U.ID = IL.ID) LIKE CONCAT('%', #{name}, '%')
 		</if>
 		<if test='beginDate != "" and endDate != ""'>
-			AND IL.DATE_BEGIN <![CDATA[>=]]> CONVERT(#{beginDate}, INTEGER)
-			AND IL.DATE_END <![CDATA[<=]]> CONVERT(#{endDate}, INTEGER)
+			AND (SELECT DATE_WEDDING FROM MAIN_INFO MI WHERE MI.INV_SEQ = IL.SEQ) <![CDATA[>=]]> #{beginDate}
+			AND (SELECT DATE_WEDDING FROM MAIN_INFO MI WHERE MI.INV_SEQ = IL.SEQ) <![CDATA[<=]]> #{endDate}
 		</if>
 		ORDER BY
 			IL.SEQ DESC
@@ -694,14 +694,14 @@
 		WHERE
 			1=1
 		<if test='id != ""'>
-			AND IL.ID = #{id}
+			AND IL.ID LIKE CONCAT('%', #{id}, '%')
 		</if>
 		<if test='name != ""'>
-			AND IL.NAME = #{name}
+			AND (SELECT NAME FROM USERES U WHERE U.ID = IL.ID) LIKE CONCAT('%', #{name}, '%')
 		</if>
 		<if test='beginDate != "" and endDate != ""'>
-			AND IL.DATE_BEGIN <![CDATA[>=]]> CONVERT(#{beginDate}, INTEGER)
-			AND IL.DATE_END <![CDATA[<=]]> CONVERT(#{endDate}, INTEGER)
+			AND (SELECT DATE_WEDDING FROM MAIN_INFO MI WHERE MI.INV_SEQ = IL.SEQ) <![CDATA[>=]]> #{beginDate}
+			AND (SELECT DATE_WEDDING FROM MAIN_INFO MI WHERE MI.INV_SEQ = IL.SEQ) <![CDATA[<=]]> #{endDate}
 		</if>
 		;
 	</select>
