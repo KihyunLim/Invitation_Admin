@@ -69,7 +69,7 @@ function getInvitationList(pageItem) {
 	$.ajax({
 		url : "/admin/invitation/getInvitationList.do?" + $.param(requestParam),
 		type : "GET",
-		error : function(xhr, sutatus, msg) {
+		error : function(xhr, status, msg) {
 			alert("status : " + status + "\nHttp error msg : " + msg);
 		},
 		success : function(result) {
