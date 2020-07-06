@@ -5,6 +5,8 @@
 console.log("########## login.js ##########");
 
 $(function(){
+	checkSaveId();
+	
 	$("#btnLogin").on("click", function(){
 		var id = $("#inputId").val(),
 			password = $("#inputPassword").val();
@@ -31,6 +33,18 @@ $(function(){
 			},
 			success : function(result) {
 				if(result.resFlag) {
+					var flagSaveId = $("#checkboxSaveId").prop("checked") == true ? "Y" : "N";
+					
+					if(flagSaveId == "Y") {
+						flagSaveId = localStorage.setItem("flagSaveId", flagSaveId);
+						
+						localStorage.setItem("saveId", reqData.id);
+					} else {
+						flagSaveId = localStorage.setItem("flagSaveId", flagSaveId);
+						
+						localStorage.removeItem("saveId");
+					}
+					
 					window.location.href = GO_TO_MAIN;
 				} else {
 					alert(result.resMessage);
@@ -38,4 +52,19 @@ $(function(){
 			}
 		})
 	});
+	
+	$("#inputId, #inputPassword").on("keyup", function(e){
+		if(e.keyCode == 13) {
+			$("#btnLogin").trigger("click");
+		}
+	});
 });
+
+function checkSaveId() {
+	if(localStorage.getItem("flagSaveId") == "Y") {
+		var saveId = localStorage.getItem("saveId") || "";
+		
+		$("#checkboxSaveId").prop("checked", true);
+		$("#inputId").val(saveId);
+	}
+}

@@ -36,8 +36,7 @@
 				<div class="row">
 					<div class="col-8">
 						<div class="icheck-primary">
-							<input type="checkbox" id="remember"> <label
-								for="remember"> 아이디 저장하기 </label>
+							<input type="checkbox" id="checkboxSaveId"> <label for="checkboxSaveId"> 아이디 저장하기 </label>
 						</div>
 					</div>
 					<!-- /.col -->

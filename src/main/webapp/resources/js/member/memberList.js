@@ -116,7 +116,7 @@ function getMemberList(pageItem) {
 	}
 	
 	$.ajax({
-		url : "/admin/member/getMemberList?" + $.param(requestParam),
+		url : "/admin/member/getMemberList.do?" + $.param(requestParam),
 		type : "GET",
 		error : function(xhr, status, msg) {
 			alert("status : " + status + "\nHttp error msg : " + msg);
@@ -173,7 +173,7 @@ function getMemberList(pageItem) {
 
 function overlapCheck(id) {
 	$.ajax({
-		url : "/admin/member/getOverlapCheck?" + $.param({id : id}),
+		url : "/admin/member/getOverlapCheck.do?" + $.param({id : id}),
 		type : "GET",
 		error : function(xhr, status, msg) {
 			isOverlapCheck = false;
@@ -233,7 +233,7 @@ function registerMember() {
 	};
 	
 	$.ajax({
-		url : "/admin/member/",
+		url : "/admin/member/registerMember.do",
 		type : "POST",
 		dataType : "json",
 		data : JSON.stringify(data),
@@ -266,7 +266,7 @@ function registerMember() {
 
 function getMemberInfo() {
 	$.ajax({
-		url : "/admin/member/" + modifyTargetId,
+		url : "/admin/member/" + modifyTargetId + ".do",
 		type : "GET",
 		error : function(xhr, status, msg) {
 			alert("status : " + status + "\nHttp error msg : " + msg);
@@ -335,7 +335,7 @@ function modifyMember() {
 	}
 	
 	$.ajax({
-		url : "/admin/member/" + data.id,
+		url : "/admin/member/" + data.id + ".do",
 		type : "PUT",
 		dataType : "json",
 		data : JSON.stringify(data),
@@ -371,7 +371,7 @@ function modifyMember() {
 
 function deleteMember(id) {
 	$.ajax({
-		url : "/admin/member/" + id,
+		url : "/admin/member/" + id + ".do",
 		type : "DELETE",
 		error : function(xhr, status, msg) {
 			alert("status : ", status, "\nHttp error msg : ", msg);

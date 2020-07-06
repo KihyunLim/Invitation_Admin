@@ -44,7 +44,7 @@ public class MemberController {
 		return "member/memberList";
 	}
 	
-	@RequestMapping(value="/getMemberList", method=RequestMethod.GET)
+	@RequestMapping(value="/getMemberList.do", method=RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> getMemberList(Criteria cri,
 			@RequestParam(value="searchCondition", defaultValue="", required=false) String condition,
@@ -56,7 +56,7 @@ public class MemberController {
 		List<UserMemberListVO> resUserMemberList = null;
 		PageMaker resPageMaker = null;
 		
-		LOGGER.info("getMemberList");
+		LOGGER.info("getMemberList.do");
 		try {
 			List<UserMemberListVO> userMemberList = userMemberService.getMemberList(cri, condition, keyword);
 			
@@ -83,8 +83,8 @@ public class MemberController {
 		return result;
 	}
 	
-//	@RequestMapping(value="/getOverlapCheck", method=RequestMethod.GET)
-	@GetMapping(value="/getOverlapCheck")
+//	@RequestMapping(value="/getOverlapCheck.do", method=RequestMethod.GET)
+	@GetMapping(value="/getOverlapCheck.do")
 	@ResponseBody
 	public Map<String, Object> getOverlapCheck(@RequestParam(value="id", required=true) String id) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -93,7 +93,7 @@ public class MemberController {
 		String resMessage = "";
 		int resOverlapCheck = 0;
 		
-		LOGGER.info("getOverlapCheck");
+		LOGGER.info("getOverlapCheck.do");
 		try {
 			resOverlapCheck = userMemberService.getOverlapCheck(id);
 			
@@ -119,14 +119,14 @@ public class MemberController {
 		return result;
 	}
 	
-	@PostMapping(value="/", headers= {"Content-type=application/json"})
+	@PostMapping(value="/registerMember.do", headers= {"Content-type=application/json"})
 	@ResponseBody
 	public Map<String, Object> registerMember(@RequestBody UserMemberVO vo) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Boolean resFlag = false;
 		String resMessage = "";
 		
-		LOGGER.info("registerMember");
+		LOGGER.info("registerMember.do");
 		try {
 			userMemberService.registerMember(vo);
 			
@@ -146,7 +146,7 @@ public class MemberController {
 		return result;
 	}
 	
-	@GetMapping(value="/{id}")
+	@GetMapping(value="/{id}.do")
 	@ResponseBody
 	public Map<String, Object> getMemberInfo(@PathVariable String id) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -154,7 +154,7 @@ public class MemberController {
 		String resMessage = "";
 		UserMemberInfoVO resMemberInfo = null;
 		
-		LOGGER.info("getMemberInfo");
+		LOGGER.info("getMemberInfo.do");
 		try {
 			resMemberInfo = userMemberService.getMemberInfo(id);
 			
@@ -179,14 +179,14 @@ public class MemberController {
 		return result;
 	}
 	
-	@PutMapping(value="/{id}", headers= {"Content-type=application/json"})
+	@PutMapping(value="/{id}.do", headers= {"Content-type=application/json"})
 	@ResponseBody
 	public Map<String, Object> modifyMember(@PathVariable String id, @RequestBody UserMemberVO vo) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Boolean resFlag = false;
 		String resMessage = "";
 		
-		LOGGER.info("modifyMember");
+		LOGGER.info("modifyMember.do");
 		try {
 			userMemberService.modifyMember(id, vo);
 			
@@ -211,14 +211,14 @@ public class MemberController {
 		return result;
 	}
 	
-	@DeleteMapping(value="/{id}")
+	@DeleteMapping(value="/{id}.do")
 	@ResponseBody
 	public Map<String, Object> deleteMember(@PathVariable String id) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Boolean resFlag = false;
 		String resMessage = "";
 		
-		LOGGER.info("deleteMember");
+		LOGGER.info("deleteMember.do");
 		try {
 			userMemberService.deleteMember(id);
 			

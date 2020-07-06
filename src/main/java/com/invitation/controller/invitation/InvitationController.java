@@ -62,7 +62,7 @@ public class InvitationController {
 		return "invitation/invitationList";
 	}
 	
-	@GetMapping(value="/getMemberInfo")
+	@GetMapping(value="/getMemberInfo.do")
 	@ResponseBody
 	public Map<String, Object> getMemberInfo(@RequestParam(value="id", required=true) String id) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -70,7 +70,7 @@ public class InvitationController {
 		String resMessage = "";
 		MemberInfoVO resMemberInfo = null;
 		
-		LOGGER.info("getMemberInfo");
+		LOGGER.info("getMemberInfo.do");
 		try {
 			resMemberInfo = invitationService.getMemberInfo(id);
 			
