@@ -48,4 +48,14 @@
 			<bean class="com.invitation.biz.common.interceptor.AuthenticationInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
+	
+	<!-- <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="defaultErrorView" value="/WEB-INF/views/error.jsp"></property>
+		<property name="statusCodes">
+			<props>
+				<prop key="/WEB-INF/views/error.jsp">500</prop>
+				<prop key="/WEB-INF/views/error.jsp">404</prop>
+			</props>
+		</property>
+	</bean> -->
 </beans>
