@@ -380,7 +380,7 @@ public class InvitationController {
 		
 		LOGGER.info("modifySweetMessage.do");
 		try {
-			invitationService.modifySweetMessage(useSM, invSeq);
+			resInvitationVO = invitationService.modifySweetMessage(useSM, invSeq);
 			
 			resFlag = true;
 		} catch(Exception e) {

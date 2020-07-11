@@ -144,7 +144,7 @@ function getMemberInfo(id) {
 	$("#inputName").val("");
 	
 	$.ajax({
-		url : "/admin/invitation/getMemberInfo?" + $.param({id : id}),
+		url : "/admin/invitation/getMemberInfo.do?" + $.param({id : id}),
 		type : "GET",
 		error : function(xhr, status, msg) {
 			alert("status : " + status + "\nHttp error msg : " + msg);

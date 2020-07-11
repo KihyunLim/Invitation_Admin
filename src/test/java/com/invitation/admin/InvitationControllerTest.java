@@ -53,25 +53,25 @@ public class InvitationControllerTest {
 		mock = MockMvcBuilders.standaloneSetup(invitationController).build();
 	}
 	
-//	@Test
-	@Ignore
+	@Test
+//	@Ignore
 	public void test_getMemberInfo() throws Exception {
 //		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 //		params.add("id", "admin");
 //		params.add("password", "1234");
 		
 		mock.perform(
-				get("/invitation/getMemberInfo")
+				get("/invitation/getMemberInfo.do")
 //				.params(params)
-				.param("id", "test3"))
+				.param("id", "test1"))
 		.andDo(print())
 		.andExpect(status().isOk())
 		.andExpect(handler().handlerType(InvitationController.class))
 		.andExpect(handler().methodName("getMemberInfo"));
 	}
 	
-	@Test
-//	@Ignore
+//	@Test
+	@Ignore
 	public void test_getInvitationList() throws Exception {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("id", "");

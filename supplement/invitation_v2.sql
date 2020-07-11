@@ -99,7 +99,7 @@ DROP TABLE ATTACH;
 SELECT * FROM ATTACH;
 TRUNCATE TABLE attach;
 
--- 메인 및 기본 정보 
+-- 메인 및 기본 정보
 CREATE TABLE MAIN_INFO (
 	SEQ INT PRIMARY KEY AUTO_INCREMENT
 	, INV_SEQ INT NOT NULL
@@ -279,7 +279,7 @@ SELECT CONVERT('20200610', INTEGER) < CONVERT('20200719', INTEGER);
 
 SHOW TRIGGERS FROM INVITATION;
 
-CREATE DEFINER=`root`@`localhost` TRIGGER main_info_after_update
+CREATE TRIGGER main_info_after_update
 AFTER UPDATE 
 ON main_info FOR EACH ROW
 BEGIN
@@ -322,3 +322,6 @@ BEGIN
 		SEQ = _INV_SEQ
 	;
 END
+
+create user 'invitation'@'localhost' identified by '1111';
+grant all privileges on INVITATION.* to 'invitation'@'localhost';
