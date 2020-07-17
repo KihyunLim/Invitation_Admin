@@ -11,4 +11,13 @@
 		WHERE 
 			ID = #{id};
 	</select>
+	
+	<select id="getUserPermission" resultType="userPermission">
+		SELECT
+			*
+		FROM
+			AUTHORITIES
+		WHERE
+			ID = #{id};
+	</select>
 </mapper>

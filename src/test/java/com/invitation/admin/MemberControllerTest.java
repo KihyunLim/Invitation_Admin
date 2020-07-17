@@ -50,7 +50,7 @@ public class MemberControllerTest {
 		
 		
 		mock.perform(
-				get("/member/getMemberList")
+				get("/member/getMemberList.do")
 				.params(params))
 		.andDo(print())
 		.andExpect(status().isOk())

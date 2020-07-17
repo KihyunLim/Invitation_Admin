@@ -33,7 +33,8 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 				out.println("<script>");
 				out.println("var confirmMoveLogin = confirm('로그인 후 이용 가능합니다.');");
 				out.println("if(confirmMoveLogin) {");
-				out.println("		location.href = '/admin/login/login.do';");
+//				out.println("		location.href = '/admin/login/login.do';");
+				out.println("		location.href = '/admin/login/securityLoginView.do';");
 				out.println("} else {");
 				out.println("		history.go(-1);");
 				out.println("}");

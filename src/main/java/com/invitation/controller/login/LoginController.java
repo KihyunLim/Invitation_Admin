@@ -37,6 +37,13 @@ public class LoginController {
 		return "login/login";
 	}
 	
+	@RequestMapping(value="/securityLoginView.do", method=RequestMethod.GET)
+	public String securityLoginView(Model model) {
+		LOGGER.info("securityLoginView page!!");
+		
+		return "login/securityLogin";
+	}
+	
 	@PostMapping(value="/login.do", headers= {"Content-type=application/json"})
 	@ResponseBody
 	public Map<String, Object> doLogin(@RequestBody UserAdminVO user, HttpSession session) throws CommonException {
@@ -76,12 +83,37 @@ public class LoginController {
 		return result;
 	}
 	
+	@PostMapping(value="/securityLogin.do", headers= {"Content-type=application/json"})
+	@ResponseBody
+	public Map<String, Object> doSecurityLogin(@RequestBody UserAdminVO user, HttpSession session) throws CommonException {
+		Boolean resFlag = false;
+		String resMessage = "";
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		LOGGER.info("doSecurityLogin!!");
+		try {
+			userAdminService.doSecurityLogin(user);
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "로그인 중 에러가 발생했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+		}
+		
+		return result;
+	}
+	
 	@GetMapping(value="/logout.do")
 	public String doLogout(HttpSession session) {
 		LOGGER.info("logout!!");
 		
 		session.invalidate();
 		
-		return "login/login";
+//		return "login/login";
+		return "login/securityLogin";
 	}
 }

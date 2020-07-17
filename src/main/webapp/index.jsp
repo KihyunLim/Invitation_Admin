@@ -2,7 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
 <%
-	response.sendRedirect(request.getContextPath() + "/login/login.do");
+	/* response.sendRedirect(request.getContextPath() + "/login/login.do"); */
+	response.sendRedirect(request.getContextPath() + "/login/securityLoginView.do");
 %>
 <html>
 <head>

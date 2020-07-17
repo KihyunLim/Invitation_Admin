@@ -5,6 +5,7 @@
 # etc
 MANIFEST.MF
 pom.properties
+target
 
 ### Eclipse ###
 .metadata
