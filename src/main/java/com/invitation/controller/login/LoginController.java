@@ -8,6 +8,8 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -92,7 +94,27 @@ public class LoginController {
 		
 		LOGGER.info("doSecurityLogin!!");
 		try {
-			userAdminService.doSecurityLogin(user);
+			if(userAdminService.doSecurityLogin(user)) {
+				session.setAttribute("id", user.getId());
+				resFlag = true;
+			} else {
+				throw new CommonException("doSecurityLogin return false");
+			}
+		} catch(BadCredentialsException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "비밀번호가 일치하지 않습니다.";
+		} catch(UsernameNotFoundException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "등록되지 않은 계정입니다.";
+		} catch(CommonException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "로그인 중 에러가 발생했습니다.(0)";
 		} catch(Exception e) {
 			LOGGER.error("error message : " + e.getMessage());
 			LOGGER.error("error trace : ", e);

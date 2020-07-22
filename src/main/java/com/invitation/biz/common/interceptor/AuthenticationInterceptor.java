@@ -15,7 +15,7 @@ import com.invitation.controller.login.LoginController;
 
 public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationInterceptor.class);
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

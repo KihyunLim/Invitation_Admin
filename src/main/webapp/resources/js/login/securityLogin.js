@@ -7,7 +7,9 @@ console.log("########## login.js ##########");
 $(function(){
 	checkSaveId();
 	
-	$("#btnLogin").on("click", function(){
+	$("#btnLogin").on("click", function(e){
+		e.stopPropagation();
+		console.log("asdfasd");
 		var id = $("#inputId").val(),
 			password = $("#inputPassword").val();
 		

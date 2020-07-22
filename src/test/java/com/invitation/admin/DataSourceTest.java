@@ -73,10 +73,10 @@ public class DataSourceTest {
 	@Ignore
 	public void test_doLogin() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-//		UserAdminVO userAdminVO = new UserAdminVO();
-		UserAdminVO userAdminVO = new UserAdminVO("admin", "1234");
-//		userAdminVO.setId("admin5");
-//		userAdminVO.setPassword("1234");
+//		UserAdminVO userAdminVO = new UserAdminVO("admin", "1234");
+		UserAdminVO userAdminVO = new UserAdminVO();
+		userAdminVO.setId("admin");
+		userAdminVO.setPassword("1234");
 		
 		LOGGER.debug(userAdminVO.toString());
 		LOGGER.debug(mapper.writeValueAsString(userAdminVO));
@@ -95,10 +95,9 @@ public class DataSourceTest {
 //	@Ignore
 	public void test_securityLogin() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-//		UserAdminVO userAdminVO = new UserAdminVO();
-		UserAdminVO userAdminVO = new UserAdminVO("admin", "1234");
-//		userAdminVO.setId("admin5");
-//		userAdminVO.setPassword("1234");
+		UserAdminVO userAdminVO = new UserAdminVO();
+		userAdminVO.setId("admin");
+		userAdminVO.setPassword("1234");
 		
 		LOGGER.debug(userAdminVO.toString());
 		LOGGER.debug(mapper.writeValueAsString(userAdminVO));

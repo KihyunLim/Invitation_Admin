@@ -17,7 +17,7 @@
 		<!-- /.login-logo -->
 		<div class="card">
 			<div class="card-body login-card-body">
-				<form action="<c:url value='/login/securityLogin.do'/>" method="post">
+				<%-- <form action="<c:url value='/login/securityLogin.do'/>" method="post" enctype="application/json"> --%>
 					<p class="login-box-msg">계정을 입력해주세요.</p>
 	
 					<div class="input-group mb-3">
@@ -46,7 +46,7 @@
 						</div>
 						<!-- /.col -->
 					</div>
-				</form>
+				<!-- </form> -->
 			</div>
 			<!-- /.login-card-body -->
 		</div>
@@ -56,6 +56,6 @@
 	<%@ include file="../include/adminlte3/js.jsp" %>
 	<script type="text/javascript" src="../js/util.js"></script>
 	<script type="text/javascript" src="../js/def.js"></script>
-	<!-- <script type="text/javascript" src="../js/login/login.js"></script> -->
+	<script type="text/javascript" src="../js/login/securityLogin.js"></script>
 </body>
 </html>

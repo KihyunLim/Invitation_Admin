@@ -28,7 +28,7 @@ import com.invitation.controller.member.MemberController;
 								"file:src/main/webapp/WEB-INF/config/servlet-config.xml"})
 public class MemberControllerTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemberControllerTest.class);
 	
 	private MockMvc mock;
 	

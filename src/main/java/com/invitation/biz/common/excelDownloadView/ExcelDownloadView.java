@@ -19,7 +19,7 @@ import com.invitation.controller.invitation.InvitationController;
 
 public class ExcelDownloadView extends AbstractView {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(InvitationController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExcelDownloadView.class);
 
 	@Override
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,

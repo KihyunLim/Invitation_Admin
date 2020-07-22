@@ -41,7 +41,7 @@ import com.invitation.controller.invitation.InvitationController;
 								"file:src/main/webapp/WEB-INF/config/servlet-config.xml"})
 public class InvitationControllerTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(InvitationControllerTest.class);
 	
 	private MockMvc mock;
 	
