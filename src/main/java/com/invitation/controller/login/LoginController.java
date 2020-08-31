@@ -8,6 +8,8 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,13 @@ public class LoginController {
 		LOGGER.info("login page!!");
 		
 		return "login/login";
+	}
+	
+	@RequestMapping(value="/securityLoginView.do", method=RequestMethod.GET)
+	public String securityLoginView(Model model) {
+		LOGGER.info("securityLoginView page!!");
+		
+		return "login/securityLogin";
 	}
 	
 	@PostMapping(value="/login.do", headers= {"Content-type=application/json"})
@@ -76,12 +85,57 @@ public class LoginController {
 		return result;
 	}
 	
+	@PostMapping(value="/securityLogin.do", headers= {"Content-type=application/json"})
+	@ResponseBody
+	public Map<String, Object> doSecurityLogin(@RequestBody UserAdminVO user, HttpSession session) throws CommonException {
+		Boolean resFlag = false;
+		String resMessage = "";
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		LOGGER.info("doSecurityLogin!!");
+		try {
+			if(userAdminService.doSecurityLogin(user)) {
+				session.setAttribute("id", user.getId());
+				resFlag = true;
+			} else {
+				throw new CommonException("doSecurityLogin return false");
+			}
+		} catch(BadCredentialsException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "비밀번호가 일치하지 않습니다.";
+		} catch(UsernameNotFoundException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "등록되지 않은 계정입니다.";
+		} catch(CommonException e) {
+			LOGGER.error("error message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "로그인 중 에러가 발생했습니다.(0)";
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "로그인 중 에러가 발생했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+		}
+		
+		return result;
+	}
+	
 	@GetMapping(value="/logout.do")
 	public String doLogout(HttpSession session) {
 		LOGGER.info("logout!!");
 		
 		session.invalidate();
 		
-		return "login/login";
+//		return "login/login";
+		return "login/securityLogin";
 	}
 }

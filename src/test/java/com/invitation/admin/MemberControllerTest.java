@@ -28,7 +28,7 @@ import com.invitation.controller.member.MemberController;
 								"file:src/main/webapp/WEB-INF/config/servlet-config.xml"})
 public class MemberControllerTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemberControllerTest.class);
 	
 	private MockMvc mock;
 	
@@ -50,7 +50,7 @@ public class MemberControllerTest {
 		
 		
 		mock.perform(
-				get("/member/getMemberList")
+				get("/member/getMemberList.do")
 				.params(params))
 		.andDo(print())
 		.andExpect(status().isOk())

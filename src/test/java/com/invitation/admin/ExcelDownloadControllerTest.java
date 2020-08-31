@@ -27,7 +27,7 @@ import com.invitation.controller.common.excelDownload.ExcelDownloadController;
 		"file:src/main/webapp/WEB-INF/config/servlet-config.xml"})
 public class ExcelDownloadControllerTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExcelDownloadControllerTest.class);
 	
 	private MockMvc mock;
 	

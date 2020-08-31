@@ -69,13 +69,17 @@ public class DataSourceTest {
 	
 	
 	
-	@Test
-//	@Ignore
+//	@Test
+	@Ignore
 	public void test_doLogin() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
+//		UserAdminVO userAdminVO = new UserAdminVO("admin", "1234");
 		UserAdminVO userAdminVO = new UserAdminVO();
-		userAdminVO.setId("admin5");
+		userAdminVO.setId("admin");
 		userAdminVO.setPassword("1234");
+		
+		LOGGER.debug(userAdminVO.toString());
+		LOGGER.debug(mapper.writeValueAsString(userAdminVO));
 		
 		mock.perform(
 				post("/login/login.do")
@@ -87,6 +91,27 @@ public class DataSourceTest {
 		.andExpect(handler().methodName("doLogin"));
 	}
 	
+	@Test
+//	@Ignore
+	public void test_securityLogin() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		UserAdminVO userAdminVO = new UserAdminVO();
+		userAdminVO.setId("admin");
+		userAdminVO.setPassword("1234");
+		
+		LOGGER.debug(userAdminVO.toString());
+		LOGGER.debug(mapper.writeValueAsString(userAdminVO));
+		
+		mock.perform(
+				post("/login/securityLogin.do")
+				.content(mapper.writeValueAsString(userAdminVO))
+				.contentType(MediaType.APPLICATION_JSON))
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(handler().handlerType(LoginController.class))
+		.andExpect(handler().methodName("doSecurityLogin"));
+	}
+	
 //	@Test
 	@Ignore
 	public void test_getMemberInfo() throws Exception {
@@ -95,7 +120,7 @@ public class DataSourceTest {
 //		params.add("password", "1234");
 		
 		mock.perform(
-				get("/invitation/getMemberInfo")
+				get("/invitation/getMemberInfo.do")
 //				.params(params)
 				.param("id", "test2"))
 		.andDo(print())
