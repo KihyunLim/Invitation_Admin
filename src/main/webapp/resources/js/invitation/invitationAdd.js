@@ -236,6 +236,14 @@ function validateData() {
 		return result;
 	}
 	
+	mi.nameGroom = $("#nameGroom").val();
+	mi.nameBride = $("#nameBride").val();
+	if(mi.nameGroom == "" || mi.nameBride == "") {
+		result.resFlag = false;
+		result.resMessage = "신랑 혹은 신부 이름을 확인해주세요.";
+		return result;
+	}
+	
 	mi.contentGroom = $("#contentGroom").val();
 	mi.contentBride = $("#contentBride").val();
 	

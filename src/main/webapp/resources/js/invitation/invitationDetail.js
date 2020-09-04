@@ -348,6 +348,8 @@ function renderSyntheticInvitation(data, pageMaker) {
 		placeX : data.mainInfoVO.placeX,
 		placeY : data.mainInfoVO.placeY
 	});
+	$("#nameGroom").val(data.mainInfoVO.nameGroom);
+	$("#nameBride").val(data.mainInfoVO.nameBride);
 	$("#contentGroom").val(data.mainInfoVO.contentGroom);
 	$("#contentBride").val(data.mainInfoVO.contentBride);
 	var fileInfo1 = setFileInfo(data.mainInfoVO.fullNameMain),
@@ -592,6 +594,14 @@ function validModifyMainInfo() {
 	if(result.resData.address == "" || result.resData.placeX == "" || result.resData.placeY == "") {
 		result.resFlag = false;
 		result.resMessage = "결혼식 장소를 확인해주세요.";
+		return result;
+	}
+	
+	result.resData.nameGroom = $("#nameGroom").val();
+	result.resData.nameBride = $("#nameBride").val();
+	if(result.resData.nameGroom == "" || result.resData.nameBride == "") {
+		result.resFlag = false;
+		result.resMessage = "신랑 혹은 신부 이름을 확인해주세요.";
 		return result;
 	}
 	

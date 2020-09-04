@@ -13,6 +13,8 @@ public class MainInfoVO {
 	private String placeX;
 	private String placeY;
 	private String address;
+	private String nameGroom;
+	private String nameBride;
 	private String contentGroom;
 	private String contentBride;
 	private int seqImgMain;
@@ -72,6 +74,18 @@ public class MainInfoVO {
 	}
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	public String getNameGroom() {
+		return nameGroom;
+	}
+	public void setNameGroom(String nameGroom) {
+		this.nameGroom = nameGroom;
+	}
+	public String getNameBride() {
+		return nameBride;
+	}
+	public void setNameBride(String nameBride) {
+		this.nameBride = nameBride;
 	}
 	public String getContentGroom() {
 		return contentGroom;
@@ -146,9 +160,10 @@ public class MainInfoVO {
 	public String toString() {
 		return "MainInfoVO [seq=" + seq + ", invSeq=" + invSeq + ", id=" + id + ", dateWedding=" + dateWedding
 				+ ", timeWedding=" + timeWedding + ", placeX=" + placeX + ", placeY=" + placeY + ", address=" + address
-				+ ", contentGroom=" + contentGroom + ", contentBride=" + contentBride + ", seqImgMain=" + seqImgMain
-				+ ", fullNameMain=" + fullNameMain + ", useEachImage=" + useEachImage + ", seqImgGroom=" + seqImgGroom
-				+ ", fullNameGroom=" + fullNameGroom + ", seqImgBride=" + seqImgBride + ", fullNameBride="
-				+ fullNameBride + ", dateTimeRegister=" + dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate + "]";
+				+ ", nameGroom=" + nameGroom + ", nameBride=" + nameBride + ", contentGroom=" + contentGroom
+				+ ", contentBride=" + contentBride + ", seqImgMain=" + seqImgMain + ", fullNameMain=" + fullNameMain
+				+ ", useEachImage=" + useEachImage + ", seqImgGroom=" + seqImgGroom + ", fullNameGroom=" + fullNameGroom
+				+ ", seqImgBride=" + seqImgBride + ", fullNameBride=" + fullNameBride + ", dateTimeRegister="
+				+ dateTimeRegister + ", dateTimeUpdate=" + dateTimeUpdate + "]";
 	}
 }

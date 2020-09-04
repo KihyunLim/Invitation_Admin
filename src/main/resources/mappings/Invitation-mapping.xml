@@ -29,6 +29,8 @@
 		<result column="X_PLACE" property="placeX" />
 		<result column="Y_PLACE" property="placeY" />
 		<result column="ADDRESS" property="address" />
+		<result column="NAME_GROOM" property="nameGroom" />
+		<result column="NAME_BRIDE" property="nameBride" />
 		<result column="CONTENT_GROOM" property="contentGroom" />
 		<result column="CONTENT_BRIDE" property="contentBride" />
 		<result column="SEQ_IMG_MAIN" property="seqImgMain" />
@@ -163,6 +165,8 @@
 				, X_PLACE
 				, Y_PLACE
 				, ADDRESS
+				, NAME_GROOM
+				, NAME_BRIDE
 				, CONTENT_GROOM
 				, CONTENT_BRIDE
 				, SEQ_IMG_MAIN
@@ -181,6 +185,8 @@
 				, #{mainInfoVO.placeX}
 				, #{mainInfoVO.placeY}
 				, #{mainInfoVO.address}
+				, #{mainInfoVO.nameGroom}
+				, #{mainInfoVO.nameBride}
 				, #{mainInfoVO.contentGroom}
 				, #{mainInfoVO.contentBride}
 				, #{mainInfoVO.seqImgMain}
@@ -408,6 +414,8 @@
 			, X_PLACE
 			, Y_PLACE
 			, ADDRESS
+			, NAME_GROOM
+			, NAME_BRIDE
 			, CONTENT_GROOM
 			, CONTENT_BRIDE
 			, SEQ_IMG_MAIN

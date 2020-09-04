@@ -104,6 +104,20 @@
 								</div>
 								<div class="row">
 									<div class="col-md-2">
+										<span>신랑 이름 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="nameGroom" />
+									</div>
+									<div class="col-md-2">
+										<span>신부 이름 : </span>
+									</div>
+									<div class="col-md-4">
+										<input type="text" id="nameBride" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2">
 										<span>신랑 간단 소개 : </span>
 									</div>
 									<div class="col-md-4">
