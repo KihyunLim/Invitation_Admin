@@ -387,4 +387,18 @@ public class InvitationServiceImpl implements InvitationService {
 		
 		return workbook;
 	}
+
+	@Override
+	public SyntheticInvitationVO receiveSyntheticInvitation(String invSeq) throws Exception {
+		SyntheticInvitationVO syntheticInvitationVO = invitationDAO.getSyntheticInvitation(invSeq);
+		
+		Boolean test = syntheticInvitationVO.getInvitationVO().getVisible().equals("Y");
+		if (!syntheticInvitationVO.getInvitationVO().getVisible().equals("Y")) {
+			LOGGER.debug(syntheticInvitationVO.getInvitationVO().getVisible());
+			LOGGER.debug(test.toString());
+			throw new CommonException("invisible");
+		}
+		
+		return syntheticInvitationVO;
+	}
 }

@@ -10,6 +10,7 @@ import com.invitation.biz.common.paging.Criteria;
 
 public interface InvitationService {
 
+	// 관리자
 	MemberInfoVO getMemberInfo(String id) throws Exception;
 
 	void registerInvitation(SyntheticInvitationVO syntheticInvitationVO);
@@ -43,4 +44,7 @@ public interface InvitationService {
 	int getInvitationListCount(String id, String name, String beginDate, String endDate);
 	
 	int getLastInsertID();
+	
+	// 청첩장 수신자 조회
+	SyntheticInvitationVO receiveSyntheticInvitation(String invSeq) throws Exception;
 }

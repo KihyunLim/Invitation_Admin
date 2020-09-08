@@ -464,4 +464,36 @@ public class InvitationController {
 		return result;
 	}
 	
+	@GetMapping(value="/receiveInvitation.do")
+	@ResponseBody
+	public Map<String, Object> receiveSyntheticInvitation(@RequestParam(value="invSeq", required=true) String invSeq) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		SyntheticInvitationVO resSyntheticInvitationVO = null;
+		
+		LOGGER.info("receiveInvitation.do");
+		try {
+			resSyntheticInvitationVO = invitationService.receiveSyntheticInvitation(invSeq);
+			
+			resFlag = true;
+		} catch(CommonException e) {
+			LOGGER.warn("warn message : " + e.getMessage());
+			
+			resFlag = false;
+			resMessage = "조회 할 수 없는 청첩장입니다.";
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "청첩장 조회에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("resSyntheticInvitation", resSyntheticInvitationVO);
+		}
+		
+		return result;
+	}
 }

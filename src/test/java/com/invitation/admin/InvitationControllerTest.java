@@ -53,8 +53,8 @@ public class InvitationControllerTest {
 		mock = MockMvcBuilders.standaloneSetup(invitationController).build();
 	}
 	
-	@Test
-//	@Ignore
+//	@Test
+	@Ignore
 	public void test_getMemberInfo() throws Exception {
 //		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 //		params.add("id", "admin");
@@ -227,5 +227,17 @@ public class InvitationControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(handler().handlerType(InvitationController.class))
 				.andExpect(handler().methodName("modifyInvitation"));
+	}
+	
+	@Test
+//	@Ignore
+	public void test_receiveSyntheticInvitation() throws Exception {
+		mock.perform(
+				get("/invitation/receiveInvitation.do")
+				.param("invSeq", "6"))
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(handler().handlerType(InvitationController.class))
+		.andExpect(handler().methodName("receiveSyntheticInvitation"));
 	}
 }
