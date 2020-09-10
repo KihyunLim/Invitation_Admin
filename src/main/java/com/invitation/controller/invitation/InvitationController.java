@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,7 @@ import com.invitation.biz.invitation.SweetMessageVO;
 import com.invitation.biz.invitation.SyntheticInvitationVO;
 import com.invitation.biz.invitation.WhenWhereVO;
 
+@CrossOrigin(origins="*")
 @Controller
 @RequestMapping(value="/invitation")
 public class InvitationController {
