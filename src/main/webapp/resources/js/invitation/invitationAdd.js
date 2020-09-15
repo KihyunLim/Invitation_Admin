@@ -244,8 +244,8 @@ function validateData() {
 		return result;
 	}
 	
-	mi.contentGroom = $("#contentGroom").val();
-	mi.contentBride = $("#contentBride").val();
+	mi.contentGroom = $("#contentGroom").val().replace(/\n/g, "<br />");
+	mi.contentBride = $("#contentBride").val().replace(/\n/g, "<br />");
 	
 	mi.fullNameMain = $("#imgMI1").parents(".wrapUploadFile").find("img").data("fullName");
 	if(mi.fullNameMain == undefined) {
@@ -286,7 +286,7 @@ function validateData() {
 		ls.listLS.push({
 			dateStory : ($this.find(".inputDateLoveStory").val()).replace(/-/g, ""),
 			title : $this.find(".inputTitleLS").val(),
-			content : $this.find(".inputContentLS").val(),
+			content : $this.find(".inputContentLS").val().replace(/\n/g, "<br />"),
 			fullNameImg : fullNameImg,
 			orderSeq : index + 1
 		});
@@ -310,7 +310,7 @@ function validateData() {
 		placeX : mi.placeX,
 		placeY : mi.placeY,
 		title : $("#inputTitleWeddingWW").val(),
-		content : $("#inputContentWeddingWW").val()
+		content : $("#inputContentWeddingWW").val().replace(/\n/g, "<br />")
 	});
 	if(invitation.usePyebaek == "Y") {
 		var dateTimePyebaek = $("#inputDatePyebaek").val() || "";
@@ -337,7 +337,7 @@ function validateData() {
 			placeX : infoAddrPyebaek.placeX || "",
 			placeY : infoAddrPyebaek.placeY || "",
 			title : $("#inputTitlePyebaekWW").val(),
-			content : $("#inputContentPyebaekWW").val()
+			content : $("#inputContentPyebaekWW").val().replace(/\n/g, "<br />")
 		});
 	}
 	

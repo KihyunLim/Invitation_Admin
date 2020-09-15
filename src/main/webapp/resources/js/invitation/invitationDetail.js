@@ -221,7 +221,7 @@ function cloneLoveStory(isSet, data) {
 		$itemLoveStory.find(".inputDateLoveStory").data("daterangepicker").setStartDate(data.dateStory);
 		$itemLoveStory.find(".inputDateLoveStory").data("daterangepicker").setEndDate(data.dateStory);
 		$itemLoveStory.find(".inputTitleLS").val(data.title);
-		$itemLoveStory.find(".inputContentLS").val(data.content);
+		$itemLoveStory.find(".inputContentLS").val(data.content.replace(/<br \/>/g, "\n"));
 	}
 	
 	$("#wrapListLS").append($itemLoveStory);
@@ -350,8 +350,8 @@ function renderSyntheticInvitation(data, pageMaker) {
 	});
 	$("#nameGroom").val(data.mainInfoVO.nameGroom);
 	$("#nameBride").val(data.mainInfoVO.nameBride);
-	$("#contentGroom").val(data.mainInfoVO.contentGroom);
-	$("#contentBride").val(data.mainInfoVO.contentBride);
+	$("#contentGroom").val(data.mainInfoVO.contentGroom.replace(/<br \/>/g, "\n"));
+	$("#contentBride").val(data.mainInfoVO.contentBride.replace(/<br \/>/g, "\n"));
 	var fileInfo1 = setFileInfo(data.mainInfoVO.fullNameMain),
 		$imgMI1 = $("#imgMI1");
 	if(fileInfo1.isEmptyImgInfo == false) {
@@ -392,7 +392,7 @@ function renderSyntheticInvitation(data, pageMaker) {
 	$("#inputDateTimeWedding_copy").data("seq", data.whenWhereVO[0].seq).data("invSeq", data.whenWhereVO[0].invSeq);
 	$("#inputDateTimeWedding_copy").val(dateTimeWedding1);
 	$("#inputTitleWeddingWW").val(data.whenWhereVO[0].title);
-	$("#inputContentWeddingWW").val(data.whenWhereVO[0].content);
+	$("#inputContentWeddingWW").val(data.whenWhereVO[0].content.replace(/<br \/>/g, "\n"));
 	if(data.whenWhereVO.length == 2) {
 		$("input[name=checkboxDoPyebaek]").prop("checked", data.whenWhereVO[1].flagPyebaek == "Y" ? true : false);
 		$("#inputDatePyebaek").data("seq", data.whenWhereVO[1].seq).data("invSeq", data.whenWhereVO[1].invSeq);
@@ -411,7 +411,7 @@ function renderSyntheticInvitation(data, pageMaker) {
 			placeY : data.whenWhereVO[1].placeY
 		});
 		$("#inputTitlePyebaekWW").val(data.whenWhereVO[1].title);
-		$("#inputContentPyebaekWW").val(data.whenWhereVO[1].content);
+		$("#inputContentPyebaekWW").val(data.whenWhereVO[1].content.replace(/<br \/>/g, "\n"));
 	}
 	
 	$("input[name=checkboxUseG]").prop("checked", data.invitationVO.useG == "Y" ? true : false);
@@ -605,8 +605,8 @@ function validModifyMainInfo() {
 		return result;
 	}
 	
-	result.resData.contentGroom = $("#contentGroom").val();
-	result.resData.contentBride = $("#contentBride").val();
+	result.resData.contentGroom = $("#contentGroom").val().replace(/\n/g, "<br />");
+	result.resData.contentBride = $("#contentBride").val().replace(/\n/g, "<br />");
 	
 	result.resData.fullNameMain = $("#imgMI1").parents(".wrapUploadFile").find("img").data("fullName");
 	result.resData.seqImgMain = $("#imgMI1").parents(".wrapUploadFile").find("img").data("seqImage") || -1;
@@ -667,7 +667,7 @@ function validModifyLoveStory() {
 			isDelete : false,
 			dateStory : ($this.find(".inputDateLoveStory").val()).replace(/-/g, ""),
 			title : $this.find(".inputTitleLS").val(),
-			content : $this.find(".inputContentLS").val(),
+			content : $this.find(".inputContentLS").val().replace(/\n/g, "<br />"),
 			fullNameImg : fullNameImg,
 			seqImage : $this.find("img").data("seqImage") || -1,
 			orderSeq : index + 1
@@ -703,7 +703,7 @@ function validModifyWhenWhere() {
 		invSeq : $("#inputDateTimeWedding_copy").data("invSeq"),
 		flagPyebaek : result.usePyebaek,
 		title : $("#inputTitleWeddingWW").val(),
-		content : $("#inputContentWeddingWW").val(),
+		content : $("#inputContentWeddingWW").val().replace(/\n/g, "<br />"),
 		modifyType : "part"
 	});
 	if(result.usePyebaek == "Y" || (result.usePyebaek == "N" && checkPhebaek != -1)) {
@@ -735,7 +735,7 @@ function validModifyWhenWhere() {
 			placeX : infoAddrPyebaek.placeX || "",
 			placeY : infoAddrPyebaek.placeY || "",
 			title : $("#inputTitlePyebaekWW").val(),
-			content : $("#inputContentPyebaekWW").val(),
+			content : $("#inputContentPyebaekWW").val().replace(/\n/g, "<br />"),
 			modifyType : modifyType
 		});
 	}
