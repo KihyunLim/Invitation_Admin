@@ -31,6 +31,7 @@ import com.invitation.biz.invitation.GalleryVO;
 import com.invitation.biz.invitation.InvitationVO;
 import com.invitation.biz.invitation.LoveStoryVO;
 import com.invitation.biz.invitation.MainInfoVO;
+import com.invitation.biz.invitation.SweetMessageVO;
 import com.invitation.biz.invitation.SyntheticInvitationVO;
 import com.invitation.biz.invitation.WhenWhereVO;
 import com.invitation.controller.invitation.InvitationController;
@@ -229,8 +230,8 @@ public class InvitationControllerTest {
 				.andExpect(handler().methodName("modifyInvitation"));
 	}
 	
-	@Test
-//	@Ignore
+//	@Test
+	@Ignore
 	public void test_receiveSyntheticInvitation() throws Exception {
 		mock.perform(
 				get("/invitation/receiveInvitation.do")
@@ -239,5 +240,28 @@ public class InvitationControllerTest {
 		.andExpect(status().isOk())
 		.andExpect(handler().handlerType(InvitationController.class))
 		.andExpect(handler().methodName("receiveSyntheticInvitation"));
+	}
+	
+	@Test
+//	@Ignore
+	public void test_registerSweetMessage() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		SweetMessageVO sweetMessageVO = new SweetMessageVO();
+		
+		sweetMessageVO.setInvSeq(6);
+		sweetMessageVO.setId("test3");
+		sweetMessageVO.setRegisterName("cus3");
+		sweetMessageVO.setRegisterContent("워후ㅜ우우우우우");
+		sweetMessageVO.setRegisterPassword("1q2w3e4r");
+		
+		mock.perform(
+					post("/invitation/registerSweetMessage.do")
+					.content(mapper.writeValueAsString(sweetMessageVO))
+					.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(handler().handlerType(InvitationController.class))
+				.andExpect(handler().methodName("registerSweetMessage"));
+		
 	}
 }

@@ -47,4 +47,8 @@ public interface InvitationService {
 	
 	// 청첩장 수신자 조회
 	SyntheticInvitationVO receiveSyntheticInvitation(String invSeq) throws Exception;
+	
+	void registerSweetMessage(SweetMessageVO sweetMessageVO);
+	
+	List<SweetMessageVO> getInvitationSweetMessageList(String invSeq);
 }

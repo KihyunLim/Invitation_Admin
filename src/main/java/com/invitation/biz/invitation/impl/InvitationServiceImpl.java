@@ -401,4 +401,14 @@ public class InvitationServiceImpl implements InvitationService {
 		
 		return syntheticInvitationVO;
 	}
+	
+	@Override
+	public void registerSweetMessage(SweetMessageVO sweetMessageVO) {
+		invitationDAO.insertSweetMessage(sweetMessageVO);
+	}
+	
+	@Override
+	public List<SweetMessageVO> getInvitationSweetMessageList(String invSeq) {
+		return invitationDAO.getSweetMessageListAll(invSeq);
+	}
 }

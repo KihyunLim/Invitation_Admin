@@ -95,7 +95,7 @@
 		<result column="REGISTER_NAME" property="registerName" />
 		<result column="REGISTER_CONTENT" property="registerContent" />
 		<result column="REGISTER_PASSWORD" property="registerPassword" />
-		<result column="DATETIME_REGISER" property="dateTimeRegister" />
+		<result column="DATETIME_REGISTER" property="dateTimeRegister" />
 		<result column="DATETIME_UPDATE" property="dateTimeUpdate" />
 	</resultMap>
 	
@@ -378,6 +378,33 @@
 				, #{id}
 				, #{isDelete}
 				, #{seqImage}
+				, null
+				, null
+			)
+		;
+	</insert>
+	
+	<insert id="insertSweetMessage">
+		INSERT INTO
+			SWEET_MESSAGE (
+				SEQ
+				, INV_SEQ
+				, ID
+				, IS_DELETE
+				, REGISTER_NAME
+				, REGISTER_CONTENT
+				, REGISTER_PASSWORD
+				, DATETIME_REGISTER
+				, DATETIME_UPDATE
+			)
+			VALUES (
+				null
+				, #{invSeq}
+				, #{id}
+				, false
+				, #{registerName}
+				, #{registerContent}
+				, #{registerPassword}
 				, null
 				, null
 			)

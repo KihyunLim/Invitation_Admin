@@ -498,4 +498,33 @@ public class InvitationController {
 		
 		return result;
 	}
+	
+	@PostMapping(value="/registerSweetMessage.do", headers= {"Content-type=application/json"})
+	@ResponseBody
+	public Map<String, Object> registerSweetMessage(@RequestBody SweetMessageVO vo) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Boolean resFlag = false;
+		String resMessage = "";
+		List<SweetMessageVO> resSweetMessageVO = null;
+		
+		LOGGER.info("registerSweetMessage.do");
+		try {
+			invitationService.registerSweetMessage(vo);
+			resSweetMessageVO = invitationService.getInvitationSweetMessageList(Integer.toString(vo.getInvSeq()));
+			
+			resFlag = true;
+		} catch(Exception e) {
+			LOGGER.error("error message : " + e.getMessage());
+			LOGGER.error("error trace : ", e);
+			
+			resFlag = false;
+			resMessage = "Sweet Message 등록에 실패했습니다.";
+		} finally {
+			result.put("resFlag", resFlag);
+			result.put("resMessage", resMessage);
+			result.put("resSweetMessage", resSweetMessageVO);
+		}
+		
+		return result;
+	}
 }

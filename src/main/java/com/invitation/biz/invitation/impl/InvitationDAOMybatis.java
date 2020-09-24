@@ -72,6 +72,10 @@ public class InvitationDAOMybatis {
 		mybatis.insert("InvitationDAO.insertGalleryItem", galleryVO);
 	}
 	
+	public void insertSweetMessage(SweetMessageVO sweetMessageVO) {
+		mybatis.insert("InvitationDAO.insertSweetMessage", sweetMessageVO);
+	}
+	
 	public List<MainInfoVO> getMemberInvitation(String id) {
 		return mybatis.selectList("InvitationDAO.getMemberInvitation", id);
 	}
