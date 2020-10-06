@@ -46,6 +46,7 @@
 			<mvc:mapping path="/**/*.do"></mvc:mapping>
 			<mvc:exclude-mapping path="/login/*.do"></mvc:exclude-mapping>
 			<mvc:exclude-mapping path="/invitation/receiveInvitation.do"></mvc:exclude-mapping>
+			<mvc:exclude-mapping path="/invitation/registerSweetMessage.do"></mvc:exclude-mapping>
 			<bean class="com.invitation.biz.common.interceptor.AuthenticationInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
