@@ -105,6 +105,7 @@ public class InvitationDAOMybatis {
 		List<GalleryVO> listG = new ArrayList<>();
 		List<SweetMessageVO> listSM = new ArrayList<>();
 		Criteria cri = new Criteria();
+		cri.setPerPageNum(99);
 		
 		resultSyntheticInvitation.setInvitationVO(mybatis.selectOne("InvitationDAO.selectInvitation", invSeq));
 		resultSyntheticInvitation.setMainInfoVO(mybatis.selectOne("InvitationDAO.selectMainInfo", invSeq));
